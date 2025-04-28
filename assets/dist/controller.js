@@ -6,7 +6,9 @@ class default_1 extends Controller {
         super(...arguments);
     }
     async connect() {
-        const toasts = this.viewValue
+        const toasts = this.viewValue;
+
+        console.log(toasts);
 
         for (const toast of toasts) {
             await Swal.fire(toast);

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Twig\Extension;
+namespace Pentiminax\UX\SweetAlert\Twig\Extension;
 
-use App\Toast\ToastManager;
+use Pentiminax\UX\SweetAlert\ToastManager;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Markup;
 use Twig\TwigFunction;
 
 class ToastExtension extends AbstractExtension
@@ -23,12 +24,12 @@ class ToastExtension extends AbstractExtension
         ];
     }
 
-    public function scripts(): string
+    public function scripts(): Markup
     {
         $stimulus = new StimulusHelper($this->twig);
         $toasts = $this->toastManager->getToasts();
 
-        $controllers['toast'] = [
+        $controllers['@pentiminax/ux-sweet-alert/sweetalert'] = [
             'view' => $toasts
         ];
 
@@ -37,6 +38,8 @@ class ToastExtension extends AbstractExtension
             $stimulusAttributes->addController($name, $controllerValues);
         }
 
-        return \sprintf('<div %s></div>', $stimulusAttributes);
+        $html = \sprintf('<div %s></div>', $stimulusAttributes);
+
+        return new Markup($html, 'UTF-8');
     }
 }

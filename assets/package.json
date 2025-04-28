@@ -1,0 +1,30 @@
+{
+  "name": "@pentiminax/ux-sweetalert",
+  "description": "SweetAlert2 integration for Symfony",
+  "license": "MIT",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/controller.js",
+  "symfony": {
+    "controllers": {
+      "sweetalert": {
+        "main": "dist/controller.js",
+        "webpackMode": "eager",
+        "fetch": "eager",
+        "enabled": true
+      }
+    },
+    "importmap": {
+      "@hotwired/stimulus": "^3.0.0",
+      "sweetalert2": "^11.19.1"
+    }
+  },
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.0.0",
+    "sweetalert2": "^11.19.1"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.0.0",
+    "sweetalert2": "^11.19.1"
+  }
+}
