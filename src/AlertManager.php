@@ -33,10 +33,8 @@ class AlertManager implements AlertManagerInterface
         return $this->requestStack->getSession();
     }
 
-    public function success(string $title, string $text, Position $position = Position::CENTER): void
+    public function success(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
     {
-        $this->addAlert(
-            Alert::new($title, $text)
-        );
+        return Alert::new($id, $title, $text, $position);
     }
 }

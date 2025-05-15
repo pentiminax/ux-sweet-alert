@@ -4,6 +4,7 @@ namespace Pentiminax\UX\SweetAlert\Model;
 
 use JsonSerializable;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
+use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 
 class Alert implements JsonSerializable
@@ -15,6 +16,8 @@ class Alert implements JsonSerializable
     private string $text;
 
     private Icon $icon = Icon::SUCCESS;
+
+    private Position $position = Position::CENTER;
 
     private string $confirmButtonText = 'OK';
 
@@ -36,7 +39,7 @@ class Alert implements JsonSerializable
 
     private string $confirmButtonColor = '#3085d6';
 
-    public static function new(string $id, string $title, string $text, Icon $icon = Icon::SUCCESS): static
+    public static function new(string $id, string $title, string $text, Icon $icon, Position $position): static
     {
         $alert = new static();
 
@@ -44,6 +47,7 @@ class Alert implements JsonSerializable
         $alert->title = $title;
         $alert->text = $text;
         $alert->icon = $icon;
+        $alert->position = $position;
         $alert->theme = Theme::AUTO;
 
         return $alert;
@@ -115,6 +119,13 @@ class Alert implements JsonSerializable
         return $this;
     }
 
+    public function position(Position $position): static
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
@@ -132,6 +143,7 @@ class Alert implements JsonSerializable
             'allowOutsideClick' => $this->allowOutsideClick,
             'allowEscapeKey' => $this->allowEscapeKey,
             'confirmButtonColor' => $this->confirmButtonColor,
+            'position' => $this->position->value,
         ];
     }
 }

@@ -10,5 +10,5 @@ interface AlertManagerInterface
 
     public function getAlerts(): array;
 
-    public function success(string $title, string $text): void;
+    public function success(string $id, string $title, string $text): Alert;
 }
