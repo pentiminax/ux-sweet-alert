@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Toast;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,17 +24,51 @@ class ToastManager implements ToastManagerInterface
         $this->getSession()->getFlashBag()->set('ux-sweet-alert:toasts', $this->toasts);
     }
 
-    public function success(string $id, string $title, string $text, Position $position, bool $showConfirmButton): void
+    public function success(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
     {
-        $toast = Toast::new($id, $title, $text);
+        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::SUCCESS, $timer);
+    }
 
-        $toast->position($position);
+    public function error(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
+    {
+        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::ERROR, $timer);
+    }
+
+    public function warning(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
+    {
+        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::WARNING, $timer);
+    }
+
+    public function info(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
+    {
+        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer);
+    }
+
+    public function question(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): Toast
+    {
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::QUESTION, $timer);
+    }
+
+    private function createAndAddToast(
+        string $id,
+        string $title,
+        string $text,
+        Position $position,
+        bool $showConfirmButton,
+        Icon $icon,
+        ?int $timer = null
+    ): Toast {
+        $toast = Toast::new($id, $title, $text, $icon);
+
+        $toast
+            ->position($position)
+            ->timer($timer);
 
         if (!$showConfirmButton) {
             $toast->withoutConfirmButton();
         }
 
-        $this->addToast($toast);
+        return $toast;
     }
 
     public function getToasts(): array
