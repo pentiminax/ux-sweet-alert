@@ -11,7 +11,11 @@ class default_1 extends Controller {
         console.log(toasts);
 
         for (const toast of toasts) {
-            await Swal.fire(toast);
+            const result = await Swal.fire(toast);
+
+            document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toast.id}:closed`, {
+                detail: result
+            }))
         }
     }
 }
