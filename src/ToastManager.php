@@ -28,7 +28,10 @@ class ToastManager implements ToastManagerInterface
         $toast = Toast::new($id, $title, $text);
 
         $toast->position($position);
-        $toast->withoutConfirmButton($showConfirmButton);
+
+        if (!$showConfirmButton) {
+            $toast->withoutConfirmButton();
+        }
 
         $this->addToast($toast);
     }
