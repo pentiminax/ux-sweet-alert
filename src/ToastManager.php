@@ -24,29 +24,59 @@ class ToastManager implements ToastManagerInterface
         $this->getSession()->getFlashBag()->set('ux-sweet-alert:toasts', $this->toasts);
     }
 
-    public function success(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
-    {
-        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::SUCCESS, $timer);
+    public function success(
+        string $id,
+        string $title,
+        string $text = '',
+        Position $position = Position::BOTTOM_END,
+        bool $showConfirmButton = false,
+        ?int $timer = null
+    ): Toast {
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::SUCCESS, $timer);
     }
 
-    public function error(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
-    {
-        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::ERROR, $timer);
+    public function error(
+        string $id,
+        string $title,
+        string $text = '',
+        Position $position = Position::BOTTOM_END,
+        bool $showConfirmButton = false,
+        ?int $timer = null
+    ): Toast {
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::ERROR, $timer);
     }
 
-    public function warning(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
-    {
-        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::WARNING, $timer);
+    public function warning(
+        string $id,
+        string $title,
+        string $text = '',
+        Position $position = Position::BOTTOM_END,
+        bool $showConfirmButton = false,
+        ?int $timer = null
+    ): Toast {
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::WARNING, $timer);
     }
 
-    public function info(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): void
-    {
-        $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer);
+    public function info(
+        string $id,
+        string $title,
+        string $text = '',
+        Position $position = Position::BOTTOM_END,
+        bool $showConfirmButton = false,
+        ?int $timer = null
+    ): Toast {
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer);
     }
 
-    public function question(string $id, string $title, string $text, Position $position, bool $showConfirmButton, ?int $timer = null): Toast
-    {
-        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::QUESTION, $timer);
+    public function question(
+        string $id,
+        string $title,
+        string $text = '',
+        Position $position = Position::BOTTOM_END,
+        bool $showConfirmButton = false,
+        ?int $timer = null
+    ): Toast {
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer);
     }
 
     private function createAndAddToast(
@@ -58,7 +88,7 @@ class ToastManager implements ToastManagerInterface
         Icon $icon,
         ?int $timer = null
     ): Toast {
-        $toast = Toast::new($id, $title, $text, $icon);
+        $toast = Toast::new($id, $title, $text, $icon, $position);
 
         $toast
             ->position($position)
@@ -67,6 +97,8 @@ class ToastManager implements ToastManagerInterface
         if (!$showConfirmButton) {
             $toast->withoutConfirmButton();
         }
+
+        $this->addToast($toast);
 
         return $toast;
     }

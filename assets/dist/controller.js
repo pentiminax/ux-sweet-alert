@@ -8,8 +8,6 @@ class default_1 extends Controller {
     async connect() {
         const toasts = this.viewValue;
 
-        console.log(toasts);
-
         for (const toast of toasts) {
             const result = await Swal.fire(toast);
 
