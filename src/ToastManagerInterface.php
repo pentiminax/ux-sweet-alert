@@ -15,7 +15,8 @@ interface ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast;
 
     public function error(
@@ -24,7 +25,8 @@ interface ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast;
 
     public function warning(
@@ -33,7 +35,8 @@ interface ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast;
 
     public function info(
@@ -42,7 +45,8 @@ interface ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast;
 
     public function question(
@@ -51,7 +55,8 @@ interface ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast;
 
     /**

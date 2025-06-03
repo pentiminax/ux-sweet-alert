@@ -30,9 +30,10 @@ class ToastManager implements ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast {
-        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::SUCCESS, $timer);
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::SUCCESS, $timer, $timerProgressBar);
     }
 
     public function error(
@@ -41,9 +42,10 @@ class ToastManager implements ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast {
-        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::ERROR, $timer);
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::ERROR, $timer, $timerProgressBar);
     }
 
     public function warning(
@@ -52,9 +54,10 @@ class ToastManager implements ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast {
-        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::WARNING, $timer);
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::WARNING, $timer, $timerProgressBar);
     }
 
     public function info(
@@ -63,9 +66,10 @@ class ToastManager implements ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast {
-        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer);
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer, $timerProgressBar);
     }
 
     public function question(
@@ -74,9 +78,10 @@ class ToastManager implements ToastManagerInterface
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast {
-        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer);
+        return $this->createAndAddToast($id, $title, $text, $position, $showConfirmButton, Icon::INFO, $timer, $timerProgressBar);
     }
 
     private function createAndAddToast(
@@ -86,7 +91,8 @@ class ToastManager implements ToastManagerInterface
         Position $position,
         bool $showConfirmButton,
         Icon $icon,
-        ?int $timer = null
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Toast {
         $toast = Toast::new($id, $title, $text, $icon, $position);
 
@@ -96,6 +102,10 @@ class ToastManager implements ToastManagerInterface
 
         if (!$showConfirmButton) {
             $toast->withoutConfirmButton();
+        }
+
+        if ($timerProgressBar) {
+            $toast->withTimerProgressBar();
         }
 
         $this->addToast($toast);
