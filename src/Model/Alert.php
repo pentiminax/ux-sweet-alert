@@ -39,7 +39,7 @@ class Alert implements JsonSerializable
 
     private string $confirmButtonColor = '#3085d6';
 
-    public static function new(string $id, string $title, string $text, Icon $icon, Position $position): static
+    public static function new(string $id, string $title, string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END): static
     {
         $alert = new static();
 

@@ -3,15 +3,16 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
          backupGlobals="false"
+         bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
          colors="true"
-         bootstrap="vendor/autoload.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />
         <ini name="intl.default_locale" value="en" />
         <ini name="intl.error_level" value="0" />
         <ini name="memory_limit" value="-1" />
+        <server name="KERNEL_CLASS" value="Pentiminax\UX\SweetAlert\Tests\Kernel" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[direct]=0&amp;verbose=0&amp;quiet[]=indirect&amp;"/>
     </php>

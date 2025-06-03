@@ -3,6 +3,7 @@
 namespace Pentiminax\UX\SweetAlert\Tests\Model;
 
 use Pentiminax\UX\SweetAlert\Enum\Icon;
+use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,8 @@ class AlertTest extends TestCase
             id: 'id',
             title: 'title',
             text: 'text',
-            icon: Icon::INFO
+            icon: Icon::INFO,
+            position: Position::CENTER
         );
 
         $alert
