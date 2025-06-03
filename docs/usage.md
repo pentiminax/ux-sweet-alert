@@ -11,7 +11,7 @@ add the following Twig function in your base.html.twig (or the layout file):
 
 ## Toasts
 
-To use UX SwwetAlert, inject the `ToastManagerInterface` service and
+To use UX SweetAlert, inject the `ToastManagerInterface` service and
 create toasts in PHP:
 
 ```php
