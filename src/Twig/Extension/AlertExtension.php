@@ -22,7 +22,7 @@ class AlertExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ux_toast_scripts', [$this, 'scripts']),
+            new TwigFunction('ux_sweet_alert_scripts', [$this, 'scripts']),
         ];
     }
 
