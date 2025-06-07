@@ -44,7 +44,7 @@ return static function (ContainerConfigurator $container) {
         ->set(ConfirmButton::class)
         ->call('setLiveResponder', [service(LiveResponder::class)])
         ->tag('twig_component', [
-            'key' => 'Pentiminax:UxSweetAlert:ConfirmButton',
+            'key' => 'SweetAlert:ConfirmButton',
             'expose_public_props' => true,
             'live' => true,
             'route' => 'ux_live_component',

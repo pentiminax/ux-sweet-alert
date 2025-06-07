@@ -21,7 +21,7 @@ class SweetAlertBundle extends AbstractBundle
             'defaults' => [
                 'Pentiminax\UX\SweetAlert\Twig\Components\\' => [
                     'template_directory' => '@SweetAlert/components/',
-                    'name_prefix' => 'Pentiminax:UxSweetAlert',
+                    'name_prefix' => 'SweetAlert:ConfirmButton',
                 ]
             ]
         ]);

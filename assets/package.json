@@ -7,6 +7,12 @@
   "main": "dist/controller.js",
   "symfony": {
     "controllers": {
+      "confirm-button":{
+        "main": "dist/confirm-button-controller.js",
+        "webpackMode": "eager",
+        "fetch": "eager",
+        "enabled": true
+      },
       "sweetalert": {
         "main": "dist/controller.js",
         "webpackMode": "eager",
