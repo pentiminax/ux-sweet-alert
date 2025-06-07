@@ -14,12 +14,13 @@ class SweetAlertBundle extends AbstractBundle
         $container->import('../config/services.php');
     }
 
+
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $builder->prependExtensionConfig('twig_component', [
             'defaults' => [
                 'Pentiminax\UX\SweetAlert\Twig\Components\\' => [
-                    'template_directory' => '@PentiminaxUxSweetAlert/',
+                    'template_directory' => '@SweetAlert/components/',
                     'name_prefix' => 'Pentiminax:UxSweetAlert',
                 ]
             ]
