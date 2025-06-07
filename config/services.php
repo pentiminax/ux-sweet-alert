@@ -43,12 +43,15 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set(ConfirmButton::class)
         ->call('setLiveResponder', [service(LiveResponder::class)])
-        ->tag('twig_component', [
+        ->tag('twig.component', [
             'key' => 'SweetAlert:ConfirmButton',
             'expose_public_props' => true,
+            'attributes_var' => 'attributes',
             'live' => true,
             'route' => 'ux_live_component',
             'method' => 'post',
             'url_reference_type' => true,
-        ]);
+        ])
+        ->tag('controller.service_arguments')
+        ->public();
 };
