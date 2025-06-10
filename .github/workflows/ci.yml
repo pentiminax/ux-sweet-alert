@@ -1,0 +1,40 @@
+name: "Test Suite"
+
+on:
+  pull_request_target:
+  push:
+    branches:
+      - main
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+    name: PHP ${{ matrix.php }} ${{ matrix.description }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Dump PHP diagnostics
+        run: php -i && php -m
+
+      - name: Install dependencies
+        run: composer install --no-progress
+
+      - name: Check for dangerous and broken dependencies
+        run: composer audit
+
+      - name: Run automated tests
+        run: vendor/bin/phpunit --coverage-text --coverage-xml build/coverage-xml --coverage-cobertura build/cobertura.xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
