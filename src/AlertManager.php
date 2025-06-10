@@ -24,6 +24,9 @@ class AlertManager implements AlertManagerInterface
         $this->getSession()->getFlashBag()->set('ux-sweet-alert:alerts', $this->alerts);
     }
 
+    /**
+     * @return Alert[]
+     */
     public function getAlerts(): array
     {
         return $this->getSession()->getFlashBag()->get('ux-sweet-alert:alerts');
