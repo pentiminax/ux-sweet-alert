@@ -18,9 +18,7 @@ composer require pentiminax/ux-sweet-alert
 
 ## Advanced documentation
 
-- Installation
-- Configuration
-- Usage
-- Alerts
-- Toasts
-
+- [Installation](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/installation.md)
+- [Usage](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/usage.md)
+- [Alerts](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/alerts.md)
+- [Toasts](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/toasts.md)
