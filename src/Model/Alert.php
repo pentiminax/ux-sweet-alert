@@ -2,12 +2,11 @@
 
 namespace Pentiminax\UX\SweetAlert\Model;
 
-use JsonSerializable;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 
-class Alert implements JsonSerializable
+class Alert implements \JsonSerializable
 {
     private string $id;
 
