@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,6 +36,40 @@ class AlertManager implements AlertManagerInterface
 
     public function success(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
     {
-        return Alert::new($id, $title, $text, $position);
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::SUCCESS);
+    }
+
+    public function error(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    {
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::ERROR);
+    }
+
+    public function warning(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    {
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::WARNING);
+    }
+
+    public function info(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    {
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::INFO);
+    }
+
+    public function question(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    {
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::QUESTION);
+    }
+
+    private function createAndAddAlert(
+        string $id,
+        string $title,
+        string $text,
+        Position $position,
+        Icon $icon
+    ): Alert {
+        $alert = Alert::new($id, $title, $text, $icon, $position);
+
+        $this->addAlert($alert);
+
+        return $alert;
     }
 }
