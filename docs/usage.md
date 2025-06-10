@@ -6,7 +6,7 @@ To automatically display toasts and alerts in your templates,
 add the following Twig function in your base.html.twig (or the layout file):
 
 ```twig
-{{ ux_toast_scripts() }}
+{{ ux_sweet_alert_scripts() }}
 ```
 
 ## Toasts
