@@ -22,3 +22,5 @@ composer require pentiminax/ux-sweet-alert
 - [Usage](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/usage.md)
 - [Alerts](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/alerts.md)
 - [Toasts](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/toasts.md)
+- [Live Component](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/live-component.md)
+
