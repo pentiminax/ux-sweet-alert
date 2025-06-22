@@ -1,5 +1,7 @@
 <?php
 
+namespace Pentiminax\UX\SweetAlert\Tests;
+
 use Pentiminax\UX\SweetAlert\Model\Toast;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
