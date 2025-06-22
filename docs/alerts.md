@@ -17,11 +17,12 @@ use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 
 public function someAction(AlertManagerInterface $alertManager): Response
 {
-$alertManager->success(
-id: 'update-success',
-title: 'Update Successful',
-text: 'Your settings have been saved.'
-);
+
+    $alertManager->success(
+        id: 'update-success',
+        title: 'Update Successful',
+        text: 'Your settings have been saved.'
+    );
 
     return $this->redirectToRoute('dashboard');
 }
@@ -40,12 +41,12 @@ Each method returns an Alert object that can be further customized using a fluen
 
 ## Parameters
 
-| Name      | Type          | Default            | Description                        |
-|-----------|---------------|--------------------|------------------------------------|
-| `id`      | `string`      | *(required)*       | Unique identifier                  |
-| `title`   | `string`      | *(required)*       | Alert title                        |
-| `text`    | `string`      | `''`               | Description text                   |
-| `position`| `Position` enum | `Position::CENTER` | Modal position on screen          |
+| Name       | Type            | Default            | Description              |
+|------------|-----------------|--------------------|--------------------------|
+| `id`       | `string`        | *(required)*       | Unique identifier        |
+| `title`    | `string`        | *(required)*       | Alert title              |
+| `text`     | `string`        | `''`               | Description text         |
+| `position` | `Position` enum | `Position::CENTER` | Modal position on screen |
 
 ## Customization
 
@@ -78,7 +79,7 @@ $alertManager->info('session-expired', 'Session Expired', 'Please log in again.'
 
 ## Retrieving Alerts
 
-To access alerts (usually for rendering them in a Twig component):
+To access alerts:
 
 ```php
 $alerts = $alertManager->getAlerts();
