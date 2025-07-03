@@ -13,15 +13,14 @@ The `ConfirmButton` Live Component lets you trigger a **SweetAlert2 confirmation
 ### 🔍 Usage Example
 
 ```twig
-<live:confirm-button
+<twig:SweetAlert:ConfirmButton
     title="Are you sure?"
     text="This action cannot be undone."
     icon="warning"
-    :show-cancel-button="true"
+    showCancelButton="true"
     callback="onConfirmAction"
->
-    Delete
-</live:confirm-button>
+/>
+
 ```
 
 ---
@@ -53,7 +52,7 @@ The `ConfirmButton` Live Component lets you trigger a **SweetAlert2 confirmation
 <div class="container">
     <div class="row">
         <div class="col">
-            <twig:ConfirmButton
+            <twig:SweetAlert:ConfirmButton
                     title="Confirm"
                     text="Are you sure?"
                     callback="myCallback"
