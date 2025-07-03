@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
+use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
@@ -19,10 +20,10 @@ class ConfirmButton
     public string $text;
 
     #[LiveProp]
-    public bool $showCancelButton = false;
+    public bool $showCancelButton = true;
 
     #[LiveProp]
-    public string $icon;
+    public string $icon = Icon::SUCCESS->value;
 
     #[LiveProp]
     public string $callback;
