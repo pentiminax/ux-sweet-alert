@@ -53,8 +53,6 @@ Each method returns an Alert object that can be further customized using a fluen
 After creating an alert, you can customize its behavior:
 
 ```php
-use Pentiminax\UX\SweetAlert\Enum\Theme;
-
 $alert = $this->alertManager->info(
     id: 'infoAler',
     title: 'Info Alert',
