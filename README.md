@@ -16,6 +16,61 @@ Install the library via Composer:
 composer require pentiminax/ux-sweet-alert
 ```
 
+## Baseic usage
+
+To automatically display toasts and alerts in your templates, add the following Twig function in your base.html.twig (or the layout file):
+
+```twig
+{{ ux_sweet_alert_scripts() }}
+```
+
+## Alerts
+
+Inject the AlertManagerInterface and use the helper methods to create alerts:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+
+public function someAction(AlertManagerInterface $alertManager): Response
+{
+
+    $alertManager->success(
+        id: 'update-success',
+        title: 'Update Successful',
+        text: 'Your settings have been saved.'
+    );
+
+    return $this->redirectToRoute('dashboard');
+}
+```
+
+## Toasts
+
+Inject the `ToastManagerInterface` service and
+create toasts:
+
+```php
+use Pentiminax\UX\SweetAlert\ToastManagerInterface;
+
+class HomeController extends AbstractController
+{
+    #[Route('/', name: 'app_homepage')]
+    public function index(ToastManagerInterface $toastManager): Response
+    {
+       $toastManager->success(
+            id: 'id',
+            title: 'title',
+            text: 'text',
+            position: Position::TOP_END,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        );
+
+        return $this->render('home/index.html.twig');
+    }
+}
+
 ## Advanced documentation
 
 - [Installation](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/installation.md)
