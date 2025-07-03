@@ -55,12 +55,15 @@ After creating an alert, you can customize its behavior:
 ```php
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 
-$alertManager->info('session-expired', 'Session Expired', 'Please log in again.')
-->withCancelButton()
-->withoutAnimation()
-->withoutBackdrop()
-->theme(Theme::DARK)
-->confirmButtonColor('#ff0000');
+$alert = $this->alertManager->info(
+    id: 'infoAler',
+    title: 'Info Alert',
+    text: 'This is an info alert',
+);
+        
+$alert
+    ->withCancelButton()
+    ->withDenyButton();
 ```
 
 ## Available Customization Methods
