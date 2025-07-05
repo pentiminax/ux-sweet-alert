@@ -16,7 +16,7 @@ Install the library via Composer:
 composer require pentiminax/ux-sweet-alert
 ```
 
-## Baseic usage
+## Basic usage
 
 To automatically display toasts and alerts in your templates, add the following Twig function in your base.html.twig (or the layout file):
 
@@ -50,6 +50,7 @@ Inject the `ToastManagerInterface` service and
 create toasts:
 
 ```php
+use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 
 class HomeController extends AbstractController
