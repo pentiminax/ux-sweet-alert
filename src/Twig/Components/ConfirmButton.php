@@ -31,6 +31,12 @@ class ConfirmButton
     #[LiveProp]
     public string $customClass = '';
 
+    #[LiveProp]
+    public string $confirmButtonText = 'OK';
+
+    #[LiveProp]
+    public string $cancelButtonText = 'Cancel';
+
     #[LiveListener('alertAdded')]
     public function alertAdded(): void
     {
@@ -41,6 +47,8 @@ class ConfirmButton
                 'icon' => $this->icon,
                 'showCancelButton' => $this->showCancelButton,
                 'customClass' => $this->customClass(),
+                'confirmButtonText' => $this->confirmButtonText,
+                'cancelButtonText' => $this->cancelButtonText
             ],
             'callback' => $this->callback
         ]);
