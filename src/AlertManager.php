@@ -37,29 +37,29 @@ class AlertManager implements AlertManagerInterface
         return $this->requestStack->getSession();
     }
 
-    public function success(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    public function success(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::SUCCESS);
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::SUCCESS, $customClass);
     }
 
-    public function error(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    public function error(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::ERROR);
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::ERROR, $customClass);
     }
 
-    public function warning(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    public function warning(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::WARNING);
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::WARNING, $customClass);
     }
 
-    public function info(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    public function info(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::INFO);
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::INFO, $customClass);
     }
 
-    public function question(string $id, string $title, string $text, Position $position = Position::CENTER): Alert
+    public function question(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::QUESTION);
+        return $this->createAndAddAlert($id, $title, $text, $position, Icon::QUESTION, $customClass);
     }
 
     private function createAndAddAlert(
@@ -67,9 +67,10 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $text,
         Position $position,
-        Icon $icon
+        Icon $icon,
+        array $customClass = []
     ): Alert {
-        $alert = Alert::new($id, $title, $text, $icon, $position);
+        $alert = Alert::new($id, $title, $text, $icon, $position, $customClass);
 
         $this->addAlert($alert);
 

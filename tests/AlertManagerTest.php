@@ -60,6 +60,7 @@ class AlertManagerTest extends KernelTestCase
             'allowEscapeKey' => true,
             'confirmButtonColor' => '#3085d6',
             'position' => 'bottom',
+            'customClass' => []
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());

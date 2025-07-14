@@ -17,7 +17,10 @@ class AlertTest extends TestCase
             title: 'title',
             text: 'text',
             icon: Icon::INFO,
-            position: Position::CENTER
+            position: Position::CENTER,
+            customClass: [
+                'confirmButton' => 'btn btn-success'
+            ]
         );
 
         $alert
@@ -46,5 +49,7 @@ class AlertTest extends TestCase
         $this->assertTrue($data['allowOutsideClick']);
         $this->assertTrue($data['allowEscapeKey']);
         $this->assertEquals('#ff0000', $data['confirmButtonColor']);
+        $this->assertEquals(Position::CENTER->value, $data['position']);
+        $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
     }
 }

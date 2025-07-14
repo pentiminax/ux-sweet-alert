@@ -38,7 +38,9 @@ class Alert implements \JsonSerializable
 
     private string $confirmButtonColor = '#3085d6';
 
-    public static function new(string $id, string $title, string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END): static
+    private array $customClass = [];
+
+    public static function new(string $id, string $title, string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
 
@@ -48,6 +50,7 @@ class Alert implements \JsonSerializable
         $alert->icon = $icon;
         $alert->position = $position;
         $alert->theme = Theme::AUTO;
+        $alert->customClass = $customClass;
 
         return $alert;
     }
@@ -143,6 +146,7 @@ class Alert implements \JsonSerializable
             'allowEscapeKey' => $this->allowEscapeKey,
             'confirmButtonColor' => $this->confirmButtonColor,
             'position' => $this->position->value,
+            'customClass' => $this->customClass
         ];
     }
 }
