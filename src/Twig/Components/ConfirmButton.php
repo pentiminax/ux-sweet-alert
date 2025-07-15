@@ -3,18 +3,20 @@
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Enum\Icon;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
+#[AsLiveComponent]
 class ConfirmButton
 {
     use ComponentToolsTrait;
     use DefaultActionTrait;
 
     #[LiveProp]
-    public string $title;
+    public string $title = '';
 
     #[LiveProp]
     public string $text = '';
@@ -26,7 +28,7 @@ class ConfirmButton
     public string $icon = Icon::SUCCESS->value;
 
     #[LiveProp]
-    public string $callback;
+    public string $callback = '';
 
     #[LiveProp]
     public string $customClass = '';
