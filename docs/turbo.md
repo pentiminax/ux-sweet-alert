@@ -6,6 +6,10 @@ UX SweetAlert provides interactive popups for your Symfony applications.
 With built-in UX Turbo integration, alerts work seamlessly both on full page reloads and with Turbo-driven navigation or
 AJAX/fetch requests.
 
+## Requirements
+
+- Symfony UX Turbo
+
 ## Alerts are automatically injected
 
 On the next Turbo navigation, page reload, or AJAX response returning Turbo Stream, the bundle will automatically inject
@@ -28,7 +32,7 @@ and trigger the popup—no page reload required.
 ## Backend example
 
 ```php
-use Pentiminax\UX\SweetAlert\AlertManagerInterface
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 public function index(AlertManagerInterface $alertManager): Response
