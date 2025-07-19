@@ -16,15 +16,18 @@
     },
     "importmap": {
       "@hotwired/stimulus": "^3.0.0",
+      "@hotwired/turbo": "^8.0.0",
       "sweetalert2": "^11.22.0"
     }
   },
   "peerDependencies": {
     "@hotwired/stimulus": "^3.0.0",
+    "@hotwired/turbo": "^8.0.0",
     "sweetalert2": "^11.22.0"
   },
   "devDependencies": {
     "@hotwired/stimulus": "^3.0.0",
+    "@hotwired/turbo": "^8.0.0",
     "sweetalert2": "^11.22.0"
   }
 }

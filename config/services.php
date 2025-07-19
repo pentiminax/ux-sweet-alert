@@ -4,6 +4,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Pentiminax\UX\SweetAlert\AlertManager;
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
@@ -54,4 +55,10 @@ return static function (ContainerConfigurator $container) {
         ])
         ->tag('controller.service_arguments')
         ->public();
+
+    $services
+        ->set(RenderAlertListener::class)
+        ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
+        ->arg('$twig', new Reference('twig'))
+        ->tag('kernel.event_listener', ['event' => 'kernel.response']);
 };
