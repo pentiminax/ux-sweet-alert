@@ -10,6 +10,10 @@ AJAX/fetch requests.
 
 - Symfony UX Turbo
 
+```bash
+composer require symfony/ux-turbo
+```
+
 ## Alerts are automatically injected
 
 On the next Turbo navigation, page reload, or AJAX response returning Turbo Stream, the bundle will automatically inject
