@@ -56,9 +56,11 @@ return static function (ContainerConfigurator $container) {
         ->tag('controller.service_arguments')
         ->public();
 
-    $services
-        ->set(RenderAlertListener::class)
-        ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
-        ->arg('$twig', new Reference('twig'))
-        ->tag('kernel.event_listener', ['event' => 'kernel.response']);
+    if (class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
+        $services
+            ->set(RenderAlertListener::class)
+            ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
+            ->arg('$twig', new Reference('twig'))
+            ->tag('kernel.event_listener', ['event' => 'kernel.response']);
+    }
 };

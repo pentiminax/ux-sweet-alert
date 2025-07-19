@@ -7,27 +7,29 @@ class default_1 extends Controller {
     }
 
     initialize() {
-        this.overrideFetch();
+        if (window.Turbo && window.Turbo.StreamActions) {
+            this.overrideFetch();
 
-        document.addEventListener('turbo:before-stream-render', ((e) => {
-            const fallbackToDefaultActions = e.detail.render;
+            document.addEventListener('turbo:before-stream-render', ((e) => {
+                const fallbackToDefaultActions = e.detail.render;
 
-            e.detail.render = async function (streamElement) {
-                if (streamElement.action == "alert") {
-                    const json = streamElement.templateContent.textContent.trim();
-                    if (!json) {
-                        return;
+                e.detail.render = async function (streamElement) {
+                    if (streamElement.action == "alert") {
+                        const json = streamElement.templateContent.textContent.trim();
+                        if (!json) {
+                            return;
+                        }
+
+                        const alert = JSON.parse(json);
+                        delete alert.id;
+
+                        await Swal.fire(alert);
+                    } else {
+                        fallbackToDefaultActions(streamElement)
                     }
-
-                    const alert = JSON.parse(json);
-                    delete alert.id;
-
-                    await Swal.fire(alert);
-                } else {
-                    fallbackToDefaultActions(streamElement)
                 }
-            }
-        }));
+            }));
+        }
     }
 
     async connect() {
@@ -62,7 +64,7 @@ class default_1 extends Controller {
     overrideFetch() {
         const originalFetch = window.fetch;
 
-        window.fetch = async function(...args) {
+        window.fetch = async function (...args) {
             const response = await originalFetch.apply(this, args);
 
             const contentType = response.headers.get('Content-Type') || '';

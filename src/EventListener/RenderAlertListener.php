@@ -39,7 +39,7 @@ class RenderAlertListener
             ]);
         }
 
-        $response->headers->set('Content-Type', TurboBundle::STREAM_MEDIA_TYPE);
+        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
 
         $response
             ->setContent($responseContent);
