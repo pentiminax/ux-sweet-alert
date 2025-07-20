@@ -8,7 +8,8 @@ class default_1 extends Controller {
 
     initialize() {
         if (window.Turbo && window.Turbo.StreamActions) {
-            this.overrideFetch();
+            this.originalFetch = window.fetch;
+            window.fetch = this.fetch.bind(this);
 
             document.addEventListener('turbo:before-stream-render', ((e) => {
                 const fallbackToDefaultActions = e.detail.render;
@@ -61,28 +62,40 @@ class default_1 extends Controller {
         }
     }
 
-    overrideFetch() {
-        const originalFetch = window.fetch;
+    async fetch(...args) {
+        const response = await this.originalFetch.apply(window, args);
+        await this.handleTurboStreams(response);
+        return response;
+    }
 
-        window.fetch = async function (...args) {
-            const response = await originalFetch.apply(this, args);
+    async handleTurboStreams(response) {
+        const contentType = response.headers.get('Content-Type') || '';
 
-            const contentType = response.headers.get('Content-Type') || '';
+        if (contentType.includes('text/vnd.turbo-stream.html')) {
+            const html = await response.clone().text();
+            this.injectHiddenHtml(html);
 
-            if (contentType.includes('text/vnd.turbo-stream.html')) {
-                const html = await response.clone().text();
+            return;
+        }
 
-                const tempDiv = document.createElement('div');
-                tempDiv.style.display = 'none';
-                tempDiv.innerHTML = html;
-
-                document.body.appendChild(tempDiv);
-
-                setTimeout(() => tempDiv.remove(), 1000);
+        if (contentType.includes('application/json')) {
+            const data = await response.clone().json();
+            if (data.alerts) {
+                this.injectHiddenHtml(data.alerts);
             }
+        }
+    }
 
-            return response;
-        };
+    injectHiddenHtml(html) {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = html;
+
+        document.body.appendChild(tempDiv);
+
+        setTimeout(function () {
+            tempDiv.remove();
+        }, 1000);
     }
 }
 

@@ -4,9 +4,9 @@ namespace Pentiminax\UX\SweetAlert\EventListener;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\UX\Turbo\TurboBundle;
 use Twig\Environment;
 
 #[AsEventListener]
@@ -22,7 +22,7 @@ class RenderAlertListener
     {
         $response = $event->getResponse();
 
-        if (!$this->shouldInjectAlerts($response)) {
+        if ($response->isRedirection()) {
             return;
         }
 
@@ -32,25 +32,36 @@ class RenderAlertListener
             return;
         }
 
-        $responseContent = '';
+        $turboStreams = $this->renderAlerts($alerts);
+
+        if ($response instanceof JsonResponse) {
+            $data = json_decode($response->getContent(), true) ?? [];
+            $data['alerts'] = $turboStreams;
+            $response->setData($data);
+
+            return;
+        }
+
+        if ($this->isHtmlResponse($response)) {
+            $content = $response->getContent() . $turboStreams;
+            $response->setContent($content);
+        }
+    }
+
+    private function renderAlerts(array $alerts): string
+    {
+        $result = '';
         foreach ($alerts as $alert) {
-            $responseContent .= $this->twig->render('@SweetAlert/turbo/alert.html.twig', [
+            $result .= $this->twig->render('@SweetAlert/turbo/alert.html.twig', [
                 'alert' => $alert
             ]);
         }
 
-        $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
-
-        $response
-            ->setContent($responseContent);
+        return $result;
     }
 
-    private function shouldInjectAlerts(Response $response): bool
+    private function isHtmlResponse(Response $response): bool
     {
-        if ($response->isRedirection()) {
-            return false;
-        }
-
-        return true;
+        return str_contains($response->headers->get('Content-Type') ?? '', 'text/html');
     }
 }

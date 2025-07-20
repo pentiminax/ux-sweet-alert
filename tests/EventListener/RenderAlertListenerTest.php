@@ -41,7 +41,7 @@ class RenderAlertListenerTest extends TestCase
             ->method('getAlerts')
             ->willReturn([$this->givenAlert()]);
 
-        $turboStramHtml = '<turbo-stream action="alert" target="alerts"><template>Alert content</template></turbo-stream>';
+        $turboStreamHtml = '<turbo-stream action="alert"><template>Alert content</template></turbo-stream>';
 
         $this->twig
             ->expects($this->once())
@@ -50,9 +50,11 @@ class RenderAlertListenerTest extends TestCase
                 '@SweetAlert/turbo/alert.html.twig',
                 $this->callback(fn(array $context) => $context['alert'] instanceof Alert)
             )
-            ->willReturn($turboStramHtml);
+            ->willReturn($turboStreamHtml);
 
-        $response = new Response();
+        $response = new Response(
+            headers: ['Content-Type' => 'text/html'],
+        );
 
         $event = new ResponseEvent(
             kernel: $this->createMock(HttpKernelInterface::class),
@@ -63,8 +65,8 @@ class RenderAlertListenerTest extends TestCase
 
         $this->listener->onKernelResponse($event);
 
-        $this->assertSame($turboStramHtml, $event->getResponse()->getContent());
-        $this->assertSame('text/vnd.turbo-stream.html', $event->getResponse()->headers->get('Content-Type'));
+        $this->assertSame($turboStreamHtml, $event->getResponse()->getContent());
+        $this->assertSame('text/html', $event->getResponse()->headers->get('Content-Type'));
     }
 
     private function givenAlert(): Alert
