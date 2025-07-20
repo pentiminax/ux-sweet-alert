@@ -15,16 +15,23 @@ class default_1 extends Controller {
                 const fallbackToDefaultActions = e.detail.render;
 
                 e.detail.render = async function (streamElement) {
-                    if (streamElement.action == "alert") {
+                    if (streamElement.action === 'alert') {
                         const json = streamElement.templateContent.textContent.trim();
+
                         if (!json) {
                             return;
                         }
 
                         const alert = JSON.parse(json);
+                        const alertId = alert.id;
+
                         delete alert.id;
 
-                        await Swal.fire(alert);
+                        const result = await Swal.fire(alert);
+
+                        document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${alertId}:closed`, {
+                            detail: result
+                        }));
                     } else {
                         fallbackToDefaultActions(streamElement)
                     }
@@ -58,7 +65,7 @@ class default_1 extends Controller {
 
             document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toast.id}:closed`, {
                 detail: result
-            }))
+            }));
         }
     }
 

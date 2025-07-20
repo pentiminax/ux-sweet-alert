@@ -3,6 +3,7 @@
 namespace Pentiminax\UX\SweetAlert\EventListener;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ class RenderAlertListener
 {
     public function __construct(
         private readonly AlertManagerInterface $alertManager,
+        private readonly ToastManagerInterface $toastManager,
         private readonly Environment           $twig
     ) {
     }
@@ -26,7 +28,10 @@ class RenderAlertListener
             return;
         }
 
-        $alerts = $this->alertManager->getAlerts();
+        $alerts = array_merge(
+            $this->alertManager->getAlerts(),
+            $this->toastManager->getToasts()
+        );
 
         if (empty($alerts)) {
             return;
