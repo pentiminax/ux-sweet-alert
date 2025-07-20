@@ -46,6 +46,22 @@ public function index(AlertManagerInterface $alertManager): Response
         title: 'Alert Title',
     );
 
-    return $this->json([]);
+    return $this->json([
+        'data' => '...'
+    ]);
 }
 ```
+
+The bundle will automatically add an alerts key to your JSON response, which will contain the Turbo Stream payload for
+the alert.
+
+## Example response:
+
+```json
+{
+  "data": "...",
+  "alerts": "<turbo-stream action=\"alert\"><template>{\"id\":\"alertId\",\"title\":\"alertTitle\"}</template></turbo-stream>"
+}
+```
+
+You do not need to return a Turbo Stream response manually. The bundle takes care of it for you.
