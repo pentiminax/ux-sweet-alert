@@ -27,11 +27,14 @@ class Toast extends Alert
 
     public function jsonSerialize(): array
     {
-        $array =  parent::jsonSerialize();
+        $array = parent::jsonSerialize();
 
         $array['timer'] = $this->timer;
         $array['timerProgressBar'] = $this->timerProgressBar;
         $array['toast'] = true;
+
+        unset($array['allowOutsideClick']);
+        unset($array['backdrop']);
 
         return $array;
     }
