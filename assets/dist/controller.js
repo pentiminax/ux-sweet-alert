@@ -1,12 +1,13 @@
 import {Controller} from '@hotwired/stimulus';
 import Swal from 'sweetalert2';
+import {getComponent} from '@symfony/ux-live-component';
 
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
     }
 
-    initialize() {
+    async initialize() {
         if (window.Turbo && window.Turbo.StreamActions) {
             this.originalFetch = window.fetch;
             window.fetch = this.fetch.bind(this);
@@ -53,10 +54,16 @@ class default_1 extends Controller {
 
             if (typeof callback === 'string' && typeof window[callback] === 'function') {
                 callback = window[callback];
-            }
 
-            if (typeof callback === 'function') {
-                callback(result);
+                if (typeof callback === 'function') {
+                    callback(result);
+                }
+            } else {
+                const component = await getComponent(e.target);
+                component.action('callbackAction', {
+                    'result': result,
+                    'args': this.getLiveItemParams(component.element)
+                })
             }
         });
 
@@ -103,6 +110,19 @@ class default_1 extends Controller {
         setTimeout(function () {
             tempDiv.remove();
         }, 1000);
+    }
+
+    getLiveItemParams(element) {
+        const params = {};
+
+        for (const attr of element.attributes) {
+            const match = attr.name.match(/^data-live-item-(.+)-param$/);
+            if (match) {
+                params[match[1]] = attr.value;
+            }
+        }
+
+        return params;
     }
 }
 
