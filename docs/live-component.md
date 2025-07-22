@@ -2,7 +2,8 @@
 
 ## Confirm Button
 
-The `ConfirmButton` Live Component lets you trigger a **SweetAlert2 confirmation dialog** when clicking a button. You can customize the title, text, icon, and the follow-up action via a callback.
+The `ConfirmButton` Live Component lets you trigger a **SweetAlert2 confirmation dialog** when clicking a button. You
+can customize the title, text, icon, and the follow-up action via a callback.
 
 ### ✅ Requirements
 
@@ -49,6 +50,7 @@ The `ConfirmButton` Live Component lets you trigger a **SweetAlert2 confirmation
 ### 🔮 Example Usage
 
 ```html
+
 <div class="container">
     <div class="row">
         <div class="col">
@@ -68,3 +70,47 @@ The `ConfirmButton` Live Component lets you trigger a **SweetAlert2 confirmation
     }
 </script>
 ```
+
+## 🧩 Extending `ConfirmButton`
+
+You can extend the `ConfirmButton` component to handle logic when the user confirms the SweetAlert dialog. Override the
+`callbackAction` method in your subclass to perform custom actions.
+
+---
+
+### 🔧 Example: Custom Live Component
+
+```html
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <twig:SweetAlert:ConfirmButton
+                    title="Confirm"
+                    text="Are you sure?"
+                    data-live-item-id-param="1"
+            />
+        </div>
+    </div>
+</div>
+```
+
+```php
+namespace App\LiveComponent;
+
+use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
+
+#[AsLiveComponent(template: '@SweetAlert/components/ConfirmButton.html.twig')]
+class MyConfirmButton extends ConfirmButton
+{
+    #[LiveAction]
+    public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): void
+    {
+        if ($result['isConfirmed'] === true && $args['id'] === '1') {
+            // Custom logic goes here
+        }
+    }
+}
