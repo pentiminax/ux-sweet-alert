@@ -2,7 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert\Model;
 
-class Result
+final readonly class Result
 {
     public function __construct(
         public bool  $isConfirmed = false,
