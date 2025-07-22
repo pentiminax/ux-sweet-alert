@@ -3,6 +3,7 @@
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Enum\Icon;
+use Pentiminax\UX\SweetAlert\Model\Result;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -41,6 +42,8 @@ class ConfirmButton
     #[LiveProp]
     public string $cancelButtonText = 'Cancel';
 
+    protected ?Result $result = null;
+
     #[LiveListener('alertAdded')]
     public function alertAdded(): void
     {
@@ -61,7 +64,7 @@ class ConfirmButton
     #[LiveAction]
     public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): void
     {
-        // This method is intentionally left empty. It can be overridden in a subclass to handle the callback action.
+        $this->result = Result::fromArray($result);
     }
 
     private function customClass(): array
