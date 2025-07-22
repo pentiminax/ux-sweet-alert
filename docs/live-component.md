@@ -109,7 +109,9 @@ class MyConfirmButton extends ConfirmButton
     #[LiveAction]
     public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): void
     {
-        if ($result['isConfirmed'] === true && $args['id'] === '1') {
+        parent::callbackAction($result, $args);
+    
+        if ($this->result->isConfirmed && $args['id'] === '1') {
             // Custom logic goes here
         }
     }
