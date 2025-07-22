@@ -85,7 +85,7 @@ You can extend the `ConfirmButton` component to handle logic when the user confi
 <div class="container">
     <div class="row">
         <div class="col">
-            <twig:SweetAlert:ConfirmButton
+            <twig:MyConfirmButton
                     title="Confirm"
                     text="Are you sure?"
                     data-live-item-id-param="1"
