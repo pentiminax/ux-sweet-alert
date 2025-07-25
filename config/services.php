@@ -4,7 +4,10 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Pentiminax\UX\SweetAlert\AlertManager;
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
+use Pentiminax\UX\SweetAlert\Inspector\DataCollector;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
@@ -18,6 +21,7 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set('sweet_alert.alert_manager', AlertManager::class)
         ->arg('$requestStack', new Reference('request_stack'))
+        ->arg('$context', new Reference('sweet_alert.context'))
         ->private();
 
     $services
@@ -27,6 +31,7 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set('sweet_alert.toast_manager', ToastManager::class)
         ->arg('$requestStack', new Reference('request_stack'))
+        ->arg('$context', new Reference('sweet_alert.context'))
         ->private();
 
     $services
@@ -55,6 +60,19 @@ return static function (ContainerConfigurator $container) {
         ])
         ->tag('controller.service_arguments')
         ->public();
+
+    $services
+        ->alias(SweetAlertContextInterface::class, 'sweet_alert.context')
+        ->private();
+
+    $services
+        ->set('sweet_alert.context', SweetAlertContext::class)
+        ->share();
+
+    $services
+        ->set(DataCollector::class)
+        ->arg('$context', new Reference('sweet_alert.context'))
+        ->tag('data_collector', ['id' => 'ux_sweetalert', 'template' => '@SweetAlert/inspector/data_collector.html.twig']);
 
     if (class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
         $services

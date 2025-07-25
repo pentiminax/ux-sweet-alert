@@ -24,7 +24,7 @@ class RenderAlertListener
     {
         $response = $event->getResponse();
 
-        if ($response->isRedirection()) {
+        if (!$event->isMainRequest() || $response->isRedirection()) {
             return;
         }
 

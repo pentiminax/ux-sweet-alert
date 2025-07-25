@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert\Tests;
 
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Model\Toast;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -24,7 +25,10 @@ class ToastManagerTest extends KernelTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $this->toastManager = new ToastManager($requestStack);
+        $this->toastManager = new ToastManager(
+            requestStack: $requestStack,
+            context: $this->createMock(SweetAlertContextInterface::class)
+        );
     }
 
     public function testAddToast(): void

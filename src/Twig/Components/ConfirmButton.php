@@ -2,8 +2,12 @@
 
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
+use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Result;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -44,19 +48,32 @@ class ConfirmButton
 
     protected ?Result $result = null;
 
+    private readonly SweetAlertContextInterface $context;
+
     #[LiveListener('alertAdded')]
     public function alertAdded(): void
     {
+        $alert = Alert::new(
+            id: uniqid(),
+            title: $this->title,
+            text: $this->text,
+            icon: Icon::from($this->icon),
+            position: Position::CENTER,
+            customClass: $this->customClass()
+        );
+
+        $alert
+            ->confirmButtonText($this->confirmButtonText)
+            ->cancelButtonText($this->cancelButtonText);
+
+        if ($this->showCancelButton) {
+            $alert->withCancelButton();
+        }
+
+        $this->context->addAlert($alert);
+
         $this->dispatchBrowserEvent('ux-sweet-alert:alert:added', [
-            'alert' => [
-                'title' => $this->title,
-                'text' => $this->text,
-                'icon' => $this->icon,
-                'showCancelButton' => $this->showCancelButton,
-                'customClass' => $this->customClass(),
-                'confirmButtonText' => $this->confirmButtonText,
-                'cancelButtonText' => $this->cancelButtonText
-            ],
+            'alert' => $alert,
             'callback' => $this->callback
         ]);
     }
@@ -65,6 +82,12 @@ class ConfirmButton
     public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): void
     {
         $this->result = Result::fromArray($result);
+    }
+
+    #[Required]
+    public function setContext(SweetAlertContextInterface $context): void
+    {
+        $this->context = $context;
     }
 
     private function customClass(): array

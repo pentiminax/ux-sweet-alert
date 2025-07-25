@@ -3,6 +3,7 @@
 namespace Pentiminax\UX\SweetAlert\Tests;
 
 use Pentiminax\UX\SweetAlert\AlertManager;
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -28,7 +29,8 @@ class AlertManagerTest extends KernelTestCase
         $requestStack->push($request);
 
         $this->alertManager = new AlertManager(
-            requestStack: $requestStack
+            requestStack: $requestStack,
+            context: $this->createMock(SweetAlertContextInterface::class)
         );
     }
 
@@ -60,7 +62,8 @@ class AlertManagerTest extends KernelTestCase
             'allowEscapeKey' => true,
             'confirmButtonColor' => '#3085d6',
             'position' => 'bottom',
-            'customClass' => []
+            'customClass' => [],
+            'cancelButtonText' => 'Cancel',
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());

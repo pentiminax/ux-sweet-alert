@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
@@ -13,7 +14,8 @@ class AlertManager implements AlertManagerInterface
     private array $alerts = [];
 
     public function __construct(
-        private readonly RequestStack $requestStack
+        private readonly RequestStack $requestStack,
+        private readonly SweetAlertContextInterface $context
     ) {
     }
 
@@ -22,6 +24,7 @@ class AlertManager implements AlertManagerInterface
         $this->alerts[] = $alert;
 
         $this->getSession()->getFlashBag()->set('ux-sweet-alert:alerts', $this->alerts);
+        $this->context->addAlert($alert);
     }
 
     /**
