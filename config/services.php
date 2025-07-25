@@ -7,7 +7,7 @@ use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
-use Pentiminax\UX\SweetAlert\Inspector\DataCollector;
+use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
@@ -70,9 +70,9 @@ return static function (ContainerConfigurator $container) {
         ->share();
 
     $services
-        ->set(DataCollector::class)
+        ->set(SweetAlertDataCollector::class)
         ->arg('$context', new Reference('sweet_alert.context'))
-        ->tag('data_collector', ['id' => 'ux_sweetalert', 'template' => '@SweetAlert/inspector/data_collector.html.twig']);
+        ->tag('data_collector', ['id' => 'ux_sweetalert', 'template' => '@SweetAlert/collector/data_collector.html.twig']);
 
     if (class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
         $services

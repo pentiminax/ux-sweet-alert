@@ -1,14 +1,14 @@
 <?php
 
-namespace Pentiminax\UX\SweetAlert\Inspector;
+namespace Pentiminax\UX\SweetAlert\DataCollector;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
+use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector as BaseDataCollector;
 use Symfony\Component\VarDumper\Cloner\Data;
 
-class DataCollector extends BaseDataCollector
+class SweetAlertDataCollector extends AbstractDataCollector
 {
     public function __construct(
         private readonly SweetAlertContextInterface $context
@@ -28,6 +28,16 @@ class DataCollector extends BaseDataCollector
     public function getData(): array|Data
     {
         return $this->data;
+    }
+
+    public function getNumberOfAlerts(): int
+    {
+        return count($this->data['alerts']);
+    }
+
+    public function getNumberOfToasts(): int
+    {
+        return count($this->data['toasts']);
     }
 
     public function getName(): string

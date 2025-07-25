@@ -2,7 +2,8 @@
 
 {% block toolbar %}
     {% set icon %}
-        {{ include('@SweetAlert/inspector/icon.svg.twig') }}
+        {{ source('@SweetAlert/collector/icon.svg') }}
+        <span class="sf-toolbar-value">{{ collector.numberOfAlerts + collector.numberOfToasts }}</span>
     {% endset %}
 
     {% set text %}
@@ -21,7 +22,7 @@
 
 {% block menu %}
     <span class="label">
-        <span class="icon">{{ include('@SweetAlert/inspector/icon.svg.twig') }}</span>
+        <span class="icon">{{ include('@SweetAlert/collector/icon.svg') }}</span>
         <strong>UX SweetAlert</strong>
     </span>
 {% endblock %}

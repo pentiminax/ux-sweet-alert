@@ -1,19 +1,20 @@
 <?php
 
-namespace Inspector;
+namespace Pentiminax\UX\SweetAlert\Tests\DataCollector;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
-use Pentiminax\UX\SweetAlert\Inspector\DataCollector;
+use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Toast;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DataCollectorTest extends TestCase
 {
-    private DataCollector $dataCollector;
+    private SweetAlertDataCollector $dataCollector;
 
     private SweetAlertContextInterface|MockObject $context;
 
@@ -23,7 +24,7 @@ class DataCollectorTest extends TestCase
 
         $this->context = $this->createMock(SweetAlertContext::class);
 
-        $this->dataCollector = new DataCollector(
+        $this->dataCollector = new SweetAlertDataCollector(
             context: $this->context
         );
     }
