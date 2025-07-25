@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Toast;
@@ -13,7 +14,8 @@ class ToastManager implements ToastManagerInterface
     private array $toasts = [];
 
     public function __construct(
-        private readonly RequestStack $requestStack
+        private readonly RequestStack $requestStack,
+        private readonly SweetAlertContextInterface $context
     ) {
     }
 
@@ -22,6 +24,8 @@ class ToastManager implements ToastManagerInterface
         $this->toasts[] = $toast;
 
         $this->getSession()->getFlashBag()->set('ux-sweet-alert:toasts', $this->toasts);
+
+        $this->context->addToast($toast);
     }
 
     public function success(

@@ -1,0 +1,37 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        {{ include('@SweetAlert/inspector/icon.svg.twig') }}
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b class="sf-toolbar-label">Alerts</b>
+            <span class="sf-toolbar-status">{{ collector.data.alerts|length }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b class="sf-toolbar-label">Toasts</b>
+            <span class="sf-toolbar-status">{{ collector.data.toasts|length }}</span>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: profiler_url}) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon">{{ include('@SweetAlert/inspector/icon.svg.twig') }}</span>
+        <strong>UX SweetAlert</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>UX SweetAlert</h2>
+
+    <h3>Alerts</h3>
+    {{ include('@WebProfiler/Profiler/table.html.twig', { data: collector.data.alerts }) }}
+
+    <h3>Toasts</h3>
+    {{ include('@WebProfiler/Profiler/table.html.twig', { data: collector.data.toasts }) }}
+{% endblock %}
