@@ -40,6 +40,11 @@ class SweetAlertDataCollector extends AbstractDataCollector
         return count($this->data['toasts']);
     }
 
+    public function getTotalCount(): int
+    {
+        return $this->getNumberOfAlerts() + $this->getNumberOfToasts();
+    }
+
     public function getName(): string
     {
         return 'ux_sweetalert';

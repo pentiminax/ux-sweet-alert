@@ -1,23 +1,25 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
-    {% set icon %}
-        {{ source('@SweetAlert/collector/icon.svg') }}
-        <span class="sf-toolbar-value">{{ collector.numberOfAlerts + collector.numberOfToasts }}</span>
-    {% endset %}
+    {% if collector.totalCount > 0 %}
+        {% set icon %}
+            {{ source('@SweetAlert/collector/icon.svg') }}
+            <span class="sf-toolbar-value">{{ collector.totalCount }}</span>
+        {% endset %}
 
-    {% set text %}
-        <div class="sf-toolbar-info-piece">
-            <b class="sf-toolbar-label">Alerts</b>
-            <span class="sf-toolbar-status">{{ collector.data.alerts|length }}</span>
-        </div>
-        <div class="sf-toolbar-info-piece">
-            <b class="sf-toolbar-label">Toasts</b>
-            <span class="sf-toolbar-status">{{ collector.data.toasts|length }}</span>
-        </div>
-    {% endset %}
+        {% set text %}
+            <div class="sf-toolbar-info-piece">
+                <b class="sf-toolbar-label">Alerts</b>
+                <span class="sf-toolbar-status">{{ collector.data.alerts|length }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b class="sf-toolbar-label">Toasts</b>
+                <span class="sf-toolbar-status">{{ collector.data.toasts|length }}</span>
+            </div>
+        {% endset %}
 
-    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: profiler_url}) }}
+        {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: profiler_url}) }}
+    {% endif %}
 {% endblock %}
 
 {% block menu %}
