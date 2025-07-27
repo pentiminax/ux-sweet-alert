@@ -79,9 +79,11 @@ class ConfirmButton
     }
 
     #[LiveAction]
-    public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): void
+    public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): mixed
     {
         $this->result = Result::fromArray($result);
+
+        return null;
     }
 
     #[Required]
