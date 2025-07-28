@@ -2,6 +2,7 @@
         class="btn btn-primary"
         data-action="live#emitSelf"
         data-live-event-param="alertAdded"
+        {% if disabled %}disabled{% endif %}
 >
     {% block content %}{% endblock %}
 </button>

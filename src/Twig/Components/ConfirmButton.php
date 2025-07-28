@@ -8,6 +8,7 @@ use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Result;
 use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -15,6 +16,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 #[AsLiveComponent]
 class ConfirmButton
@@ -32,7 +34,7 @@ class ConfirmButton
     public bool $showCancelButton = true;
 
     #[LiveProp]
-    public string $icon = Icon::SUCCESS->value;
+    public Icon $icon = Icon::QUESTION;
 
     #[LiveProp]
     public string $callback = '';
@@ -46,7 +48,12 @@ class ConfirmButton
     #[LiveProp]
     public string $cancelButtonText = 'Cancel';
 
+    #[ExposeInTemplate(getter: 'isDisabled')]
+    public bool $disabled = false;
+
     protected ?Result $result = null;
+
+    protected readonly TranslatorInterface $translator;
 
     private readonly SweetAlertContextInterface $context;
 
@@ -55,16 +62,16 @@ class ConfirmButton
     {
         $alert = Alert::new(
             id: uniqid(),
-            title: $this->title,
-            text: $this->text,
-            icon: Icon::from($this->icon),
+            title: $this->translator->trans($this->title),
+            text: $this->translator->trans($this->text),
+            icon: $this->icon,
             position: Position::CENTER,
             customClass: $this->customClass()
         );
 
         $alert
-            ->confirmButtonText($this->confirmButtonText)
-            ->cancelButtonText($this->cancelButtonText);
+            ->confirmButtonText($this->translator->trans($this->confirmButtonText))
+            ->cancelButtonText($this->translator->trans($this->cancelButtonText));
 
         if ($this->showCancelButton) {
             $alert->withCancelButton();
@@ -90,6 +97,17 @@ class ConfirmButton
     public function setContext(SweetAlertContextInterface $context): void
     {
         $this->context = $context;
+    }
+
+    #[Required]
+    public function setTranslator(TranslatorInterface $translator): void
+    {
+        $this->translator = $translator;
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
     }
 
     private function customClass(): array
