@@ -42,11 +42,11 @@ class Alert implements \JsonSerializable
 
     private string $cancelButtonText = 'Cancel';
 
-    public static function new(string $id, string $title, string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
+    public static function new(string $title, string $id = '', string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
 
-        $alert->id = $id;
+        $alert->id = empty($id) ? uniqid(more_entropy: true) : $id;
         $alert->title = $title;
         $alert->text = $text;
         $alert->icon = $icon;
@@ -55,6 +55,11 @@ class Alert implements \JsonSerializable
         $alert->customClass = $customClass;
 
         return $alert;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function withoutAnimation(): static

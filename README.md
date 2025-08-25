@@ -35,7 +35,6 @@ public function someAction(AlertManagerInterface $alertManager): Response
 {
 
     $alertManager->success(
-        id: 'update-success',
         title: 'Update Successful',
         text: 'Your settings have been saved.'
     );
@@ -59,7 +58,6 @@ class HomeController extends AbstractController
     public function index(ToastManagerInterface $toastManager): Response
     {
        $toastManager->success(
-            id: 'id',
             title: 'title',
             text: 'text',
             position: Position::TOP_END,

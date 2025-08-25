@@ -34,8 +34,8 @@ class ToastManagerTest extends KernelTestCase
     public function testAddToast(): void
     {
         $toast = Toast::new(
-            id: 'toast',
-            title: 'title'
+            title: 'title',
+            id: 'toast'
         );
 
         $this->toastManager->addToast($toast);

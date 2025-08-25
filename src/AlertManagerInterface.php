@@ -11,13 +11,13 @@ interface AlertManagerInterface
 
     public function getAlerts(): array;
 
-    public function success(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
+    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
 
-    public function error(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
+    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
 
-    public function warning(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
+    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
 
-    public function info(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
+    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
 
-    public function question(string $id, string $title, string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
+    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert;
 }

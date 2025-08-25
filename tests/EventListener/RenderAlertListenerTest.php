@@ -77,7 +77,6 @@ class RenderAlertListenerTest extends TestCase
     private function givenAlert(): Alert
     {
         return Alert::new(
-            id: 'id',
             title: 'title',
             text: 'Text',
         );

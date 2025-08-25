@@ -61,7 +61,6 @@ class ConfirmButton
     public function alertAdded(): void
     {
         $alert = Alert::new(
-            id: uniqid(),
             title: $this->translator->trans($this->title),
             text: $this->translator->trans($this->text),
             icon: $this->icon,

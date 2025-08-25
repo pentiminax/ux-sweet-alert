@@ -20,7 +20,6 @@ public function __construct(
 public function someAction(): Response
 {
     $this->toastManager->success(
-        id: 'profile-updated',
         title: 'Profile Updated!',
         text: 'Your changes have been saved.',
         timer: 3000,

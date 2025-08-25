@@ -29,8 +29,8 @@ class ToastManager implements ToastManagerInterface
     }
 
     public function success(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -41,8 +41,8 @@ class ToastManager implements ToastManagerInterface
     }
 
     public function error(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -53,8 +53,8 @@ class ToastManager implements ToastManagerInterface
     }
 
     public function warning(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -65,8 +65,8 @@ class ToastManager implements ToastManagerInterface
     }
 
     public function info(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -77,8 +77,8 @@ class ToastManager implements ToastManagerInterface
     }
 
     public function question(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -98,7 +98,15 @@ class ToastManager implements ToastManagerInterface
         ?int $timer = null,
         bool $timerProgressBar = false
     ): Toast {
-        $toast = Toast::new($id, $title, $text, $icon, $position);
+        $id = empty($id) ? uniqid(more_entropy: true) : $id;
+
+        $toast = Toast::new(
+            title: $title,
+            id: $id,
+            text: $text,
+            icon: $icon,
+            position: $position
+        );
 
         $toast
             ->position($position)
