@@ -34,7 +34,7 @@ class ConfirmButton
     public bool $showCancelButton = true;
 
     #[LiveProp]
-    public Icon $icon = Icon::QUESTION;
+    public string $icon = Icon::QUESTION->value;
 
     #[LiveProp]
     public string $callback = '';
@@ -63,7 +63,7 @@ class ConfirmButton
         $alert = Alert::new(
             title: $this->translator->trans($this->title),
             text: $this->translator->trans($this->text),
-            icon: $this->icon,
+            icon: Icon::from($this->icon),
             position: Position::CENTER,
             customClass: $this->customClass()
         );
