@@ -10,8 +10,8 @@ interface ToastManagerInterface
     public function addToast(Toast $toast): void;
 
     public function success(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -20,8 +20,8 @@ interface ToastManagerInterface
     ): Toast;
 
     public function error(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -30,8 +30,8 @@ interface ToastManagerInterface
     ): Toast;
 
     public function warning(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -40,8 +40,8 @@ interface ToastManagerInterface
     ): Toast;
 
     public function info(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,
@@ -50,8 +50,8 @@ interface ToastManagerInterface
     ): Toast;
 
     public function question(
-        string $id,
         string $title,
+        string $id = '',
         string $text = '',
         Position $position = Position::BOTTOM_END,
         bool $showConfirmButton = false,

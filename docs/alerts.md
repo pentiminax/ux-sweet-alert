@@ -19,7 +19,6 @@ public function someAction(AlertManagerInterface $alertManager): Response
 {
 
     $alertManager->success(
-        id: 'update-success',
         title: 'Update Successful',
         text: 'Your settings have been saved.'
     );
@@ -54,7 +53,6 @@ After creating an alert, you can customize its behavior:
 
 ```php
 $alert = $this->alertManager->info(
-    id: 'infoAler',
     title: 'Info Alert',
     text: 'This is an info alert',
 );

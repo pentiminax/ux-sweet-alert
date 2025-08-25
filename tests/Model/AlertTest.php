@@ -13,8 +13,8 @@ class AlertTest extends TestCase
     public function testCreateAlert(): void
     {
         $alert = Alert::new(
-            id: 'id',
             title: 'title',
+            id: 'id',
             text: 'text',
             icon: Icon::INFO,
             position: Position::CENTER,

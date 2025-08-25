@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert\Tests;
 use Pentiminax\UX\SweetAlert\AlertManager;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,15 +40,15 @@ class AlertManagerTest extends KernelTestCase
         string $method,
         string $expectedIcon
     ): void {
+        /** @var Alert $alert */
         $alert = $this->alertManager->$method(
-            id: 'id',
             title: 'title',
             text: 'text',
             position: Position::BOTTOM
         );
 
         $expectedArray = [
-            'id' => 'id',
+            'id' => $alert->getId(),
             'title' => 'title',
             'text' => 'text',
             'icon' => $expectedIcon,

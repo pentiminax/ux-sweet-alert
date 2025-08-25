@@ -42,7 +42,6 @@ use Symfony\Component\HttpFoundation\Response;
 public function index(AlertManagerInterface $alertManager): Response
 {
     $this->alertManager->info(
-        id: 'alertId',
         title: 'Alert Title',
     );
 

@@ -23,7 +23,6 @@ class HomeController extends AbstractController
     public function index(ToastManagerInterface $toastManager): Response
     {
        $toastManager->success(
-            id: 'id',
             title: 'title',
             text: 'text',
             position: Position::TOP_END,
