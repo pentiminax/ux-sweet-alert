@@ -89,6 +89,11 @@ class ConfirmButton
     {
         $this->result = Result::fromArray($result);
 
+        $this->dispatchBrowserEvent('ux-sweet-alert:callback', [
+            'result' => $result,
+            'args' => $args
+        ]);
+
         return null;
     }
 
