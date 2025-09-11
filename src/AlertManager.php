@@ -7,6 +7,7 @@ use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class AlertManager implements AlertManagerInterface
@@ -36,15 +37,20 @@ class AlertManager implements AlertManagerInterface
     {
         $alerts = [];
         if ($this->autoConvertFlashMessages) {
-            foreach ($this->getSession()->getFlashBag()->all() as $key => $messages) {
-                if ($key === AlertManagerInterface::ALERT_STORAGE_KEY || $key === ToastManagerInterface::TOAST_STORAGE_KEY) {
+            foreach ($this->getFlashBag()->peekAll() as $key => $messages) {
+                if ($key === ToastManagerInterface::TOAST_STORAGE_KEY) {
                     continue;
                 }
 
-                $alerts[] = $this->flashMessageConverter->convert($key, $messages);
+                if ($key === AlertManagerInterface::ALERT_STORAGE_KEY) {
+                    $alerts[] = $this->getFlashBag()->get($key);
+                } else {
+                    $alerts[] = $this->flashMessageConverter->convert($key, $messages);
+                    $this->getFlashBag()->get($key);
+                }
             }
         } else {
-            return $this->getSession()->getFlashBag()->get(self::ALERT_STORAGE_KEY);
+            return $this->getFlashBag()->get(self::ALERT_STORAGE_KEY);
         }
 
         return array_merge(...$alerts);
@@ -102,5 +108,10 @@ class AlertManager implements AlertManagerInterface
         $this->addAlert($alert);
 
         return $alert;
+    }
+
+    private function getFlashBag(): FlashBagInterface
+    {
+        return $this->getSession()->getFlashBag();
     }
 }

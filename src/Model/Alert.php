@@ -62,6 +62,21 @@ class Alert implements \JsonSerializable
         return $this->id;
     }
 
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getIcon(): Icon
+    {
+        return $this->icon;
+    }
+
+    public function getPosition(): Position
+    {
+        return $this->position;
+    }
+
     public function withoutAnimation(): static
     {
         $this->animation = false;

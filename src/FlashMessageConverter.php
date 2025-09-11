@@ -6,7 +6,7 @@ use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 
-class FlashMessageConverter
+class FlashMessageConverter implements FlashMessageConverterInterface
 {
     public function convert(string $key, array $messages): array
     {
@@ -29,7 +29,8 @@ class FlashMessageConverter
         return match($key) {
             'error' => Icon::ERROR,
             'warning' => Icon::WARNING,
-            'info' => Icon::INFO,
+            'info', 'notice' => Icon::INFO,
+            'question' => Icon::QUESTION,
             default => Icon::SUCCESS,
         };
     }
