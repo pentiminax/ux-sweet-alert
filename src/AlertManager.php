@@ -15,7 +15,9 @@ class AlertManager implements AlertManagerInterface
 
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly SweetAlertContextInterface $context
+        private readonly SweetAlertContextInterface $context,
+        private readonly FlashMessageConverter $flashMessageConverter,
+        private readonly bool $autoConvertFlashMessages = false,
     ) {
     }
 
@@ -32,7 +34,20 @@ class AlertManager implements AlertManagerInterface
      */
     public function getAlerts(): array
     {
-        return $this->getSession()->getFlashBag()->get('ux-sweet-alert:alerts');
+        $alerts = [];
+        if ($this->autoConvertFlashMessages) {
+            foreach ($this->getSession()->getFlashBag()->all() as $key => $messages) {
+                if ($key === AlertManagerInterface::ALERT_STORAGE_KEY || $key === ToastManagerInterface::TOAST_STORAGE_KEY) {
+                    continue;
+                }
+
+                $alerts[] = $this->flashMessageConverter->convert($key, $messages);
+            }
+        } else {
+            return $this->getSession()->getFlashBag()->get(self::ALERT_STORAGE_KEY);
+        }
+
+        return array_merge(...$alerts);
     }
 
     public function getSession(): FlashBagAwareSessionInterface

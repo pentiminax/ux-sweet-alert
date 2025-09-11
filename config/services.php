@@ -8,6 +8,8 @@ use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
 use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
+use Pentiminax\UX\SweetAlert\FlashMessageConverter;
+use Pentiminax\UX\SweetAlert\FlashMessageConverterInterface;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
@@ -22,6 +24,8 @@ return static function (ContainerConfigurator $container) {
         ->set('sweet_alert.alert_manager', AlertManager::class)
         ->arg('$requestStack', new Reference('request_stack'))
         ->arg('$context', new Reference('sweet_alert.context'))
+        ->arg('$flashMessageConverter', new Reference('sweet_alert.flash_message_converter'))
+        ->arg('$autoConvertFlashMessages', '%sweet_alert.auto_convert_flash_messages%')
         ->private();
 
     $services
@@ -73,6 +77,13 @@ return static function (ContainerConfigurator $container) {
         ->set(SweetAlertDataCollector::class)
         ->arg('$context', new Reference('sweet_alert.context'))
         ->tag('data_collector', ['id' => 'ux_sweetalert', 'template' => '@SweetAlert/collector/data_collector.html.twig']);
+
+    $services
+        ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class)
+        ;
+
+    $services
+        ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter');
 
     if (class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
         $services

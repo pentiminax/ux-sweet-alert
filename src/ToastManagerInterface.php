@@ -7,6 +7,8 @@ use Pentiminax\UX\SweetAlert\Model\Toast;
 
 interface ToastManagerInterface
 {
+    public const TOAST_STORAGE_KEY = 'ux-sweet-alert:toasts';
+
     public function addToast(Toast $toast): void;
 
     public function success(
