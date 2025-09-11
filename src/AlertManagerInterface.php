@@ -7,6 +7,8 @@ use Pentiminax\UX\SweetAlert\Model\Alert;
 
 interface AlertManagerInterface
 {
+    public const ALERT_STORAGE_KEY = 'ux-sweet-alert:alerts';
+
     public function addAlert(Alert $alert): void;
 
     public function getAlerts(): array;

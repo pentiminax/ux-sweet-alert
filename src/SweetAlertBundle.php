@@ -3,17 +3,28 @@
 namespace Pentiminax\UX\SweetAlert;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class SweetAlertBundle extends AbstractBundle
 {
-    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    public function configure(DefinitionConfigurator $definition): void
     {
-        $container->import('../config/services.php');
+        $definition->rootNode()
+            ->children()
+                ->scalarNode('auto_convert_flash_messages')->defaultFalse()->end()
+            ->end()
+        ;
     }
 
+    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        $builder->setParameter('sweet_alert.auto_convert_flash_messages', $config['auto_convert_flash_messages']);
+
+        $container->import('../config/services.php');
+    }
 
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {

@@ -7,6 +7,7 @@ use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class AlertManager implements AlertManagerInterface
@@ -15,7 +16,9 @@ class AlertManager implements AlertManagerInterface
 
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly SweetAlertContextInterface $context
+        private readonly SweetAlertContextInterface $context,
+        private readonly FlashMessageConverter $flashMessageConverter,
+        private readonly bool $autoConvertFlashMessages = false,
     ) {
     }
 
@@ -32,7 +35,25 @@ class AlertManager implements AlertManagerInterface
      */
     public function getAlerts(): array
     {
-        return $this->getSession()->getFlashBag()->get('ux-sweet-alert:alerts');
+        $alerts = [];
+        if ($this->autoConvertFlashMessages) {
+            foreach ($this->getFlashBag()->peekAll() as $key => $messages) {
+                if ($key === ToastManagerInterface::TOAST_STORAGE_KEY) {
+                    continue;
+                }
+
+                if ($key === AlertManagerInterface::ALERT_STORAGE_KEY) {
+                    $alerts[] = $this->getFlashBag()->get($key);
+                } else {
+                    $alerts[] = $this->flashMessageConverter->convert($key, $messages);
+                    $this->getFlashBag()->get($key);
+                }
+            }
+        } else {
+            return $this->getFlashBag()->get(AlertManagerInterface::ALERT_STORAGE_KEY);
+        }
+
+        return array_merge(...$alerts);
     }
 
     public function getSession(): FlashBagAwareSessionInterface
@@ -87,5 +108,10 @@ class AlertManager implements AlertManagerInterface
         $this->addAlert($alert);
 
         return $alert;
+    }
+
+    private function getFlashBag(): FlashBagInterface
+    {
+        return $this->getSession()->getFlashBag();
     }
 }

@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert\Tests;
 use Pentiminax\UX\SweetAlert\AlertManager;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -31,7 +32,8 @@ class AlertManagerTest extends KernelTestCase
 
         $this->alertManager = new AlertManager(
             requestStack: $requestStack,
-            context: $this->createMock(SweetAlertContextInterface::class)
+            context: $this->createMock(SweetAlertContextInterface::class),
+            flashMessageConverter: new FlashMessageConverter(),
         );
     }
 

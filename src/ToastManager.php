@@ -127,7 +127,7 @@ class ToastManager implements ToastManagerInterface
 
     public function getToasts(): array
     {
-        return $this->getSession()->getFlashBag()->get('ux-sweet-alert:toasts');
+        return $this->getSession()->getFlashBag()->get(ToastManagerInterface::TOAST_STORAGE_KEY);
     }
 
     public function getSession(): FlashBagAwareSessionInterface
