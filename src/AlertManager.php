@@ -50,7 +50,7 @@ class AlertManager implements AlertManagerInterface
                 }
             }
         } else {
-            return $this->getFlashBag()->get(self::ALERT_STORAGE_KEY);
+            return $this->getFlashBag()->get(AlertManagerInterface::ALERT_STORAGE_KEY);
         }
 
         return array_merge(...$alerts);
