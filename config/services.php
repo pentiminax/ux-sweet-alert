@@ -79,8 +79,7 @@ return static function (ContainerConfigurator $container) {
         ->tag('data_collector', ['id' => 'ux_sweetalert', 'template' => '@SweetAlert/collector/data_collector.html.twig']);
 
     $services
-        ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class)
-        ;
+        ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class);
 
     $services
         ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter');
