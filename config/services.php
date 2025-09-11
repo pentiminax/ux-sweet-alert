@@ -82,7 +82,8 @@ return static function (ContainerConfigurator $container) {
         ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class);
 
     $services
-        ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter');
+        ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter')
+        ->private();
 
     if (class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
         $services
