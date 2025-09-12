@@ -31,9 +31,9 @@ Inject the AlertManagerInterface and use the helper methods to create alerts:
 ```php
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 
-public function someAction(AlertManagerInterface $alertManager): Response
+#[Route('/', name: 'app_homepage')]
+public function index(AlertManagerInterface $alertManager): Response
 {
-
     $alertManager->success(
         title: 'Update Successful',
         text: 'Your settings have been saved.'
