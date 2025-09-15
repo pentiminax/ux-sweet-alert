@@ -32,7 +32,9 @@ class AlertTest extends TestCase
             ->withDenyButton()
             ->withoutAnimation()
             ->withoutBackdrop()
-            ->withoutConfirmButton();
+            ->withoutConfirmButton()
+            ->html('<b>html</b>')
+        ;
 
         $data = $alert->jsonSerialize();
 
@@ -51,5 +53,6 @@ class AlertTest extends TestCase
         $this->assertEquals('#ff0000', $data['confirmButtonColor']);
         $this->assertEquals(Position::CENTER->value, $data['position']);
         $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
+        $this->assertEquals('<b>html</b>', $data['html']);
     }
 }

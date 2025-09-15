@@ -42,6 +42,8 @@ class Alert implements \JsonSerializable
 
     private string $cancelButtonText = 'Cancel';
 
+    private ?string $html = null;
+
     public static function new(string $title, string $id = '', string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
@@ -164,6 +166,13 @@ class Alert implements \JsonSerializable
         return $this;
     }
 
+    public function html(string $html): static
+    {
+        $this->html = $html;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
@@ -183,7 +192,8 @@ class Alert implements \JsonSerializable
             'confirmButtonColor' => $this->confirmButtonColor,
             'position' => $this->position->value,
             'customClass' => $this->customClass,
-            'cancelButtonText' => $this->cancelButtonText
+            'cancelButtonText' => $this->cancelButtonText,
+            'html' => $this->html
         ];
     }
 }
