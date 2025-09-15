@@ -67,6 +67,7 @@ class AlertManagerTest extends KernelTestCase
             'position' => 'bottom',
             'customClass' => [],
             'cancelButtonText' => 'Cancel',
+            'html' => null,
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
