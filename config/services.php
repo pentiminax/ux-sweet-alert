@@ -15,6 +15,7 @@ use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
 use Pentiminax\UX\SweetAlert\Twig\Extension\AlertExtension;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\LiveResponder;
 
 return static function (ContainerConfigurator $container) {
@@ -53,6 +54,8 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set(ConfirmButton::class)
         ->call('setLiveResponder', [service(LiveResponder::class)])
+        ->call('setContext', [service(SweetAlertContextInterface::class)])
+        ->call('setTranslator', [service(TranslatorInterface::class)])
         ->tag('twig.component', [
             'key' => 'SweetAlert:ConfirmButton',
             'expose_public_props' => true,
