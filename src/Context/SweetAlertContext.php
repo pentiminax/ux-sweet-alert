@@ -32,4 +32,10 @@ class SweetAlertContext implements SweetAlertContextInterface
     {
         return $this->toasts;
     }
+
+    public function clear(): void
+    {
+        $this->alerts = [];
+        $this->toasts = [];
+    }
 }

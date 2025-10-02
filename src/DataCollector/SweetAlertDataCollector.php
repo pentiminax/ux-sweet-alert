@@ -52,9 +52,13 @@ class SweetAlertDataCollector extends AbstractDataCollector
 
     private function collectData(): array
     {
-        return [
+        $data = [
             'alerts' => $this->context->getAlerts(),
             'toasts' => $this->context->getToasts(),
         ];
+
+        $this->context->clear();
+
+        return $data;
     }
 }
