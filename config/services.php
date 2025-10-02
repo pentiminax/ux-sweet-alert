@@ -74,6 +74,7 @@ return static function (ContainerConfigurator $container) {
 
     $services
         ->set('sweet_alert.context', SweetAlertContext::class)
+        ->tag('kernel.reset', ['method' => 'reset'])
         ->share();
 
     $services

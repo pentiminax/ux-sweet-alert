@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class AlertManager implements AlertManagerInterface
 {
-    private array $alerts = [];
-
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly SweetAlertContextInterface $context,
@@ -24,9 +22,10 @@ class AlertManager implements AlertManagerInterface
 
     public function addAlert(Alert $alert): void
     {
-        $this->alerts[] = $alert;
+        $alerts = $this->getFlashBag()->peek(AlertManagerInterface::ALERT_STORAGE_KEY, []);
+        $alerts[] = $alert;
 
-        $this->getSession()->getFlashBag()->set('ux-sweet-alert:alerts', $this->alerts);
+        $this->getSession()->getFlashBag()->set(AlertManagerInterface::ALERT_STORAGE_KEY, $alerts);
         $this->context->addAlert($alert);
     }
 

@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class ToastManager implements ToastManagerInterface
 {
-    private array $toasts = [];
-
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly SweetAlertContextInterface $context
@@ -21,9 +19,10 @@ class ToastManager implements ToastManagerInterface
 
     public function addToast(Toast $toast): void
     {
-        $this->toasts[] = $toast;
+        $toasts = $this->getSession()->getFlashBag()->peek(ToastManagerInterface::TOAST_STORAGE_KEY, []);
+        $toasts[] = $toast;
 
-        $this->getSession()->getFlashBag()->set('ux-sweet-alert:toasts', $this->toasts);
+        $this->getSession()->getFlashBag()->set(ToastManagerInterface::TOAST_STORAGE_KEY, $toasts);
 
         $this->context->addToast($toast);
     }
