@@ -41,7 +41,7 @@ class AlertExtension extends AbstractExtension
             $stimulusAttributes->addController($name, $controllerValues);
         }
 
-        $html = \sprintf('<div %s></div>', $stimulusAttributes);
+        $html = \sprintf('<div data-turbo-temporary="true" %s></div>', $stimulusAttributes);
 
         return new Markup($html, 'UTF-8');
     }
