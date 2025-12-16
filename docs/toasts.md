@@ -28,3 +28,17 @@ public function someAction(): Response
 
     return $this->redirectToRoute('profile');
 }
+```
+
+## Themes
+
+Toasts share the same theme API as alerts:
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Theme;
+
+$toast = $this->toastManager->success(title: 'Saved!');
+$toast->theme(Theme::MaterialUILight);
+```
+
+Import SweetAlert2 theme CSS files when using Bootstrap or Material variants:

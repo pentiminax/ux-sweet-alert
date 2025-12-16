@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -60,29 +61,29 @@ class AlertManager implements AlertManagerInterface
         return $this->requestStack->getSession();
     }
 
-    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
+    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::SUCCESS, $customClass);
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::SUCCESS, $customClass);
     }
 
-    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
+    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::ERROR, $customClass);
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::ERROR, $customClass);
     }
 
-    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
+    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::WARNING, $customClass);
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::WARNING, $customClass);
     }
 
-    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
+    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::INFO, $customClass);
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::INFO, $customClass);
     }
 
-    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, array $customClass = []): Alert
+    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
     {
-        return $this->createAndAddAlert($id, $title, $text, $position, Icon::QUESTION, $customClass);
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::QUESTION, $customClass);
     }
 
     private function createAndAddAlert(
@@ -90,6 +91,7 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $text,
         Position $position,
+        Theme $theme,
         Icon $icon,
         array $customClass = []
     ): Alert {
@@ -103,6 +105,7 @@ class AlertManager implements AlertManagerInterface
             position: $position,
             customClass: $customClass
         );
+        $alert->theme($theme);
 
         $this->addAlert($alert);
 
