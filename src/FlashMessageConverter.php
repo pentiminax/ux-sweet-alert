@@ -11,7 +11,7 @@ class FlashMessageConverter implements FlashMessageConverterInterface
 {
     private Theme $defaultTheme;
 
-    public function __construct(string $defaultTheme = Theme::Auto->value)
+    public function __construct(string $defaultTheme = 'auto')
     {
         $this->defaultTheme = Theme::from($defaultTheme);
     }

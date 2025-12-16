@@ -16,7 +16,7 @@ class SweetAlertBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->scalarNode('auto_convert_flash_messages')->defaultFalse()->end()
-                ->enumNode('theme')->values(array_map(static fn (Theme $theme) => $theme->value, Theme::cases()))->defaultValue(Theme::Auto->value)->end()
+                ->enumNode('theme')->values(array_map(static fn (Theme $theme) => $theme->value, Theme::cases()))->defaultValue('auto')->end()
             ->end()
         ;
     }
