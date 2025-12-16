@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert\Tests;
 use Pentiminax\UX\SweetAlert\AlertManager;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -71,6 +72,32 @@ class AlertManagerTest extends KernelTestCase
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
+    }
+
+    public function testUsesConfiguredDefaultTheme(): void
+    {
+        $session = new Session(new MockArraySessionStorage());
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $alertManager = new AlertManager(
+            requestStack: $requestStack,
+            context: $this->createMock(SweetAlertContextInterface::class),
+            flashMessageConverter: new FlashMessageConverter(Theme::Dark->value),
+            defaultTheme: Theme::Dark->value
+        );
+
+        $alert = $alertManager->success(
+            title: 'title',
+            text: 'text',
+            position: Position::CENTER
+        );
+
+        $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
     public static function alertMethodProvider(): \Generator

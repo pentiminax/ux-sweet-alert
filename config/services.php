@@ -27,6 +27,7 @@ return static function (ContainerConfigurator $container) {
         ->arg('$context', new Reference('sweet_alert.context'))
         ->arg('$flashMessageConverter', new Reference('sweet_alert.flash_message_converter'))
         ->arg('$autoConvertFlashMessages', '%sweet_alert.auto_convert_flash_messages%')
+        ->arg('$defaultTheme', '%sweet_alert.theme%')
         ->private();
 
     $services
@@ -37,6 +38,7 @@ return static function (ContainerConfigurator $container) {
         ->set('sweet_alert.toast_manager', ToastManager::class)
         ->arg('$requestStack', new Reference('request_stack'))
         ->arg('$context', new Reference('sweet_alert.context'))
+        ->arg('$defaultTheme', '%sweet_alert.theme%')
         ->private();
 
     $services
@@ -83,7 +85,8 @@ return static function (ContainerConfigurator $container) {
         ->tag('data_collector', ['id' => 'ux_sweetalert', 'template' => '@SweetAlert/collector/data_collector.html.twig']);
 
     $services
-        ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class);
+        ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class)
+        ->arg('$defaultTheme', '%sweet_alert.theme%');
 
     $services
         ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter')

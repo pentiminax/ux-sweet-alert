@@ -3,6 +3,7 @@
 namespace Pentiminax\UX\SweetAlert\Tests;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Toast;
 use Pentiminax\UX\SweetAlert\ToastManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -43,5 +44,29 @@ class ToastManagerTest extends KernelTestCase
         $toasts = $this->toastManager->getToasts();
 
         $this->assertContains($toast, $toasts);
+    }
+
+    public function testToastUsesConfiguredTheme(): void
+    {
+        $session = new Session(new MockArraySessionStorage());
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $toastManager = new ToastManager(
+            requestStack: $requestStack,
+            context: $this->createMock(SweetAlertContextInterface::class),
+            defaultTheme: Theme::Dark->value
+        );
+
+        $toast = $toastManager->success(
+            title: 'title',
+            text: 'text'
+        );
+
+        $this->assertSame(Theme::Dark->value, $toast->jsonSerialize()['theme']);
     }
 }

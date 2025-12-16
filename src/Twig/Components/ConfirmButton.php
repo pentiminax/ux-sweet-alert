@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert\Twig\Components;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Result;
 use Symfony\Contracts\Service\Attribute\Required;

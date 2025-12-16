@@ -13,13 +13,18 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class AlertManager implements AlertManagerInterface
 {
+    private Theme $defaultTheme;
+
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly SweetAlertContextInterface $context,
         private readonly FlashMessageConverter $flashMessageConverter,
         private readonly bool $autoConvertFlashMessages = false,
+        string $defaultTheme = 'auto',
     ) {
+        $this->defaultTheme = Theme::from($defaultTheme);
     }
+
 
     public function addAlert(Alert $alert): void
     {
@@ -61,27 +66,27 @@ class AlertManager implements AlertManagerInterface
         return $this->requestStack->getSession();
     }
 
-    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
+    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
     {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::SUCCESS, $customClass);
     }
 
-    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
+    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
     {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::ERROR, $customClass);
     }
 
-    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
+    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
     {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::WARNING, $customClass);
     }
 
-    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
+    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
     {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::INFO, $customClass);
     }
 
-    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert
+    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
     {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::QUESTION, $customClass);
     }
@@ -91,11 +96,12 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $text,
         Position $position,
-        Theme $theme,
+        ?Theme $theme,
         Icon $icon,
         array $customClass = []
     ): Alert {
         $id = empty($id) ? uniqid(more_entropy: true) : $id;
+        $theme ??= $this->defaultTheme;
 
         $alert = Alert::new(
             title: $title,

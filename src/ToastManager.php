@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Toast;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
@@ -13,9 +14,13 @@ class ToastManager implements ToastManagerInterface
 {
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly SweetAlertContextInterface $context
+        private readonly SweetAlertContextInterface $context,
+        string $defaultTheme = Theme::Auto->value,
     ) {
+        $this->defaultTheme = Theme::from($defaultTheme);
     }
+
+    private Theme $defaultTheme;
 
     public function addToast(Toast $toast): void
     {
@@ -109,7 +114,8 @@ class ToastManager implements ToastManagerInterface
 
         $toast
             ->position($position)
-            ->timer($timer);
+            ->timer($timer)
+            ->theme($this->defaultTheme);
 
         if (!$showConfirmButton) {
             $toast->withoutConfirmButton();

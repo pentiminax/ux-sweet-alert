@@ -14,13 +14,13 @@ interface AlertManagerInterface
 
     public function getAlerts(): array;
 
-    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert;
+    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert;
 
-    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert;
+    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert;
 
-    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert;
+    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert;
 
-    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert;
+    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert;
 
-    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, Theme $theme = Theme::Auto, array $customClass = []): Alert;
+    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert;
 }

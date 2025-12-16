@@ -4,10 +4,18 @@ namespace Pentiminax\UX\SweetAlert;
 
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 
 class FlashMessageConverter implements FlashMessageConverterInterface
 {
+    private Theme $defaultTheme;
+
+    public function __construct(string $defaultTheme = Theme::Auto->value)
+    {
+        $this->defaultTheme = Theme::from($defaultTheme);
+    }
+
     public function convert(string $key, array $messages): array
     {
         $icon = $this->convertKeyToIcon($key);
@@ -18,7 +26,7 @@ class FlashMessageConverter implements FlashMessageConverterInterface
                 title: $message,
                 icon: $icon,
                 position: Position::CENTER
-            );
+            )->theme($this->defaultTheme);
         }
 
         return $alerts;

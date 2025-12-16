@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,6 +16,7 @@ class SweetAlertBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->scalarNode('auto_convert_flash_messages')->defaultFalse()->end()
+                ->enumNode('theme')->values(array_map(static fn (Theme $theme) => $theme->value, Theme::cases()))->defaultValue(Theme::Auto->value)->end()
             ->end()
         ;
     }
@@ -22,6 +24,7 @@ class SweetAlertBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $builder->setParameter('sweet_alert.auto_convert_flash_messages', $config['auto_convert_flash_messages']);
+        $builder->setParameter('sweet_alert.theme', $config['theme']);
 
         $container->import('../config/services.php');
     }
