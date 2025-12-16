@@ -34,3 +34,6 @@ Repository specifics for contributors and automation. Keep this doc close when a
 ## Security & Configuration Tips
 - Do not commit secrets; rely on local `.env` for sensitive values.
 - Keep `var/` and other cache/output directories ignored; clear them if tests behave unexpectedly after dependency bumps.
+
+## Additional Information
+- Always use context7 when I need code generation, setup or configuration steps, or library/API documentation. This means you should automatically use the Context7 MCP tools to resolve library id and get library docs without me having to explicitly ask.
