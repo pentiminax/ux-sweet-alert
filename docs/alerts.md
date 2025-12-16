@@ -71,10 +71,37 @@ $alert
 | `withoutConfirmButton()`      | Hides the confirm button                             |
 | `withoutAnimation()`          | Disables animation                                   |
 | `withoutBackdrop()`           | Removes modal backdrop                               |
-| `theme(Theme $theme)`         | Sets the theme (light, dark, or auto)                |
+| `theme(Theme $theme)`         | Sets the theme (default `auto`)                      |
 | `confirmButtonColor(string)`  | Sets confirm button color (hex value)                |
 | `denyOutsideClick()`          | Prevents closing the modal by clicking outside       |
 | `denyEscapeKey()`             | Prevents closing the modal with the ESC key          |
+
+## Themes
+
+SweetAlert2 ships several themes. Set them directly from PHP:
+
+```php
+$alert
+    ->theme(Theme::Auto)
+    ->theme(Theme::Dark)
+    ->theme(Theme::Light)
+    ->theme(Theme::Borderless)
+    ->theme(Theme::Bootstrap5)
+    ->theme(Theme::Bootstrap4)
+    ->theme(Theme::MaterialUI)
+;
+```
+
+The optional SweetAlert2 theme styles are not auto-imported. The `autoimport` section in `assets/package.json` disables them by default so you can choose the right stylesheet yourself:
+
+```json
+"autoimport": {
+  "sweetalert2/themes/bootstrap-4.css": false,
+  "sweetalert2/themes/bootstrap-5.css": false,
+  "sweetalert2/themes/bulma.css": false,
+  "sweetalert2/themes/material-ui.css": false
+}
+```
 
 ## Retrieving Alerts
 

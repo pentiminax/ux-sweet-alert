@@ -5,6 +5,7 @@
 ```yaml
 sweet_alert:
   auto_convert_flash_messages: false
+  theme: 'auto'
 ```
 
 ## Available options
@@ -15,3 +16,12 @@ Type: `bool`
 Default: `false`
 
 If set to `true`, the bundle will automatically convert flash messages to sweet alerts.
+
+### theme
+
+Type: `string`
+Default: `auto`
+
+Defines the default SweetAlert theme to use when displaying alerts.
+
+This option maps directly to the Theme enum: `Pentiminax\UX\SweetAlert\Enum\Theme`

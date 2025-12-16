@@ -53,7 +53,7 @@ class Alert implements \JsonSerializable
         $alert->text = $text;
         $alert->icon = $icon;
         $alert->position = $position;
-        $alert->theme = Theme::AUTO;
+        $alert->theme = Theme::Auto;
         $alert->customClass = $customClass;
 
         return $alert;

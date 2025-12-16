@@ -27,7 +27,7 @@ class AlertTest extends TestCase
             ->confirmButtonColor('#ff0000')
             ->denyEscapeKey()
             ->denyOutsideClick()
-            ->theme(Theme::DARK)
+            ->theme(Theme::Dark)
             ->withCancelButton()
             ->withDenyButton()
             ->withoutAnimation()
@@ -46,7 +46,7 @@ class AlertTest extends TestCase
         $this->assertTrue($data['showCancelButton']);
         $this->assertTrue($data['showDenyButton']);
         $this->assertFalse($data['animation']);
-        $this->assertEquals(Theme::DARK->value, $data['theme']);
+        $this->assertEquals(Theme::Dark->value, $data['theme']);
         $this->assertFalse($data['backdrop']);
         $this->assertTrue($data['allowOutsideClick']);
         $this->assertTrue($data['allowEscapeKey']);
@@ -54,5 +54,23 @@ class AlertTest extends TestCase
         $this->assertEquals(Position::CENTER->value, $data['position']);
         $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
         $this->assertEquals('<b>html</b>', $data['html']);
+    }
+
+    public function testSerializeSupportsBootstrapTheme(): void
+    {
+        $alert = Alert::new(
+            title: 'title',
+            id: 'bootstrap-id',
+            text: 'text',
+            icon: Icon::INFO,
+            position: Position::CENTER,
+            customClass: []
+        );
+
+        $alert->theme(Theme::Bootstrap5);
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertEquals(Theme::Bootstrap5->value, $data['theme']);
     }
 }
