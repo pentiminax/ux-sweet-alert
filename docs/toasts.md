@@ -41,4 +41,4 @@ $toast = $this->toastManager->success(title: 'Saved!');
 $toast->theme(Theme::MaterialUILight);
 ```
 
-Import SweetAlert2 theme CSS files when using Bootstrap or Material variants:
+Theme styles are not auto-imported (see `assets/package.json` `autoimport` entries).

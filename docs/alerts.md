@@ -92,6 +92,17 @@ $alert
 ;
 ```
 
+The optional SweetAlert2 theme styles are not auto-imported. The `autoimport` section in `assets/package.json` disables them by default so you can choose the right stylesheet yourself:
+
+```json
+"autoimport": {
+  "sweetalert2/themes/bootstrap-4.css": false,
+  "sweetalert2/themes/bootstrap-5.css": false,
+  "sweetalert2/themes/bulma.css": false,
+  "sweetalert2/themes/material-ui.css": false
+}
+```
+
 ## Retrieving Alerts
 
 To access alerts:
