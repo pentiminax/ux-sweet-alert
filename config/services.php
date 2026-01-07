@@ -57,7 +57,7 @@ return static function (ContainerConfigurator $container) {
         ->set(ConfirmButton::class)
         ->call('setLiveResponder', [service(LiveResponder::class)])
         ->call('setContext', [service(SweetAlertContextInterface::class)])
-        ->call('setTranslator', [service(TranslatorInterface::class)])
+        ->call('setTranslator', [service(TranslatorInterface::class)->nullOnInvalid()])
         ->tag('twig.component', [
             'key' => 'SweetAlert:ConfirmButton',
             'expose_public_props' => true,

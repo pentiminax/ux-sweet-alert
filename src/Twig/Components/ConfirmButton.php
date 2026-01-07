@@ -52,7 +52,7 @@ class ConfirmButton
 
     protected ?Result $result = null;
 
-    protected readonly TranslatorInterface $translator;
+    protected ?TranslatorInterface $translator = null;
 
     private readonly SweetAlertContextInterface $context;
 
@@ -60,16 +60,16 @@ class ConfirmButton
     public function alertAdded(): void
     {
         $alert = Alert::new(
-            title: $this->translator->trans($this->title),
-            text: $this->translator->trans($this->text),
+            title: $this->translate($this->title),
+            text: $this->translate($this->text),
             icon: Icon::from($this->icon),
             position: Position::CENTER,
             customClass: $this->customClass()
         );
 
         $alert
-            ->confirmButtonText($this->translator->trans($this->confirmButtonText))
-            ->cancelButtonText($this->translator->trans($this->cancelButtonText));
+            ->confirmButtonText($this->translate($this->confirmButtonText))
+            ->cancelButtonText($this->translate($this->cancelButtonText));
 
         if ($this->showCancelButton) {
             $alert->withCancelButton();
@@ -103,7 +103,7 @@ class ConfirmButton
     }
 
     #[Required]
-    public function setTranslator(TranslatorInterface $translator): void
+    public function setTranslator(?TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
@@ -116,5 +116,10 @@ class ConfirmButton
     private function customClass(): array
     {
         return empty($this->customClass) ? [] : json_decode($this->customClass, true);
+    }
+
+    private function translate(string $message): string
+    {
+        return $this->translator?->trans($message) ?? $message;
     }
 }
