@@ -1,6 +1,9 @@
-# Alerts
+---
+title: Alerts
+description: Trigger SweetAlert2 modals from the server.
+---
 
-The AlertManagerInterface provides a structured and expressive way to trigger SweetAlert2 modal alerts within your Symfony application.
+The `AlertManagerInterface` provides a structured and expressive way to trigger SweetAlert2 modal alerts within your Symfony application.
 
 ## Overview
 
@@ -10,7 +13,7 @@ This library leverages Symfony’s session flash system to store alerts and rend
 
 ## Usage
 
-Inject the AlertManagerInterface and use the helper methods to create alerts:
+Inject `AlertManagerInterface` and use the helper methods to create alerts:
 
 ```php
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
@@ -27,14 +30,14 @@ public function someAction(AlertManagerInterface $alertManager): Response
 }
 ```
 
-## Alert Types
+## Alert types
 
 The following predefined alert types are available:
--	success()
--	error()
--	warning()
--	info()
--	question()
+- success()
+- error()
+- warning()
+- info()
+- question()
 
 Each method returns an Alert object that can be further customized using a fluent API.
 
@@ -62,7 +65,7 @@ $alert
     ->withDenyButton();
 ```
 
-## Available Customization Methods
+## Available customization methods
 
 | Method                        | Description                                          |
 |-------------------------------|------------------------------------------------------|
@@ -103,7 +106,7 @@ The optional SweetAlert2 theme styles are not auto-imported. The `autoimport` se
 }
 ```
 
-## Retrieving Alerts
+## Retrieving alerts
 
 To access alerts:
 
@@ -112,9 +115,5 @@ $alerts = $alertManager->getAlerts();
 ```
 
 ## Notes
-- 	Alerts are stored in Symfony’s FlashBag and persist for one request.
-- 	Alerts must be rendered on the frontend with SweetAlert2-compatible JavaScript.
-
-⸻
-
-Build clear and engaging user interactions with powerful alerts
+- Alerts are stored in Symfony’s FlashBag and persist for one request.
+- Alerts must be rendered on the frontend with SweetAlert2-compatible JavaScript.

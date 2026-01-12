@@ -1,9 +1,12 @@
-# Usage
+---
+title: Usage
+description: Initialize the bundle and trigger toasts.
+---
 
 ## Initialization
 
-To automatically display toasts and alerts in your templates, 
-add the following Twig function in your base.html.twig (or the layout file):
+To automatically display toasts and alerts in your templates,
+add the following Twig function in your `base.html.twig` (or the layout file):
 
 ```twig
 {{ ux_sweet_alert_scripts() }}
@@ -34,3 +37,4 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig');
     }
 }
+```

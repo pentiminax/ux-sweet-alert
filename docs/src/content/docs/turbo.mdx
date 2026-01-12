@@ -1,4 +1,7 @@
-# Turbo integration
+---
+title: Turbo Integration
+description: Use SweetAlert with Symfony UX Turbo.
+---
 
 ## Overview
 
@@ -17,7 +20,7 @@ composer require symfony/ux-turbo
 ## Alerts are automatically injected
 
 On the next Turbo navigation, page reload, or AJAX response returning Turbo Stream, the bundle will automatically inject
-a <turbo-stream action="SweetAlert"> with the alert configuration.
+a `<turbo-stream action="SweetAlert">` with the alert configuration.
 
 You do not need to manage anything on the frontend:
 Your custom SweetAlert action will be executed and the popup will appear.
@@ -54,7 +57,7 @@ public function index(AlertManagerInterface $alertManager): Response
 The bundle will automatically add an alerts key to your JSON response, which will contain the Turbo Stream payload for
 the alert.
 
-## Example response:
+## Example response
 
 ```json
 {
