@@ -1,0 +1,30 @@
+---
+title: Configuration
+description: Options de configuration par défaut.
+---
+
+## Configuration par défaut
+
+```yaml
+sweet_alert:
+  auto_convert_flash_messages: false
+  theme: 'auto'
+```
+
+## Options disponibles
+
+### auto_convert_flash_messages
+
+Type : `bool`
+Défaut : `false`
+
+Si défini à `true`, le bundle convertira automatiquement les messages flash en alertes SweetAlert.
+
+### theme
+
+Type : `string`
+Défaut : `auto`
+
+Définit le thème SweetAlert par défaut pour l'affichage des alertes.
+
+Cette option mappe directement l'énumération `Pentiminax\UX\SweetAlert\Enum\Theme`.

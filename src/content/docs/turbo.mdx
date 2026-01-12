@@ -1,0 +1,67 @@
+---
+title: Intégration Turbo
+description: Utiliser SweetAlert avec Symfony UX Turbo.
+---
+
+## Vue d'ensemble
+
+UX SweetAlert fournit des popups interactifs pour vos applications Symfony.
+Avec l'intégration UX Turbo, les alertes fonctionnent avec les rechargements complets, la navigation Turbo et les requêtes AJAX/fetch.
+
+## Prérequis
+
+- Symfony UX Turbo
+
+```bash
+composer require symfony/ux-turbo
+```
+
+## Insertion automatique des alertes
+
+Lors de la prochaine navigation Turbo, d'un rechargement de page ou d'une réponse AJAX retournant un Turbo Stream,
+le bundle injecte automatiquement un `<turbo-stream action="SweetAlert">` avec la configuration de l'alerte.
+
+Vous n'avez rien à gérer côté frontend :
+Votre action SweetAlert personnalisée s'exécute et la popup apparaît.
+
+## Utiliser avec fetch / AJAX
+
+Même en utilisant fetch directement, aucune adaptation supplémentaire n'est nécessaire :
+
+```javascript
+await fetch('/your-endpoint');
+```
+
+Le bundle intercepte automatiquement les réponses Turbo Stream contenant une alerte SweetAlert,
+les injecte dans le DOM et déclenche la popup — sans rechargement de page.
+
+## Exemple backend
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+public function index(AlertManagerInterface $alertManager): Response
+{
+    $this->alertManager->info(
+        title: 'Alert Title',
+    );
+
+    return $this->json([
+        'data' => '...'
+    ]);
+}
+```
+
+Le bundle ajoute automatiquement une clé `alerts` à la réponse JSON, contenant le payload Turbo Stream pour l'alerte.
+
+## Exemple de réponse
+
+```json
+{
+  "data": "...",
+  "alerts": "<turbo-stream action=\"alert\"><template>{\"id\":\"alertId\",\"title\":\"alertTitle\"}</template></turbo-stream>"
+}
+```
+
+Vous n'avez pas à retourner manuellement une réponse Turbo Stream. Le bundle s'occupe de tout.

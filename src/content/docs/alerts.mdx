@@ -1,0 +1,119 @@
+---
+title: Alertes
+description: Déclencher des modales SweetAlert2 côté serveur.
+---
+
+Le `AlertManagerInterface` fournit un moyen structuré de déclencher des modales SweetAlert2 dans votre application Symfony.
+
+## Vue d'ensemble
+
+Les alertes sont des dialogues modaux qui notifient l'utilisateur ou nécessitent une confirmation. Contrairement aux toasts, les alertes bloquent l'interaction et demandent généralement une action (confirmation, annulation, etc.).
+
+Cette bibliothèque utilise le système de flash de session Symfony pour stocker les alertes et les rendre lors du prochain chargement de page.
+
+## Utilisation
+
+Injectez `AlertManagerInterface` et utilisez les méthodes helper pour créer des alertes :
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+
+public function someAction(AlertManagerInterface $alertManager): Response
+{
+
+    $alertManager->success(
+        title: 'Update Successful',
+        text: 'Your settings have been saved.'
+    );
+
+    return $this->redirectToRoute('dashboard');
+}
+```
+
+## Types d'alertes
+
+Les types prédéfinis suivants sont disponibles :
+- success()
+- error()
+- warning()
+- info()
+- question()
+
+Chaque méthode retourne un objet `Alert` qui peut être personnalisé via une API fluide.
+
+## Paramètres
+
+| Nom        | Type            | Défaut             | Description               |
+|------------|-----------------|--------------------|---------------------------|
+| `id`       | `string`        | *(obligatoire)*    | Identifiant unique        |
+| `title`    | `string`        | *(obligatoire)*    | Titre de l'alerte         |
+| `text`     | `string`        | `''`               | Texte de description      |
+| `position` | `Position` enum | `Position::CENTER` | Position de la modale     |
+
+## Personnalisation
+
+Après création, vous pouvez personnaliser son comportement :
+
+```php
+$alert = $this->alertManager->info(
+    title: 'Info Alert',
+    text: 'This is an info alert',
+);
+        
+$alert
+    ->withCancelButton()
+    ->withDenyButton();
+```
+
+## Méthodes de personnalisation disponibles
+
+| Méthode                       | Description                                             |
+|------------------------------|---------------------------------------------------------|
+| `withCancelButton()`          | Affiche un bouton d'annulation                          |
+| `withDenyButton()`            | Affiche un bouton de refus                              |
+| `withoutConfirmButton()`      | Cache le bouton de confirmation                         |
+| `withoutAnimation()`          | Désactive l'animation                                   |
+| `withoutBackdrop()`           | Supprime le backdrop de la modale                       |
+| `theme(Theme $theme)`         | Définit le thème (par défaut `auto`)                    |
+| `confirmButtonColor(string)`  | Définit la couleur du bouton de confirmation (hex)      |
+| `denyOutsideClick()`          | Empêche la fermeture en cliquant à l'extérieur          |
+| `denyEscapeKey()`             | Empêche la fermeture via la touche ESC                 |
+
+## Thèmes
+
+SweetAlert2 fournit plusieurs thèmes. Configurez-les directement en PHP :
+
+```php
+$alert
+    ->theme(Theme::Auto)
+    ->theme(Theme::Dark)
+    ->theme(Theme::Light)
+    ->theme(Theme::Borderless)
+    ->theme(Theme::Bootstrap5)
+    ->theme(Theme::Bootstrap4)
+    ->theme(Theme::MaterialUI)
+;
+```
+
+Les feuilles de style de thèmes ne sont pas auto-importées. La section `autoimport` dans `assets/package.json` les désactive par défaut pour vous laisser choisir la feuille de style adaptée :
+
+```json
+"autoimport": {
+  "sweetalert2/themes/bootstrap-4.css": false,
+  "sweetalert2/themes/bootstrap-5.css": false,
+  "sweetalert2/themes/bulma.css": false,
+  "sweetalert2/themes/material-ui.css": false
+}
+```
+
+## Récupérer les alertes
+
+Pour accéder aux alertes :
+
+```php
+$alerts = $alertManager->getAlerts();
+```
+
+## Notes
+- Les alertes sont stockées dans le FlashBag de Symfony et persistent pour une requête.
+- Les alertes doivent être rendues côté frontend avec un JavaScript compatible SweetAlert2.

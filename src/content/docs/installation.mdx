@@ -1,0 +1,23 @@
+---
+title: Installation
+description: Installer le bundle et ses assets.
+---
+
+Avant de commencer, assurez-vous que StimulusBundle est configuré dans votre application.
+
+Installez le bundle avec Composer et Symfony Flex :
+
+```bash
+composer require pentiminax/ux-sweet-alert
+```
+
+Si vous utilisez WebpackEncore, installez vos assets et relancez Encore (inutile si vous utilisez AssetMapper) :
+
+```bash
+npm install --force
+npm run watch
+
+# ou utilisez yarn
+yarn install --force
+yarn watch
+```

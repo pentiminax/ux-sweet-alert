@@ -1,0 +1,109 @@
+---
+title: Live Component
+description: Déclencher une confirmation via Live Components.
+---
+
+## Confirm Button
+
+Le Live Component `ConfirmButton` permet de déclencher une boîte de confirmation SweetAlert2 lors du clic sur un bouton.
+Vous pouvez personnaliser le titre, le texte, l'icône et l'action de suivi via un callback.
+
+### Prérequis
+
+- Votre frontend doit écouter l'événement `ux-sweet-alert:alert:added` et le gérer avec SweetAlert2.
+
+### Exemple d'utilisation
+
+```twig
+<twig:SweetAlert:ConfirmButton
+    title="Are you sure?"
+    text="This action cannot be undone."
+    icon="warning"
+    showCancelButton="true"
+    callback="onConfirmAction"
+/>
+```
+
+### Props disponibles
+
+| Nom               | Type   | Description                                                      |
+|-------------------|--------|------------------------------------------------------------------|
+| `title`           | string | Titre affiché dans la boîte de confirmation                       |
+| `text`            | string | Texte de description supplémentaire                              |
+| `icon`            | string | `success`, `error`, `warning`, `info`, `question`                |
+| `showCancelButton`| bool   | Affiche le bouton "Cancel" (par défaut `false`)                 |
+| `callback`        | string | Méthode Live Component appelée si l'utilisateur confirme         |
+
+### Comportement
+
+1. Le bouton déclenche un événement `live#emit` avec l'identifiant `alertAdded`.
+2. La méthode `alertAdded()` du LiveComponent dispatch l'événement JS `ux-sweet-alert:alert:added`.
+3. Votre JS frontend écoute cet événement et appelle `Swal.fire(...)`.
+4. Si l'utilisateur confirme, la méthode `callback` est invoquée via LiveComponent.
+
+### Exemple complet
+
+```html
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <twig:SweetAlert:ConfirmButton
+                    title="Confirm"
+                    text="Are you sure?"
+                    callback="myCallback"
+            />
+        </div>
+    </div>
+</div>
+<script>
+    function myCallback(result) {
+        if (result.isConfirmed) {
+            // Do something.
+        }
+    }
+</script>
+```
+
+## Étendre `ConfirmButton`
+
+Vous pouvez étendre le composant `ConfirmButton` pour gérer la logique lorsque l'utilisateur confirme le dialogue SweetAlert.
+Remplacez la méthode `callbackAction` dans votre sous-classe pour exécuter des actions personnalisées.
+
+### Exemple : Live Component personnalisé
+
+```html
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <twig:MyConfirmButton
+                    title="Confirm"
+                    text="Are you sure?"
+                    data-live-item-id-param="1"
+            />
+        </div>
+    </div>
+</div>
+```
+
+```php
+namespace App\LiveComponent;
+
+use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
+
+#[AsLiveComponent(template: '@SweetAlert/components/ConfirmButton.html.twig')]
+class MyConfirmButton extends ConfirmButton
+{
+    #[LiveAction]
+    public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): void
+    {
+        parent::callbackAction($result, $args);
+
+        if ($this->result->isConfirmed && $args['id'] === '1') {
+            // Custom logic goes here
+        }
+    }
+}
+```
