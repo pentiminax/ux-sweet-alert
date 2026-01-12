@@ -12,6 +12,9 @@ interface AlertManagerInterface
 
     public function addAlert(Alert $alert): void;
 
+    /**
+     * @return Alert[]
+     */
     public function getAlerts(): array;
 
     public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert;

@@ -92,12 +92,10 @@ return static function (ContainerConfigurator $container) {
         ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter')
         ->private();
 
-    if (class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
-        $services
-            ->set(RenderAlertListener::class)
-            ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
-            ->arg('$toastManager', new Reference('sweet_alert.toast_manager'))
-            ->arg('$twig', new Reference('twig'))
-            ->tag('kernel.event_listener', ['event' => 'kernel.response']);
-    }
+    $services
+        ->set(RenderAlertListener::class)
+        ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
+        ->arg('$toastManager', new Reference('sweet_alert.toast_manager'))
+        ->arg('$twig', new Reference('twig'))
+        ->tag('kernel.event_listener', ['event' => 'kernel.response']);
 };
