@@ -3,6 +3,7 @@
 namespace Pentiminax\UX\SweetAlert\EventListener;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Htmx\HxTriggerHelper;
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,7 +34,14 @@ class RenderAlertListener
             $this->toastManager->getToasts()
         );
 
-        if (empty($alerts)) {
+
+        if ($alerts === []) {
+            return;
+        }
+
+        if (!class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
+            HxTriggerHelper::withAlert($response, $alerts[0]);
+
             return;
         }
 

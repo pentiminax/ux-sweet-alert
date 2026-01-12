@@ -39,16 +39,23 @@ class default_1 extends Controller {
                 }
             }));
         }
+
+        document.body.addEventListener('htmx:alert', function (e) {
+            console.log(e)
+        })
     }
 
     async connect() {
-        const toasts = this.viewValue;
-
         document.addEventListener('ux-sweet-alert:alert:added', async (e) => {
             const alert = e.detail['alert'];
 
+            console.log(e);
+
             const result = await Swal.fire(alert);
-            delete alert.id;
+
+            if (alert.id) {
+                delete alert.id;
+            }
 
             let callback = e.detail['callback'] ?? null;
 
@@ -59,14 +66,19 @@ class default_1 extends Controller {
                     callback(result);
                 }
             } else {
-                const component = await getComponent(e.target);
-                component.action('callbackAction', {
-                    'result': result,
-                    'args': this.getLiveItemParams(component.element)
-                })
+                try {
+                    const component = await getComponent(e.target);
+                    component.action('callbackAction', {
+                        'result': result,
+                        'args': this.getLiveItemParams(component.element)
+                    })
+                } catch (e) {
+                    console.warn(e);
+                }
             }
         });
 
+        const toasts = this.viewValue;
         for (const toast of toasts) {
             const result = await Swal.fire(toast);
 
