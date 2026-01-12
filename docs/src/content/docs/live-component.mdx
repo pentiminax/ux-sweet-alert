@@ -1,18 +1,18 @@
 ---
 title: Live Component
-description: Déclencher une confirmation via Live Components.
+description: Trigger confirmation dialogs with Live Components.
 ---
 
 ## Confirm Button
 
-Le Live Component `ConfirmButton` permet de déclencher une boîte de confirmation SweetAlert2 lors du clic sur un bouton.
-Vous pouvez personnaliser le titre, le texte, l'icône et l'action de suivi via un callback.
+The `ConfirmButton` Live Component lets you trigger a SweetAlert2 confirmation dialog when clicking a button.
+You can customize the title, text, icon, and the follow-up action via a callback.
 
-### Prérequis
+### Requirements
 
-- Votre frontend doit écouter l'événement `ux-sweet-alert:alert:added` et le gérer avec SweetAlert2.
+- Your frontend must listen to the `ux-sweet-alert:alert:added` event and handle it with SweetAlert2.
 
-### Exemple d'utilisation
+### Usage example
 
 ```twig
 <twig:SweetAlert:ConfirmButton
@@ -24,24 +24,24 @@ Vous pouvez personnaliser le titre, le texte, l'icône et l'action de suivi via 
 />
 ```
 
-### Props disponibles
+### Available props
 
-| Nom               | Type   | Description                                                      |
-|-------------------|--------|------------------------------------------------------------------|
-| `title`           | string | Titre affiché dans la boîte de confirmation                       |
-| `text`            | string | Texte de description supplémentaire                              |
-| `icon`            | string | `success`, `error`, `warning`, `info`, `question`                |
-| `showCancelButton`| bool   | Affiche le bouton "Cancel" (par défaut `false`)                 |
-| `callback`        | string | Méthode Live Component appelée si l'utilisateur confirme         |
+| Name               | Type   | Description                                                      |
+|--------------------|--------|------------------------------------------------------------------|
+| `title`            | string | Title displayed in the confirmation dialog                       |
+| `text`             | string | Additional description text                                      |
+| `icon`             | string | `success`, `error`, `warning`, `info`, `question`                |
+| `showCancelButton` | bool   | Whether to show the "Cancel" button (default: `false`)           |
+| `callback`         | string | Live component method name to invoke if user confirms the dialog |
 
-### Comportement
+### Behavior
 
-1. Le bouton déclenche un événement `live#emit` avec l'identifiant `alertAdded`.
-2. La méthode `alertAdded()` du LiveComponent dispatch l'événement JS `ux-sweet-alert:alert:added`.
-3. Votre JS frontend écoute cet événement et appelle `Swal.fire(...)`.
-4. Si l'utilisateur confirme, la méthode `callback` est invoquée via LiveComponent.
+1. Button triggers a `live#emit` event with the `alertAdded` identifier.
+2. The LiveComponent method `alertAdded()` dispatches the JS event `ux-sweet-alert:alert:added`.
+3. Your frontend JS listens to this event and calls `Swal.fire(...)`.
+4. On confirmation, the `callback` method is invoked using LiveComponent.
 
-### Exemple complet
+### Example usage
 
 ```html
 <div class="container">
@@ -64,12 +64,12 @@ Vous pouvez personnaliser le titre, le texte, l'icône et l'action de suivi via 
 </script>
 ```
 
-## Étendre `ConfirmButton`
+## Extending `ConfirmButton`
 
-Vous pouvez étendre le composant `ConfirmButton` pour gérer la logique lorsque l'utilisateur confirme le dialogue SweetAlert.
-Remplacez la méthode `callbackAction` dans votre sous-classe pour exécuter des actions personnalisées.
+You can extend the `ConfirmButton` component to handle logic when the user confirms the SweetAlert dialog. Override the
+`callbackAction` method in your subclass to perform custom actions.
 
-### Exemple : Live Component personnalisé
+### Example: custom Live Component
 
 ```html
 <div class="container">

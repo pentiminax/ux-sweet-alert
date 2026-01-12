@@ -1,19 +1,19 @@
 ---
-title: Alertes
-description: Déclencher des modales SweetAlert2 côté serveur.
+title: Alerts
+description: Trigger SweetAlert2 modals from the server.
 ---
 
-Le `AlertManagerInterface` fournit un moyen structuré de déclencher des modales SweetAlert2 dans votre application Symfony.
+The `AlertManagerInterface` provides a structured and expressive way to trigger SweetAlert2 modal alerts within your Symfony application.
 
-## Vue d'ensemble
+## Overview
 
-Les alertes sont des dialogues modaux qui notifient l'utilisateur ou nécessitent une confirmation. Contrairement aux toasts, les alertes bloquent l'interaction et demandent généralement une action (confirmation, annulation, etc.).
+Alerts are modal dialogs used to notify users or require confirmation. Unlike toasts, alerts are blocking interactions and typically require user action (e.g., confirmation or cancellation).
 
-Cette bibliothèque utilise le système de flash de session Symfony pour stocker les alertes et les rendre lors du prochain chargement de page.
+This library leverages Symfony’s session flash system to store alerts and renders them on the next page load.
 
-## Utilisation
+## Usage
 
-Injectez `AlertManagerInterface` et utilisez les méthodes helper pour créer des alertes :
+Inject `AlertManagerInterface` and use the helper methods to create alerts:
 
 ```php
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
@@ -30,29 +30,29 @@ public function someAction(AlertManagerInterface $alertManager): Response
 }
 ```
 
-## Types d'alertes
+## Alert types
 
-Les types prédéfinis suivants sont disponibles :
+The following predefined alert types are available:
 - success()
 - error()
 - warning()
 - info()
 - question()
 
-Chaque méthode retourne un objet `Alert` qui peut être personnalisé via une API fluide.
+Each method returns an Alert object that can be further customized using a fluent API.
 
-## Paramètres
+## Parameters
 
-| Nom        | Type            | Défaut             | Description               |
-|------------|-----------------|--------------------|---------------------------|
-| `id`       | `string`        | *(obligatoire)*    | Identifiant unique        |
-| `title`    | `string`        | *(obligatoire)*    | Titre de l'alerte         |
-| `text`     | `string`        | `''`               | Texte de description      |
-| `position` | `Position` enum | `Position::CENTER` | Position de la modale     |
+| Name       | Type            | Default            | Description              |
+|------------|-----------------|--------------------|--------------------------|
+| `id`       | `string`        | *(required)*       | Unique identifier        |
+| `title`    | `string`        | *(required)*       | Alert title              |
+| `text`     | `string`        | `''`               | Description text         |
+| `position` | `Position` enum | `Position::CENTER` | Modal position on screen |
 
-## Personnalisation
+## Customization
 
-Après création, vous pouvez personnaliser son comportement :
+After creating an alert, you can customize its behavior:
 
 ```php
 $alert = $this->alertManager->info(
@@ -65,23 +65,23 @@ $alert
     ->withDenyButton();
 ```
 
-## Méthodes de personnalisation disponibles
+## Available customization methods
 
-| Méthode                       | Description                                             |
-|------------------------------|---------------------------------------------------------|
-| `withCancelButton()`          | Affiche un bouton d'annulation                          |
-| `withDenyButton()`            | Affiche un bouton de refus                              |
-| `withoutConfirmButton()`      | Cache le bouton de confirmation                         |
-| `withoutAnimation()`          | Désactive l'animation                                   |
-| `withoutBackdrop()`           | Supprime le backdrop de la modale                       |
-| `theme(Theme $theme)`         | Définit le thème (par défaut `auto`)                    |
-| `confirmButtonColor(string)`  | Définit la couleur du bouton de confirmation (hex)      |
-| `denyOutsideClick()`          | Empêche la fermeture en cliquant à l'extérieur          |
-| `denyEscapeKey()`             | Empêche la fermeture via la touche ESC                 |
+| Method                        | Description                                          |
+|-------------------------------|------------------------------------------------------|
+| `withCancelButton()`          | Shows a cancel button                                |
+| `withDenyButton()`            | Shows a deny button                                  |
+| `withoutConfirmButton()`      | Hides the confirm button                             |
+| `withoutAnimation()`          | Disables animation                                   |
+| `withoutBackdrop()`           | Removes modal backdrop                               |
+| `theme(Theme $theme)`         | Sets the theme (default `auto`)                      |
+| `confirmButtonColor(string)`  | Sets confirm button color (hex value)                |
+| `denyOutsideClick()`          | Prevents closing the modal by clicking outside       |
+| `denyEscapeKey()`             | Prevents closing the modal with the ESC key          |
 
-## Thèmes
+## Themes
 
-SweetAlert2 fournit plusieurs thèmes. Configurez-les directement en PHP :
+SweetAlert2 ships several themes. Set them directly from PHP:
 
 ```php
 $alert
@@ -95,7 +95,7 @@ $alert
 ;
 ```
 
-Les feuilles de style de thèmes ne sont pas auto-importées. La section `autoimport` dans `assets/package.json` les désactive par défaut pour vous laisser choisir la feuille de style adaptée :
+The optional SweetAlert2 theme styles are not auto-imported. The `autoimport` section in `assets/package.json` disables them by default so you can choose the right stylesheet yourself:
 
 ```json
 "autoimport": {
@@ -106,14 +106,14 @@ Les feuilles de style de thèmes ne sont pas auto-importées. La section `autoim
 }
 ```
 
-## Récupérer les alertes
+## Retrieving alerts
 
-Pour accéder aux alertes :
+To access alerts:
 
 ```php
 $alerts = $alertManager->getAlerts();
 ```
 
 ## Notes
-- Les alertes sont stockées dans le FlashBag de Symfony et persistent pour une requête.
-- Les alertes doivent être rendues côté frontend avec un JavaScript compatible SweetAlert2.
+- Alerts are stored in Symfony’s FlashBag and persist for one request.
+- Alerts must be rendered on the frontend with SweetAlert2-compatible JavaScript.

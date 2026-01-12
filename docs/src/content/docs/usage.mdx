@@ -1,12 +1,12 @@
 ---
-title: Utilisation
-description: Initialiser le bundle et déclencher des toasts.
+title: Usage
+description: Initialize the bundle and trigger toasts.
 ---
 
-## Initialisation
+## Initialization
 
-Pour afficher automatiquement les toasts et les alertes dans vos templates,
-ajoutez la fonction Twig suivante dans votre `base.html.twig` (ou le fichier de layout) :
+To automatically display toasts and alerts in your templates,
+add the following Twig function in your `base.html.twig` (or the layout file):
 
 ```twig
 {{ ux_sweet_alert_scripts() }}
@@ -14,8 +14,8 @@ ajoutez la fonction Twig suivante dans votre `base.html.twig` (ou le fichier de 
 
 ## Toasts
 
-Pour utiliser UX SweetAlert, injectez le service `ToastManagerInterface` et
-créez des toasts en PHP :
+To use UX SweetAlert, inject the `ToastManagerInterface` service and
+create toasts in PHP:
 
 ```php
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;

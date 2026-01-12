@@ -1,14 +1,15 @@
 ---
-title: Intégration Turbo
-description: Utiliser SweetAlert avec Symfony UX Turbo.
+title: Turbo Integration
+description: Use SweetAlert with Symfony UX Turbo.
 ---
 
-## Vue d'ensemble
+## Overview
 
-UX SweetAlert fournit des popups interactifs pour vos applications Symfony.
-Avec l'intégration UX Turbo, les alertes fonctionnent avec les rechargements complets, la navigation Turbo et les requêtes AJAX/fetch.
+UX SweetAlert provides interactive popups for your Symfony applications.
+With built-in UX Turbo integration, alerts work seamlessly both on full page reloads and with Turbo-driven navigation or
+AJAX/fetch requests.
 
-## Prérequis
+## Requirements
 
 - Symfony UX Turbo
 
@@ -16,26 +17,26 @@ Avec l'intégration UX Turbo, les alertes fonctionnent avec les rechargements co
 composer require symfony/ux-turbo
 ```
 
-## Insertion automatique des alertes
+## Alerts are automatically injected
 
-Lors de la prochaine navigation Turbo, d'un rechargement de page ou d'une réponse AJAX retournant un Turbo Stream,
-le bundle injecte automatiquement un `<turbo-stream action="SweetAlert">` avec la configuration de l'alerte.
+On the next Turbo navigation, page reload, or AJAX response returning Turbo Stream, the bundle will automatically inject
+a `<turbo-stream action="SweetAlert">` with the alert configuration.
 
-Vous n'avez rien à gérer côté frontend :
-Votre action SweetAlert personnalisée s'exécute et la popup apparaît.
+You do not need to manage anything on the frontend:
+Your custom SweetAlert action will be executed and the popup will appear.
 
-## Utiliser avec fetch / AJAX
+## Using with fetch / AJAX requests
 
-Même en utilisant fetch directement, aucune adaptation supplémentaire n'est nécessaire :
+Even when using fetch directly, no extra adaptation is required:
 
 ```javascript
 await fetch('/your-endpoint');
 ```
 
-Le bundle intercepte automatiquement les réponses Turbo Stream contenant une alerte SweetAlert,
-les injecte dans le DOM et déclenche la popup — sans rechargement de page.
+The bundle will automatically intercept Turbo Stream responses containing a SweetAlert alert, inject it into the DOM,
+and trigger the popup—no page reload required.
 
-## Exemple backend
+## Backend example
 
 ```php
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
@@ -53,9 +54,10 @@ public function index(AlertManagerInterface $alertManager): Response
 }
 ```
 
-Le bundle ajoute automatiquement une clé `alerts` à la réponse JSON, contenant le payload Turbo Stream pour l'alerte.
+The bundle will automatically add an alerts key to your JSON response, which will contain the Turbo Stream payload for
+the alert.
 
-## Exemple de réponse
+## Example response
 
 ```json
 {
@@ -64,4 +66,4 @@ Le bundle ajoute automatiquement une clé `alerts` à la réponse JSON, contenan
 }
 ```
 
-Vous n'avez pas à retourner manuellement une réponse Turbo Stream. Le bundle s'occupe de tout.
+You do not need to return a Turbo Stream response manually. The bundle takes care of it for you.

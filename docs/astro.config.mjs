@@ -7,23 +7,23 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'UX SweetAlert',
-      description: 'Documentation du bundle UX SweetAlert.',
+      description: 'Online documentation for the UX SweetAlert bundle.',
       sidebar: [
         {
-          label: 'Prise en main',
+          label: 'Getting Started',
           items: [
             { label: 'Installation', link: '/installation/' },
-            { label: 'Utilisation', link: '/usage/' },
+            { label: 'Usage', link: '/usage/' },
             { label: 'Configuration', link: '/configuration/' }
           ]
         },
         {
-          label: 'Fonctionnalités',
+          label: 'Features',
           items: [
-            { label: 'Alertes', link: '/alerts/' },
+            { label: 'Alerts', link: '/alerts/' },
             { label: 'Toasts', link: '/toasts/' },
             { label: 'Live Component', link: '/live-component/' },
-            { label: 'Intégration Turbo', link: '/turbo/' }
+            { label: 'Turbo Integration', link: '/turbo/' }
           ]
         }
       ]

@@ -1,17 +1,17 @@
 ---
 title: Toasts
-description: Afficher des notifications non bloquantes.
+description: Show non-blocking notifications.
 ---
 
-Le `ToastManagerInterface` fournit une API fluide et cohérente pour afficher des notifications toast avec SweetAlert2 dans Symfony.
+The `ToastManagerInterface` provides a fluent and consistent way to display toast notifications using SweetAlert2 in Symfony applications.
 
-## Vue d'ensemble
+## Overview
 
-Les toasts sont des notifications légères et non bloquantes qui apparaissent à l'écran et disparaissent automatiquement après un délai. Cette implémentation est entièrement intégrée aux sessions Symfony et aux messages flash.
+Toasts are lightweight, non-blocking notifications that appear on the screen and automatically disappear after a given time. This implementation is fully integrated with Symfony sessions and flash messages.
 
-## Utilisation
+## Usage
 
-Injectez `ToastManagerInterface` dans votre contrôleur ou service pour créer et ajouter des toasts :
+Inject `ToastManagerInterface` into your controller or service to create and add toast notifications:
 
 ```php
 use Pentiminax\UX\SweetAlert\ToastManagerInterface;
@@ -33,9 +33,9 @@ public function someAction(): Response
 }
 ```
 
-## Thèmes
+## Themes
 
-Les toasts partagent la même API de thèmes que les alertes :
+Toasts share the same theme API as alerts:
 
 ```php
 use Pentiminax\UX\SweetAlert\Enum\Theme;
@@ -44,4 +44,4 @@ $toast = $this->toastManager->success(title: 'Saved!');
 $toast->theme(Theme::MaterialUILight);
 ```
 
-Les feuilles de style de thèmes ne sont pas auto-importées (voir `assets/package.json` et ses entrées `autoimport`).
+Theme styles are not auto-imported (see `assets/package.json` `autoimport` entries).
