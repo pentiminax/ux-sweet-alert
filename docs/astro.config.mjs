@@ -15,18 +15,18 @@ export default defineConfig({
         {
           label: 'Getting Started',
           items: [
-            { label: 'Installation', slug: 'installation/' },
-            { label: 'Usage', slug: 'usage/' },
-            { label: 'Configuration', slug: 'configuration/' }
+            { label: 'Installation', slug: 'installation' },
+            { label: 'Usage', slug: 'usage' },
+            { label: 'Configuration', slug: 'configuration' }
           ]
         },
         {
           label: 'Features',
           items: [
-            { label: 'Alerts', slug: 'alerts/' },
-            { label: 'Toasts', slug: 'toasts/' },
-            { label: 'Live Component', slug: 'live-component/' },
-            { label: 'Turbo Integration', slug: 'turbo/' }
+            { label: 'Alerts', slug: 'alerts' },
+            { label: 'Toasts', slug: 'toasts' },
+            { label: 'Live Component', slug: 'live-component' },
+            { label: 'Turbo Integration', slug: 'turbo' }
           ]
         }
       ]
