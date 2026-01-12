@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   site: 'https://pentiminax.github.io',
-  base: import.meta.env.PROD ? '/ux-sweet-alert' : '/',
+  base: '/ux-sweet-alert',
   integrations: [
     starlight({
       title: 'UX SweetAlert',
@@ -15,18 +15,18 @@ export default defineConfig({
         {
           label: 'Getting Started',
           items: [
-            { label: 'Installation', link: '/installation/' },
-            { label: 'Usage', link: '/usage/' },
-            { label: 'Configuration', link: '/configuration/' }
+            { label: 'Installation', slug: 'installation/' },
+            { label: 'Usage', slug: 'usage/' },
+            { label: 'Configuration', slug: 'configuration/' }
           ]
         },
         {
           label: 'Features',
           items: [
-            { label: 'Alerts', link: '/alerts/' },
-            { label: 'Toasts', link: '/toasts/' },
-            { label: 'Live Component', link: '/live-component/' },
-            { label: 'Turbo Integration', link: '/turbo/' }
+            { label: 'Alerts', slug: 'alerts/' },
+            { label: 'Toasts', slug: 'toasts/' },
+            { label: 'Live Component', slug: 'live-component/' },
+            { label: 'Turbo Integration', slug: 'turbo/' }
           ]
         }
       ]
