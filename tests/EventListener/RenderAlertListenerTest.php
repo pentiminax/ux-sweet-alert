@@ -28,6 +28,10 @@ class RenderAlertListenerTest extends TestCase
     {
         parent::setUp();
 
+        if (!class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
+            class_alias(DummyTurboBundle::class, \Symfony\UX\Turbo\TurboBundle::class);
+        }
+
         $this->alertManager = $this->createMock(AlertManagerInterface::class);
         $this->toastManager = $this->createMock(ToastManagerInterface::class);
         $this->twig = $this->createMock(Environment::class);
@@ -81,4 +85,8 @@ class RenderAlertListenerTest extends TestCase
             text: 'Text',
         );
     }
+}
+
+final class DummyTurboBundle
+{
 }
