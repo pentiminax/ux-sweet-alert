@@ -3,10 +3,13 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   site: 'https://pentiminax.github.io',
-  base: '/ux-sweet-alert',
+  base: import.meta.env.PROD ? '/ux-sweet-alert' : '/',
   integrations: [
     starlight({
       title: 'UX SweetAlert',
+      customCss: [
+        './src/styles/custom.css',
+      ],
       description: 'Online documentation for the UX SweetAlert bundle.',
       sidebar: [
         {

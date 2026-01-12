@@ -1,15 +1,37 @@
 ---
 title: UX SweetAlert
-description: Online documentation for the UX SweetAlert bundle.
+description: Beautiful, responsive, customizable alerts for your web applications.
+template: splash
+hero:
+  tagline: Make your user notifications sweet and simple.
+  image:
+    file: ../../assets/sweet-alert-hero.svg
+  actions:
+    - text: Get Started
+      link: /installation/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/pentiminax/ux-sweet-alert
+      icon: external
+      variant: minimal
 ---
 
-Welcome to the UX SweetAlert documentation. Find installation, configuration, and feature guides here.
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Quick start
+<div class="hero-bg"></div>
 
-- [Install the bundle](/installation/)
-- [Configure default options](/configuration/)
-- [Trigger alerts](/alerts/)
-- [Trigger toasts](/toasts/)
-- [Use the Live Component](/live-component/)
-- [Enable Turbo integration](/turbo/)
+<CardGrid stagger>
+	<Card title="Easy Integration" icon="puzzle">
+		Drop-in replacement for standard browser alerts with a modern touch.
+	</Card>
+	<Card title="Fully Customizable" icon="setting">
+		Configure colors, icons, positioning and animations to match your brand.
+	</Card>
+	<Card title="Live Components" icon="rocket">
+		Seamlessly integrate with Symfony Live Components for real-time interactivity.
+	</Card>
+	<Card title="Turbo Ready" icon="laptop">
+		Built-in support for Hotwire Turbo Drive to keep your navigation smooth.
+	</Card>
+</CardGrid>

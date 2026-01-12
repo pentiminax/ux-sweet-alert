@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+	/* Font overrides */
+	--sl-font: 'Outfit', system-ui, -apple-system, sans-serif;
+	
+	/* Brand Colors - Sweet/Vibrant */
+	--sl-hue-accent: 320; /* Pinkish-Purple base */
+	--sl-color-accent-low: #3e1a2e;
+	--sl-color-accent: #ec4899;
+	--sl-color-accent-high: #fbcfe8;
+	
+	/* Dark mode tweaks for a "deep space" feel */
+	--sl-color-bg: #0f172a; /* Slate 900 */
+	--sl-color-bg-nav: #1e293b; /* Slate 800 */
+	--sl-color-bg-sidebar: #1e293b;
+	--sl-color-hairline: #334155;
+}
+
+[data-theme='light'] {
+	--sl-color-bg: #ffffff;
+	--sl-color-bg-nav: #f8fafc;
+	--sl-color-bg-sidebar: #f8fafc;
+	--sl-color-accent-low: #fce7f3;
+	--sl-color-accent: #db2777;
+	--sl-color-accent-high: #831843;
+}
+
+/* Make the hero look cooler */
+.hero-html {
+	background: linear-gradient(to right, #ec4899, #8b5cf6);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Card styling improvements */
+.card {
+	border-radius: 12px;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+	border-color: var(--sl-color-accent);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--sl-color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--sl-color-gray-5);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--sl-color-gray-4);
+}
