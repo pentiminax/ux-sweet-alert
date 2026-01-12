@@ -29,7 +29,14 @@ export default defineConfig({
             { label: 'Turbo Integration', slug: 'turbo' }
           ]
         }
-      ]
+      ],
+      defaultLocale: 'root',
+      locales: {
+        root: {
+          label: 'English',
+          lang: 'en',
+        },
+      },
     })
   ]
 });
