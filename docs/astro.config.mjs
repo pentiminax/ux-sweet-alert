@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: 'https://pentiminax.github.io',
+  base: '/ux-sweet-alert',
   integrations: [
     starlight({
       title: 'UX SweetAlert',
