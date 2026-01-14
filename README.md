@@ -71,12 +71,7 @@ class HomeController extends AbstractController
 }
 ```
 
-## Advanced documentation
+## Documentation
 
-- [Installation](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/installation.md)
-- [Configuration](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/configuration.md)
-- [Usage](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/usage.md)
-- [Alerts](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/alerts.md)
-- [Toasts](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/toasts.md)
-- [Live Component](https://github.com/pentiminax/ux-sweet-alert/blob/main/docs/live-component.md)
+- [Online documentation](https://pentiminax.github.io/ux-sweet-alert/)
 
