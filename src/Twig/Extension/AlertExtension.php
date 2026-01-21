@@ -3,7 +3,6 @@
 namespace Pentiminax\UX\SweetAlert\Twig\Extension;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
-use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -15,7 +14,6 @@ class AlertExtension extends AbstractExtension
     public function __construct(
         private readonly Environment  $twig,
         private readonly AlertManagerInterface $alertManager,
-        private readonly ToastManagerInterface $toastManager,
     ) {
     }
 
@@ -30,10 +28,9 @@ class AlertExtension extends AbstractExtension
     {
         $stimulus = new StimulusHelper($this->twig);
         $alerts = $this->alertManager->getAlerts();
-        $toasts = $this->toastManager->getToasts();
 
         $controllers['@pentiminax/ux-sweet-alert/sweetalert'] = [
-            'view' => array_merge($alerts, $toasts),
+            'view' => $alerts,
         ];
 
         $stimulusAttributes = $stimulus->createStimulusAttributes();

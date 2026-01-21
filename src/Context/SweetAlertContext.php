@@ -3,16 +3,12 @@
 namespace Pentiminax\UX\SweetAlert\Context;
 
 use Pentiminax\UX\SweetAlert\Model\Alert;
-use Pentiminax\UX\SweetAlert\Model\Toast;
 use Symfony\Contracts\Service\ResetInterface;
 
 class SweetAlertContext implements ResetInterface, SweetAlertContextInterface
 {
     /** @var Alert[] */
     private array $alerts = [];
-
-    /** @var Toast[] */
-    private array $toasts = [];
 
     public function addAlert(Alert $alert): void
     {
@@ -24,20 +20,18 @@ class SweetAlertContext implements ResetInterface, SweetAlertContextInterface
         return $this->alerts;
     }
 
-    public function addToast(Toast $toast): void
+    public function getStandardAlerts(): array
     {
-        $this->toasts[] = $toast;
+        return array_filter($this->alerts, fn(Alert $alert) => !$alert->isToast());
     }
 
     public function getToasts(): array
     {
-        return $this->toasts;
+        return array_filter($this->alerts, fn(Alert $alert) => $alert->isToast());
     }
-
 
     public function reset(): void
     {
         $this->alerts = [];
-        $this->toasts = [];
     }
 }

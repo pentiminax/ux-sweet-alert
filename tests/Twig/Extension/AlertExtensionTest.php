@@ -3,7 +3,6 @@
 namespace Pentiminax\UX\SweetAlert\Tests\Twig\Extension;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
-use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Extension\AlertExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
@@ -21,13 +20,7 @@ class AlertExtensionTest extends TestCase
             ->method('getAlerts')
             ->willReturn([]);
 
-        $toastManager = $this->createMock(ToastManagerInterface::class);
-        $toastManager
-            ->expects($this->once())
-            ->method('getToasts')
-            ->willReturn([]);
-
-        $extension = new AlertExtension($twig, $alertManager, $toastManager);
+        $extension = new AlertExtension($twig, $alertManager);
 
         $markup = $extension->scripts();
 

@@ -54,6 +54,7 @@ class AlertTest extends TestCase
         $this->assertEquals(Position::CENTER->value, $data['position']);
         $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
         $this->assertEquals('<b>html</b>', $data['html']);
+        $this->assertArrayNotHasKey('toast', $data);
     }
 
     public function testSerializeSupportsBootstrapTheme(): void
@@ -72,5 +73,48 @@ class AlertTest extends TestCase
         $data = $alert->jsonSerialize();
 
         $this->assertEquals(Theme::Bootstrap5->value, $data['theme']);
+    }
+
+    public function testToastMode(): void
+    {
+        $alert = Alert::new(
+            title: 'toast',
+            id: 'toast-id',
+            text: 'text'
+        );
+
+        $alert
+            ->asToast()
+            ->timer(3000)
+            ->withTimerProgressBar()
+            ->theme(Theme::MaterialUIDark);
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertTrue($alert->isToast());
+        $this->assertSame(Theme::MaterialUIDark->value, $data['theme']);
+        $this->assertTrue($data['toast']);
+        $this->assertSame(3000, $data['timer']);
+        $this->assertTrue($data['timerProgressBar']);
+        $this->assertArrayNotHasKey('backdrop', $data);
+        $this->assertArrayNotHasKey('allowOutsideClick', $data);
+    }
+
+    public function testStandardAlertDoesNotIncludeToastFields(): void
+    {
+        $alert = Alert::new(
+            title: 'standard',
+            id: 'alert-id',
+            text: 'text'
+        );
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertFalse($alert->isToast());
+        $this->assertArrayNotHasKey('toast', $data);
+        $this->assertArrayNotHasKey('timer', $data);
+        $this->assertArrayNotHasKey('timerProgressBar', $data);
+        $this->assertArrayHasKey('backdrop', $data);
+        $this->assertArrayHasKey('allowOutsideClick', $data);
     }
 }

@@ -3,7 +3,6 @@
 namespace Pentiminax\UX\SweetAlert\Context;
 
 use Pentiminax\UX\SweetAlert\Model\Alert;
-use Pentiminax\UX\SweetAlert\Model\Toast;
 
 interface SweetAlertContextInterface
 {
@@ -14,10 +13,17 @@ interface SweetAlertContextInterface
      */
     public function getAlerts(): array;
 
-    public function addToast(Toast $toast): void;
+    /**
+     * Returns only alerts that are not toasts.
+     *
+     * @return Alert[]
+     */
+    public function getStandardAlerts(): array;
 
     /**
-     * @return Toast[]
+     * Returns only alerts that are toasts.
+     *
+     * @return Alert[]
      */
     public function getToasts(): array;
 }

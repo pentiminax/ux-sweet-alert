@@ -43,10 +43,6 @@ class AlertManager implements AlertManagerInterface
         $alerts = [];
         if ($this->autoConvertFlashMessages) {
             foreach ($this->getFlashBag()->peekAll() as $key => $messages) {
-                if ($key === ToastManagerInterface::TOAST_STORAGE_KEY) {
-                    continue;
-                }
-
                 if ($key === AlertManagerInterface::ALERT_STORAGE_KEY) {
                     $alerts[] = $this->getFlashBag()->get($key);
                 } else {
@@ -66,29 +62,97 @@ class AlertManager implements AlertManagerInterface
         return $this->requestStack->getSession();
     }
 
-    public function success(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
-    {
-        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::SUCCESS, $customClass);
+    public function success(
+        string $title,
+        string $id = '',
+        string $text = '',
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false
+    ): Alert {
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::SUCCESS, $customClass, $toast, $timer, $timerProgressBar);
     }
 
-    public function error(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
-    {
-        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::ERROR, $customClass);
+    public function error(
+        string $title,
+        string $id = '',
+        string $text = '',
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false
+    ): Alert {
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::ERROR, $customClass, $toast, $timer, $timerProgressBar);
     }
 
-    public function warning(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
-    {
-        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::WARNING, $customClass);
+    public function warning(
+        string $title,
+        string $id = '',
+        string $text = '',
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false
+    ): Alert {
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::WARNING, $customClass, $toast, $timer, $timerProgressBar);
     }
 
-    public function info(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
-    {
-        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::INFO, $customClass);
+    public function info(
+        string $title,
+        string $id = '',
+        string $text = '',
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false
+    ): Alert {
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::INFO, $customClass, $toast, $timer, $timerProgressBar);
     }
 
-    public function question(string $title, string $id = '', string $text = '', Position $position = Position::CENTER, ?Theme $theme = null, array $customClass = []): Alert
-    {
-        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::QUESTION, $customClass);
+    public function question(
+        string $title,
+        string $id = '',
+        string $text = '',
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false
+    ): Alert {
+        return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::QUESTION, $customClass, $toast, $timer, $timerProgressBar);
+    }
+
+    public function toast(
+        string $title,
+        string $id = '',
+        string $text = '',
+        Position $position = Position::BOTTOM_END,
+        ?Theme $theme = null,
+        ?int $timer = null,
+        bool $timerProgressBar = false
+    ): Alert {
+        return $this->createAndAddAlert(
+            id: $id,
+            title: $title,
+            text: $text,
+            position: $position,
+            theme: $theme,
+            icon: Icon::SUCCESS,
+            customClass: [],
+            toast: true,
+            timer: $timer,
+            timerProgressBar: $timerProgressBar
+        );
     }
 
     private function createAndAddAlert(
@@ -98,10 +162,18 @@ class AlertManager implements AlertManagerInterface
         Position $position,
         ?Theme $theme,
         Icon $icon,
-        array $customClass = []
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false
     ): Alert {
         $id = empty($id) ? uniqid(more_entropy: true) : $id;
         $theme ??= $this->defaultTheme;
+
+        // Apply toast defaults if toast mode
+        if ($toast && $position === Position::CENTER) {
+            $position = Position::BOTTOM_END;
+        }
 
         $alert = Alert::new(
             title: $title,
@@ -112,6 +184,16 @@ class AlertManager implements AlertManagerInterface
             customClass: $customClass
         );
         $alert->theme($theme);
+
+        if ($toast) {
+            $alert->asToast();
+            $alert->timer($timer);
+            $alert->withoutConfirmButton();
+
+            if ($timerProgressBar) {
+                $alert->withTimerProgressBar();
+            }
+        }
 
         $this->addAlert($alert);
 

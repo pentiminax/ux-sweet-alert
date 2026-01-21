@@ -6,7 +6,6 @@ use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
 use Pentiminax\UX\SweetAlert\Model\Alert;
-use Pentiminax\UX\SweetAlert\Model\Toast;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,17 +36,17 @@ class DataCollectorTest extends TestCase
     public function testGetData(): void
     {
         $alerts = [
-            Alert::new('id', 'title', 'text')
+            Alert::new('title', 'id', 'text')
         ];
 
         $this->context
             ->expects($this->once())
-            ->method('getAlerts')
+            ->method('getStandardAlerts')
             ->willReturn($alerts);
 
-        $toasts = [
-            Toast::new('id', 'title', 'text')
-        ];
+        $toastAlert = Alert::new('toast-title', 'toast-id', 'text');
+        $toastAlert->asToast();
+        $toasts = [$toastAlert];
 
         $this->context
             ->expects($this->once())
