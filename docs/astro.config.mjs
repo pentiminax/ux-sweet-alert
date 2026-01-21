@@ -26,7 +26,8 @@ export default defineConfig({
             { label: 'Alerts', slug: 'alerts' },
             { label: 'Toasts', slug: 'toasts' },
             { label: 'Live Component', slug: 'live-component' },
-            { label: 'Turbo Integration', slug: 'turbo' }
+            { label: 'Turbo Integration', slug: 'turbo' },
+            { label: 'HTMX Integration', slug: 'htmx' }
           ]
         }
       ],
