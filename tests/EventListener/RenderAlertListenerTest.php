@@ -5,7 +5,6 @@ namespace Pentiminax\UX\SweetAlert\Tests\EventListener;
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
 use Pentiminax\UX\SweetAlert\Model\Alert;
-use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +19,6 @@ class RenderAlertListenerTest extends TestCase
 
     private AlertManagerInterface|MockObject $alertManager;
 
-    private ToastManagerInterface|MockObject $toastManager;
-
     private Environment|MockObject $twig;
 
     protected function setUp(): void
@@ -33,12 +30,10 @@ class RenderAlertListenerTest extends TestCase
         }
 
         $this->alertManager = $this->createMock(AlertManagerInterface::class);
-        $this->toastManager = $this->createMock(ToastManagerInterface::class);
         $this->twig = $this->createMock(Environment::class);
 
         $this->listener = new RenderAlertListener(
             alertManager: $this->alertManager,
-            toastManager: $this->toastManager,
             twig: $this->twig
         );
     }

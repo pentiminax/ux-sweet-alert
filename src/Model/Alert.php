@@ -44,6 +44,12 @@ class Alert implements \JsonSerializable
 
     private ?string $html = null;
 
+    private bool $toast = false;
+
+    private ?int $timer = null;
+
+    private bool $timerProgressBar = false;
+
     public static function new(string $title, string $id = '', string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
@@ -173,9 +179,38 @@ class Alert implements \JsonSerializable
         return $this;
     }
 
+    public function asToast(): static
+    {
+        $this->toast = true;
+
+        return $this;
+    }
+
+    public function isToast(): bool
+    {
+        return $this->toast;
+    }
+
+    /**
+     * @param int|null $timer Auto close timer of the popup. Set in ms (milliseconds).
+     */
+    public function timer(?int $timer): static
+    {
+        $this->timer = $timer;
+
+        return $this;
+    }
+
+    public function withTimerProgressBar(): static
+    {
+        $this->timerProgressBar = true;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'title' => $this->title,
             'text' => $this->text,
@@ -186,14 +221,23 @@ class Alert implements \JsonSerializable
             'showDenyButton' => $this->showDenyButton,
             'animation' => $this->animation,
             'theme' => $this->theme->value,
-            'backdrop' => $this->backdrop,
-            'allowOutsideClick' => $this->allowOutsideClick,
             'allowEscapeKey' => $this->allowEscapeKey,
             'confirmButtonColor' => $this->confirmButtonColor,
             'position' => $this->position->value,
             'customClass' => $this->customClass,
             'cancelButtonText' => $this->cancelButtonText,
-            'html' => $this->html
+            'html' => $this->html,
         ];
+
+        if ($this->toast) {
+            $data['toast'] = true;
+            $data['timer'] = $this->timer;
+            $data['timerProgressBar'] = $this->timerProgressBar;
+        } else {
+            $data['backdrop'] = $this->backdrop;
+            $data['allowOutsideClick'] = $this->allowOutsideClick;
+        }
+
+        return $data;
     }
 }
