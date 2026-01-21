@@ -1,0 +1,47 @@
+---
+title: HTMX Integration
+description: Trigger UX SweetAlert popups from HTMX responses.
+---
+
+## Overview
+
+UX SweetAlert can emit alerts through HTMX responses without extra JavaScript plumbing. When an alert is present and
+Symfony UX Turbo is not installed, the bundle adds an `HX-Trigger` header that HTMX turns into a browser event the
+SweetAlert controller already listens for.
+
+## Requirements
+
+- HTMX installed on the page.
+- The UX SweetAlert Stimulus controller registered (same as standard usage).
+
+## Automatic alert dispatch
+
+When you trigger an alert in a controller, the response listener automatically attaches an `HX-Trigger` header that
+fires the `ux-sweet-alert:alert:added` event. The alert payload is passed in the event detail.
+
+```http
+HX-Trigger: {"ux-sweet-alert:alert:added":{"alert":{"title":"Alert Title","icon":"success"}}}
+```
+
+Once HTMX receives the response, it dispatches the event and the SweetAlert controller shows the popup.
+
+## Manual HTMX trigger helper
+
+If you want to attach the trigger yourself (for example when building a custom response), use the helper:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Htmx\HxTriggerHelper;
+use Symfony\Component\HttpFoundation\Response;
+
+public function index(AlertManagerInterface $alertManager): Response
+{
+    $alert = $alertManager->success('Saved!', text: 'Your changes have been stored.');
+
+    $response = new Response('OK');
+
+    return HxTriggerHelper::withAlert($response, $alert);
+}
+```
+
+This ensures HTMX receives the `HX-Trigger` header with the correct event payload.
