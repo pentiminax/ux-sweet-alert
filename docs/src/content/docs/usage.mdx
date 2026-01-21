@@ -14,22 +14,22 @@ add the following Twig function in your `base.html.twig` (or the layout file):
 
 ## Toasts
 
-To use UX SweetAlert, inject the `ToastManagerInterface` service and
-create toasts in PHP:
+To use UX SweetAlert, inject the `AlertManagerInterface` service and
+use the `toast()` method to create toasts in PHP:
 
 ```php
-use Pentiminax\UX\SweetAlert\ToastManagerInterface;
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Enum\Position;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_homepage')]
-    public function index(ToastManagerInterface $toastManager): Response
+    public function index(AlertManagerInterface $alertManager): Response
     {
-       $toastManager->success(
+       $alertManager->toast(
             title: 'title',
             text: 'text',
             position: Position::TOP_END,
-            showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true
         );

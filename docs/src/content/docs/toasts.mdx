@@ -3,7 +3,7 @@ title: Toasts
 description: Show non-blocking notifications.
 ---
 
-The `ToastManagerInterface` provides a fluent and consistent way to display toast notifications using SweetAlert2 in Symfony applications.
+The `AlertManagerInterface` provides a fluent and consistent way to display toast notifications using SweetAlert2 in Symfony applications.
 
 ## Overview
 
@@ -11,18 +11,18 @@ Toasts are lightweight, non-blocking notifications that appear on the screen and
 
 ## Usage
 
-Inject `ToastManagerInterface` into your controller or service to create and add toast notifications:
+Inject `AlertManagerInterface` into your controller or service and use the `toast()` method to create toast notifications:
 
 ```php
-use Pentiminax\UX\SweetAlert\ToastManagerInterface;
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 
 public function __construct(
-    private ToastManagerInterface $toastManager
+    private AlertManagerInterface $alertManager
 ) {}
 
 public function someAction(): Response
 {
-    $this->toastManager->success(
+    $this->alertManager->toast(
         title: 'Profile Updated!',
         text: 'Your changes have been saved.',
         timer: 3000,
@@ -40,7 +40,7 @@ Toasts share the same theme API as alerts:
 ```php
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 
-$toast = $this->toastManager->success(title: 'Saved!');
+$toast = $this->alertManager->toast(title: 'Saved!');
 $toast->theme(Theme::MaterialUILight);
 ```
 

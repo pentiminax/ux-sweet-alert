@@ -45,23 +45,21 @@ public function index(AlertManagerInterface $alertManager): Response
 
 ## Toasts
 
-Inject the `ToastManagerInterface` service and
-create toasts:
+Use the `AlertManagerInterface` service with the `toast()` method to create toast notifications:
 
 ```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Pentiminax\UX\SweetAlert\Enum\Position;
-use Pentiminax\UX\SweetAlert\ToastManagerInterface;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_homepage')]
-    public function index(ToastManagerInterface $toastManager): Response
+    public function index(AlertManagerInterface $alertManager): Response
     {
-       $toastManager->success(
+       $alertManager->toast(
             title: 'title',
             text: 'text',
             position: Position::TOP_END,
-            showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true
         );
