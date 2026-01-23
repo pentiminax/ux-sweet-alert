@@ -136,6 +136,7 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
+        ?Icon $icon = Icon::SUCCESS,
         Position $position = Position::BOTTOM_END,
         ?Theme $theme = null,
         ?int $timer = null,
