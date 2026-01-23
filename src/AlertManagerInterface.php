@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
@@ -81,6 +82,7 @@ interface AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
+        ?Icon $icon = Icon::SUCCESS,
         Position $position = Position::BOTTOM_END,
         ?Theme $theme = null,
         ?int $timer = null,

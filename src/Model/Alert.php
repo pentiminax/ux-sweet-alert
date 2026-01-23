@@ -14,7 +14,7 @@ class Alert implements \JsonSerializable
 
     private string $text;
 
-    private Icon $icon = Icon::SUCCESS;
+    private ?Icon $icon = Icon::SUCCESS;
 
     private Position $position = Position::CENTER;
 
@@ -50,7 +50,21 @@ class Alert implements \JsonSerializable
 
     private bool $timerProgressBar = false;
 
-    public static function new(string $title, string $id = '', string $text = '', Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
+    private ?string $footer = null;
+
+    private ?string $imageUrl = null;
+
+    private ?int $imageHeight = null;
+
+    private ?string $imageAlt = null;
+
+    private bool $draggable = false;
+
+    private bool $focusConfirm = true;
+
+    private string $denyButtonText = 'No';
+
+    public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
 
@@ -75,7 +89,7 @@ class Alert implements \JsonSerializable
         return $this->title;
     }
 
-    public function getIcon(): Icon
+    public function getIcon(): ?Icon
     {
         return $this->icon;
     }
@@ -208,13 +222,97 @@ class Alert implements \JsonSerializable
         return $this;
     }
 
+    public function getFooter(): ?string
+    {
+        return $this->footer;
+    }
+
+    public function setFooter(?string $footer): static
+    {
+        $this->footer = $footer;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): static
+    {
+        $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getImageAlt(): ?string
+    {
+        return $this->imageAlt;
+    }
+
+    public function setImageAlt(?string $imageAlt): static
+    {
+        $this->imageAlt = $imageAlt;
+
+        return $this;
+    }
+
+    public function getImageHeight(): ?int
+    {
+        return $this->imageHeight;
+    }
+
+    public function setImageHeight(?int $imageHeight): static
+    {
+        $this->imageHeight = $imageHeight;
+
+        return $this;
+    }
+
+    public function setDraggable(bool $draggable = true): static
+    {
+        $this->draggable = $draggable;
+
+        return $this;
+    }
+
+    public function isDraggable(): bool
+    {
+        return $this->draggable;
+    }
+
+    public function setFocusConfirm(bool $focusConfirm = true): static
+    {
+        $this->focusConfirm = $focusConfirm;
+
+        return $this;
+    }
+
+    public function isFocusConfirm(): bool
+    {
+        return $this->focusConfirm;
+    }
+
+    public function setDenyButtonText(string $denyButtonText): static
+    {
+        $this->denyButtonText = $denyButtonText;
+
+        return $this;
+    }
+
+    public function getDenyButtonText(): string
+    {
+        return $this->denyButtonText;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
             'id' => $this->id,
             'title' => $this->title,
             'text' => $this->text,
-            'icon' => $this->icon->value,
+            'icon' => $this->icon?->value,
             'confirmButtonText' => $this->confirmButtonText,
             'showConfirmButton' => $this->showConfirmButton,
             'showCancelButton' => $this->showCancelButton,
@@ -227,6 +325,12 @@ class Alert implements \JsonSerializable
             'customClass' => $this->customClass,
             'cancelButtonText' => $this->cancelButtonText,
             'html' => $this->html,
+            'footer' => $this->footer,
+            'imageUrl' => $this->imageUrl,
+            'imageHeight' => $this->imageHeight,
+            'imageAlt' => $this->imageAlt,
+            'draggable' => $this->draggable,
+            'focusConfirm' => $this->focusConfirm,
         ];
 
         if ($this->toast) {
