@@ -69,6 +69,12 @@ class AlertManagerTest extends KernelTestCase
             'html' => null,
             'backdrop' => true,
             'allowOutsideClick' => true,
+            'footer' => null,
+            'imageUrl' => null,
+            'imageHeight' => null,
+            'imageAlt' => null,
+            'draggable' => false,
+            'focusConfirm' => true,
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
