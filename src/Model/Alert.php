@@ -64,6 +64,8 @@ class Alert implements \JsonSerializable
 
     private string $denyButtonText = 'No';
 
+    private bool $topLayer = false;
+
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
@@ -306,6 +308,13 @@ class Alert implements \JsonSerializable
         return $this->denyButtonText;
     }
 
+    public function setTopLayer(bool $topLayer = true): static
+    {
+        $this->topLayer = $topLayer;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
@@ -331,6 +340,7 @@ class Alert implements \JsonSerializable
             'imageAlt'           => $this->imageAlt,
             'draggable'          => $this->draggable,
             'focusConfirm'       => $this->focusConfirm,
+            'topLayer'           => $this->topLayer,
         ];
 
         if ($this->toast) {
