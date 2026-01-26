@@ -8,6 +8,7 @@ use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +32,13 @@ class AlertManagerTest extends KernelTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $alertDefaults = new AlertDefaults();
+
         $this->alertManager = new AlertManager(
             requestStack: $requestStack,
             context: $this->createMock(SweetAlertContextInterface::class),
-            flashMessageConverter: new FlashMessageConverter(),
+            flashMessageConverter: new FlashMessageConverter($alertDefaults),
+            alertDefaults: $alertDefaults,
         );
     }
 
@@ -91,17 +95,18 @@ class AlertManagerTest extends KernelTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $alertDefaults = new AlertDefaults(theme: Theme::Dark);
+
         $alertManager = new AlertManager(
             requestStack: $requestStack,
             context: $this->createMock(SweetAlertContextInterface::class),
-            flashMessageConverter: new FlashMessageConverter(Theme::Dark->value),
-            defaultTheme: Theme::Dark->value
+            flashMessageConverter: new FlashMessageConverter($alertDefaults),
+            alertDefaults: $alertDefaults,
         );
 
         $alert = $alertManager->success(
             title: 'title',
             text: 'text',
-            position: Position::CENTER
         );
 
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
@@ -171,11 +176,13 @@ class AlertManagerTest extends KernelTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $alertDefaults = new AlertDefaults(theme: Theme::Dark);
+
         $alertManager = new AlertManager(
             requestStack: $requestStack,
             context: $this->createMock(SweetAlertContextInterface::class),
-            flashMessageConverter: new FlashMessageConverter(Theme::Dark->value),
-            defaultTheme: Theme::Dark->value
+            flashMessageConverter: new FlashMessageConverter($alertDefaults),
+            alertDefaults: $alertDefaults,
         );
 
         $alert = $alertManager->toast(

@@ -81,6 +81,44 @@ class Alert implements \JsonSerializable
         return $alert;
     }
 
+    public static function withDefaults(
+        AlertDefaults $defaults,
+        string $title,
+        string $id = '',
+        string $text = '',
+        ?Icon $icon = Icon::SUCCESS,
+        ?Position $position = null,
+        ?array $customClass = null,
+    ): static {
+        $alert = new static();
+
+        $alert->id                 = empty($id) ? uniqid(more_entropy: true) : $id;
+        $alert->title              = $title;
+        $alert->text               = $text;
+        $alert->icon               = $icon;
+        $alert->position           = $position        ?? $defaults->position;
+        $alert->theme              = $defaults->theme ?? Theme::Auto;
+        $alert->customClass        = $customClass     ?? $defaults->customClass;
+        $alert->confirmButtonColor = $defaults->confirmButtonColor;
+        $alert->confirmButtonText  = $defaults->confirmButtonText;
+        $alert->cancelButtonText   = $defaults->cancelButtonText;
+        $alert->denyButtonText     = $defaults->denyButtonText;
+        $alert->showConfirmButton  = $defaults->showConfirmButton;
+        $alert->showCancelButton   = $defaults->showCancelButton;
+        $alert->showDenyButton     = $defaults->showDenyButton;
+        $alert->backdrop           = $defaults->backdrop;
+        $alert->animation          = $defaults->animation;
+        $alert->allowOutsideClick  = $defaults->allowOutsideClick;
+        $alert->allowEscapeKey     = $defaults->allowEscapeKey;
+        $alert->focusConfirm       = $defaults->focusConfirm;
+        $alert->draggable          = $defaults->draggable;
+        $alert->topLayer           = $defaults->topLayer;
+        $alert->timer              = $defaults->timer;
+        $alert->timerProgressBar   = $defaults->timerProgressBar;
+
+        return $alert;
+    }
+
     public function getId(): string
     {
         return $this->id;

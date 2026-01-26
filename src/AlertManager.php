@@ -7,22 +7,20 @@ use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class AlertManager implements AlertManagerInterface
 {
-    private Theme $defaultTheme;
-
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly SweetAlertContextInterface $context,
         private readonly FlashMessageConverter $flashMessageConverter,
+        private readonly AlertDefaults $alertDefaults,
         private readonly bool $autoConvertFlashMessages = false,
-        string $defaultTheme = 'auto',
     ) {
-        $this->defaultTheme = Theme::from($defaultTheme);
     }
 
     public function addAlert(Alert $alert): void
@@ -168,14 +166,14 @@ class AlertManager implements AlertManagerInterface
         bool $timerProgressBar = false,
     ): Alert {
         $id = empty($id) ? uniqid(more_entropy: true) : $id;
-        $theme ??= $this->defaultTheme;
 
         // Apply toast defaults if toast mode
         if ($toast && Position::CENTER === $position) {
             $position = Position::BOTTOM_END;
         }
 
-        $alert = Alert::new(
+        $alert = Alert::withDefaults(
+            defaults: $this->alertDefaults,
             title: $title,
             id: $id,
             text: $text,
@@ -183,7 +181,6 @@ class AlertManager implements AlertManagerInterface
             position: $position,
             customClass: $customClass
         );
-        $alert->theme($theme);
 
         if ($toast) {
             $alert->asToast();

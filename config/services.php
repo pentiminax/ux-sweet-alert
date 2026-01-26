@@ -10,6 +10,7 @@ use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
 use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\FlashMessageConverterInterface;
+use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
 use Pentiminax\UX\SweetAlert\Twig\Extension\AlertExtension;
 use Symfony\Component\DependencyInjection\Reference;
@@ -20,12 +21,22 @@ return static function (ContainerConfigurator $container) {
     $services = $container->services();
 
     $services
+        ->set('sweet_alert.alert_defaults', AlertDefaults::class)
+        ->factory([AlertDefaults::class, 'fromArray'])
+        ->arg('$config', '%sweet_alert.defaults%')
+        ->private();
+
+    $services
+        ->alias(AlertDefaults::class, 'sweet_alert.alert_defaults')
+        ->private();
+
+    $services
         ->set('sweet_alert.alert_manager', AlertManager::class)
         ->arg('$requestStack', new Reference('request_stack'))
         ->arg('$context', new Reference('sweet_alert.context'))
         ->arg('$flashMessageConverter', new Reference('sweet_alert.flash_message_converter'))
+        ->arg('$alertDefaults', new Reference('sweet_alert.alert_defaults'))
         ->arg('$autoConvertFlashMessages', '%sweet_alert.auto_convert_flash_messages%')
-        ->arg('$defaultTheme', '%sweet_alert.theme%')
         ->private();
 
     $services
@@ -72,7 +83,7 @@ return static function (ContainerConfigurator $container) {
 
     $services
         ->set('sweet_alert.flash_message_converter', FlashMessageConverter::class)
-        ->arg('$defaultTheme', '%sweet_alert.theme%');
+        ->arg('$alertDefaults', new Reference('sweet_alert.alert_defaults'));
 
     $services
         ->alias(FlashMessageConverterInterface::class, 'sweet_alert.flash_message_converter')
