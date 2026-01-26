@@ -2,6 +2,7 @@
 
 namespace Pentiminax\UX\SweetAlert;
 
+use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -17,6 +18,35 @@ class SweetAlertBundle extends AbstractBundle
             ->children()
                 ->scalarNode('auto_convert_flash_messages')->defaultFalse()->end()
                 ->enumNode('theme')->values(array_map(static fn (Theme $theme) => $theme->value, Theme::cases()))->defaultValue('auto')->end()
+                ->arrayNode('default_options')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->enumNode('position')
+                            ->values(array_map(static fn (Position $position) => $position->value, Position::cases()))
+                            ->defaultValue('center')
+                        ->end()
+                        ->scalarNode('confirmButtonColor')->defaultValue('#3085d6')->end()
+                        ->scalarNode('confirmButtonText')->defaultValue('OK')->end()
+                        ->scalarNode('cancelButtonText')->defaultValue('Cancel')->end()
+                        ->scalarNode('denyButtonText')->defaultValue('No')->end()
+                        ->booleanNode('showConfirmButton')->defaultTrue()->end()
+                        ->booleanNode('showCancelButton')->defaultFalse()->end()
+                        ->booleanNode('showDenyButton')->defaultFalse()->end()
+                        ->booleanNode('animation')->defaultTrue()->end()
+                        ->booleanNode('backdrop')->defaultTrue()->end()
+                        ->booleanNode('allowOutsideClick')->defaultTrue()->end()
+                        ->booleanNode('allowEscapeKey')->defaultTrue()->end()
+                        ->booleanNode('focusConfirm')->defaultTrue()->end()
+                        ->booleanNode('draggable')->defaultFalse()->end()
+                        ->booleanNode('topLayer')->defaultFalse()->end()
+                        ->integerNode('timer')->defaultNull()->end()
+                        ->booleanNode('timerProgressBar')->defaultFalse()->end()
+                        ->arrayNode('customClass')
+                            ->scalarPrototype()->end()
+                            ->defaultValue([])
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
     }
@@ -25,6 +55,7 @@ class SweetAlertBundle extends AbstractBundle
     {
         $builder->setParameter('sweet_alert.auto_convert_flash_messages', $config['auto_convert_flash_messages']);
         $builder->setParameter('sweet_alert.theme', $config['theme']);
+        $builder->setParameter('sweet_alert.default_options', $config['default_options']);
 
         $container->import('../config/services.php');
     }

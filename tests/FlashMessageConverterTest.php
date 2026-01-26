@@ -6,6 +6,7 @@ use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +16,7 @@ final class FlashMessageConverterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->converter = new FlashMessageConverter();
+        $this->converter = new FlashMessageConverter(new AlertDefaults());
     }
 
     #[DataProvider('provideFlashCases')]
@@ -30,6 +31,7 @@ final class FlashMessageConverterTest extends TestCase
         foreach ($alerts as $i => $alert) {
             self::assertSame($messages[$i], $alert->getTitle());
             self::assertSame($expectedIcon, $alert->getIcon());
+            // Position comes from AlertDefaults which defaults to CENTER
             self::assertSame(Position::CENTER, $alert->getPosition());
         }
     }
