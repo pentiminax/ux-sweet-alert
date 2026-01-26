@@ -15,7 +15,7 @@ class RenderAlertListener
 {
     public function __construct(
         private readonly AlertManagerInterface $alertManager,
-        private readonly Environment           $twig
+        private readonly Environment $twig,
     ) {
     }
 
@@ -29,7 +29,7 @@ class RenderAlertListener
 
         $alerts = $this->alertManager->getAlerts();
 
-        if ($alerts === []) {
+        if ([] === $alerts) {
             return;
         }
 
@@ -42,7 +42,7 @@ class RenderAlertListener
         $turboStreams = $this->renderAlerts($alerts);
 
         if ($response instanceof JsonResponse) {
-            $data = json_decode($response->getContent(), true) ?? [];
+            $data           = json_decode($response->getContent(), true) ?? [];
             $data['alerts'] = $turboStreams;
             $response->setData($data);
 
@@ -50,7 +50,7 @@ class RenderAlertListener
         }
 
         if ($this->isHtmlResponse($response)) {
-            $content = $response->getContent() . $turboStreams;
+            $content = $response->getContent().$turboStreams;
             $response->setContent($content);
         }
     }
@@ -60,7 +60,7 @@ class RenderAlertListener
         $result = '';
         foreach ($alerts as $alert) {
             $result .= $this->twig->render('@SweetAlert/turbo/alert.html.twig', [
-                'alert' => $alert
+                'alert' => $alert,
             ]);
         }
 

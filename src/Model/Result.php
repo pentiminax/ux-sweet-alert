@@ -5,9 +5,9 @@ namespace Pentiminax\UX\SweetAlert\Model;
 final readonly class Result
 {
     public function __construct(
-        public bool  $isConfirmed = false,
-        public bool  $isDenied = false,
-        public bool  $isDismissed = false,
+        public bool $isConfirmed = false,
+        public bool $isDenied = false,
+        public bool $isDismissed = false,
         public mixed $value = null,
     ) {
     }
@@ -16,9 +16,9 @@ final readonly class Result
     {
         return new self(
             isConfirmed: $result['isConfirmed'] ?? false,
-            isDenied: $result['isDenied'] ?? false,
+            isDenied: $result['isDenied']       ?? false,
             isDismissed: $result['isDismissed'] ?? false,
-            value: $result['value'] ?? null
+            value: $result['value']             ?? null
         );
     }
 }

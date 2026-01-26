@@ -19,7 +19,7 @@ class AlertTest extends TestCase
             icon: Icon::INFO,
             position: Position::CENTER,
             customClass: [
-                'confirmButton' => 'btn btn-success'
+                'confirmButton' => 'btn btn-success',
             ]
         );
 

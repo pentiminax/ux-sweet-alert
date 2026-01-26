@@ -22,12 +22,12 @@ class SweetAlertContext implements ResetInterface, SweetAlertContextInterface
 
     public function getStandardAlerts(): array
     {
-        return array_filter($this->alerts, fn(Alert $alert) => !$alert->isToast());
+        return array_filter($this->alerts, fn (Alert $alert) => !$alert->isToast());
     }
 
     public function getToasts(): array
     {
-        return array_filter($this->alerts, fn(Alert $alert) => $alert->isToast());
+        return array_filter($this->alerts, fn (Alert $alert) => $alert->isToast());
     }
 
     public function reset(): void

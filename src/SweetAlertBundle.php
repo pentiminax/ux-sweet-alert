@@ -35,9 +35,9 @@ class SweetAlertBundle extends AbstractBundle
             'defaults' => [
                 'Pentiminax\UX\SweetAlert\Twig\Components\\' => [
                     'template_directory' => '@SweetAlert/components/',
-                    'name_prefix' => 'SweetAlert',
-                ]
-            ]
+                    'name_prefix'        => 'SweetAlert',
+                ],
+            ],
         ]);
 
         if ($this->isAssetMapperAvailable($builder)) {

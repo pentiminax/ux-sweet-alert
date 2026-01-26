@@ -13,8 +13,8 @@ class HxTriggerHelper
     {
         return self::withTrigger($response, [
             self::EVENT_KEY => [
-                'alert' => $alert->jsonSerialize()
-            ]
+                'alert' => $alert->jsonSerialize(),
+            ],
         ]);
     }
 

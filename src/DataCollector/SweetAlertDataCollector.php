@@ -11,7 +11,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
 class SweetAlertDataCollector extends AbstractDataCollector
 {
     public function __construct(
-        private readonly SweetAlertContextInterface $context
+        private readonly SweetAlertContextInterface $context,
     ) {
     }
 
@@ -32,12 +32,12 @@ class SweetAlertDataCollector extends AbstractDataCollector
 
     public function getNumberOfAlerts(): int
     {
-        return count($this->data['alerts']);
+        return \count($this->data['alerts']);
     }
 
     public function getNumberOfToasts(): int
     {
-        return count($this->data['toasts']);
+        return \count($this->data['toasts']);
     }
 
     public function getTotalCount(): int
