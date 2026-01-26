@@ -17,8 +17,7 @@ class SweetAlertBundle extends AbstractBundle
         $definition->rootNode()
             ->children()
                 ->scalarNode('auto_convert_flash_messages')->defaultFalse()->end()
-                ->enumNode('theme')->values(array_map(static fn (Theme $theme) => $theme->value, Theme::cases()))->defaultValue('auto')->end()
-                ->arrayNode('default_options')
+                ->arrayNode('defaults')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->enumNode('position')
@@ -41,6 +40,7 @@ class SweetAlertBundle extends AbstractBundle
                         ->booleanNode('topLayer')->defaultFalse()->end()
                         ->integerNode('timer')->defaultNull()->end()
                         ->booleanNode('timerProgressBar')->defaultFalse()->end()
+                        ->enumNode('theme')->values(array_map(static fn (Theme $theme) => $theme->value, Theme::cases()))->defaultValue('auto')->end()
                         ->arrayNode('customClass')
                             ->scalarPrototype()->end()
                             ->defaultValue([])
@@ -54,8 +54,7 @@ class SweetAlertBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $builder->setParameter('sweet_alert.auto_convert_flash_messages', $config['auto_convert_flash_messages']);
-        $builder->setParameter('sweet_alert.theme', $config['theme']);
-        $builder->setParameter('sweet_alert.default_options', $config['default_options']);
+        $builder->setParameter('sweet_alert.defaults', $config['defaults']);
 
         $container->import('../config/services.php');
     }

@@ -23,7 +23,7 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set('sweet_alert.alert_defaults', AlertDefaults::class)
         ->factory([AlertDefaults::class, 'fromArray'])
-        ->arg('$config', '%sweet_alert.default_options%')
+        ->arg('$config', '%sweet_alert.defaults%')
         ->private();
 
     $services
