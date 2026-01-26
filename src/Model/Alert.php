@@ -68,12 +68,12 @@ class Alert implements \JsonSerializable
     {
         $alert = new static();
 
-        $alert->id = empty($id) ? uniqid(more_entropy: true) : $id;
-        $alert->title = $title;
-        $alert->text = $text;
-        $alert->icon = $icon;
-        $alert->position = $position;
-        $alert->theme = Theme::Auto;
+        $alert->id          = empty($id) ? uniqid(more_entropy: true) : $id;
+        $alert->title       = $title;
+        $alert->text        = $text;
+        $alert->icon        = $icon;
+        $alert->position    = $position;
+        $alert->theme       = Theme::Auto;
         $alert->customClass = $customClass;
 
         return $alert;
@@ -156,7 +156,7 @@ class Alert implements \JsonSerializable
     }
 
     /**
-     * @param string $color Hex color code for the confirm button.
+     * @param string $color hex color code for the confirm button
      */
     public function confirmButtonColor(string $color): static
     {
@@ -309,36 +309,36 @@ class Alert implements \JsonSerializable
     public function jsonSerialize(): array
     {
         $data = [
-            'id' => $this->id,
-            'title' => $this->title,
-            'text' => $this->text,
-            'icon' => $this->icon?->value,
-            'confirmButtonText' => $this->confirmButtonText,
-            'showConfirmButton' => $this->showConfirmButton,
-            'showCancelButton' => $this->showCancelButton,
-            'showDenyButton' => $this->showDenyButton,
-            'animation' => $this->animation,
-            'theme' => $this->theme->value,
-            'allowEscapeKey' => $this->allowEscapeKey,
+            'id'                 => $this->id,
+            'title'              => $this->title,
+            'text'               => $this->text,
+            'icon'               => $this->icon?->value,
+            'confirmButtonText'  => $this->confirmButtonText,
+            'showConfirmButton'  => $this->showConfirmButton,
+            'showCancelButton'   => $this->showCancelButton,
+            'showDenyButton'     => $this->showDenyButton,
+            'animation'          => $this->animation,
+            'theme'              => $this->theme->value,
+            'allowEscapeKey'     => $this->allowEscapeKey,
             'confirmButtonColor' => $this->confirmButtonColor,
-            'position' => $this->position->value,
-            'customClass' => $this->customClass,
-            'cancelButtonText' => $this->cancelButtonText,
-            'html' => $this->html,
-            'footer' => $this->footer,
-            'imageUrl' => $this->imageUrl,
-            'imageHeight' => $this->imageHeight,
-            'imageAlt' => $this->imageAlt,
-            'draggable' => $this->draggable,
-            'focusConfirm' => $this->focusConfirm,
+            'position'           => $this->position->value,
+            'customClass'        => $this->customClass,
+            'cancelButtonText'   => $this->cancelButtonText,
+            'html'               => $this->html,
+            'footer'             => $this->footer,
+            'imageUrl'           => $this->imageUrl,
+            'imageHeight'        => $this->imageHeight,
+            'imageAlt'           => $this->imageAlt,
+            'draggable'          => $this->draggable,
+            'focusConfirm'       => $this->focusConfirm,
         ];
 
         if ($this->toast) {
-            $data['toast'] = true;
-            $data['timer'] = $this->timer;
+            $data['toast']            = true;
+            $data['timer']            = $this->timer;
             $data['timerProgressBar'] = $this->timerProgressBar;
         } else {
-            $data['backdrop'] = $this->backdrop;
+            $data['backdrop']          = $this->backdrop;
             $data['allowOutsideClick'] = $this->allowOutsideClick;
         }
 

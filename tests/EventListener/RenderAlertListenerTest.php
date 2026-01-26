@@ -30,7 +30,7 @@ class RenderAlertListenerTest extends TestCase
         }
 
         $this->alertManager = $this->createMock(AlertManagerInterface::class);
-        $this->twig = $this->createMock(Environment::class);
+        $this->twig         = $this->createMock(Environment::class);
 
         $this->listener = new RenderAlertListener(
             alertManager: $this->alertManager,
@@ -52,7 +52,7 @@ class RenderAlertListenerTest extends TestCase
             ->method('render')
             ->with(
                 '@SweetAlert/turbo/alert.html.twig',
-                $this->callback(fn(array $context) => $context['alert'] instanceof Alert)
+                $this->callback(fn (array $context) => $context['alert'] instanceof Alert)
             )
             ->willReturn($turboStreamHtml);
 
@@ -64,7 +64,7 @@ class RenderAlertListenerTest extends TestCase
             kernel: $this->createMock(HttpKernelInterface::class),
             request: Request::create('/'),
             requestType: HttpKernelInterface::MAIN_REQUEST,
-            response:$response
+            response: $response
         );
 
         $this->listener->onKernelResponse($event);

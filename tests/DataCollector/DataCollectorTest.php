@@ -36,7 +36,7 @@ class DataCollectorTest extends TestCase
     public function testGetData(): void
     {
         $alerts = [
-            Alert::new('title', 'id', 'text')
+            Alert::new('title', 'id', 'text'),
         ];
 
         $this->context

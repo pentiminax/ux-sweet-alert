@@ -25,10 +25,9 @@ class AlertManager implements AlertManagerInterface
         $this->defaultTheme = Theme::from($defaultTheme);
     }
 
-
     public function addAlert(Alert $alert): void
     {
-        $alerts = $this->getFlashBag()->peek(AlertManagerInterface::ALERT_STORAGE_KEY, []);
+        $alerts   = $this->getFlashBag()->peek(AlertManagerInterface::ALERT_STORAGE_KEY, []);
         $alerts[] = $alert;
 
         $this->getSession()->getFlashBag()->set(AlertManagerInterface::ALERT_STORAGE_KEY, $alerts);
@@ -43,7 +42,7 @@ class AlertManager implements AlertManagerInterface
         $alerts = [];
         if ($this->autoConvertFlashMessages) {
             foreach ($this->getFlashBag()->peekAll() as $key => $messages) {
-                if ($key === AlertManagerInterface::ALERT_STORAGE_KEY) {
+                if (AlertManagerInterface::ALERT_STORAGE_KEY === $key) {
                     $alerts[] = $this->getFlashBag()->get($key);
                 } else {
                     $alerts[] = $this->flashMessageConverter->convert($key, $messages);
@@ -71,7 +70,7 @@ class AlertManager implements AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::SUCCESS, $customClass, $toast, $timer, $timerProgressBar);
     }
@@ -85,7 +84,7 @@ class AlertManager implements AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::ERROR, $customClass, $toast, $timer, $timerProgressBar);
     }
@@ -99,7 +98,7 @@ class AlertManager implements AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::WARNING, $customClass, $toast, $timer, $timerProgressBar);
     }
@@ -113,7 +112,7 @@ class AlertManager implements AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::INFO, $customClass, $toast, $timer, $timerProgressBar);
     }
@@ -127,7 +126,7 @@ class AlertManager implements AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         return $this->createAndAddAlert($id, $title, $text, $position, $theme, Icon::QUESTION, $customClass, $toast, $timer, $timerProgressBar);
     }
@@ -140,7 +139,7 @@ class AlertManager implements AlertManagerInterface
         Position $position = Position::BOTTOM_END,
         ?Theme $theme = null,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         return $this->createAndAddAlert(
             id: $id,
@@ -166,13 +165,13 @@ class AlertManager implements AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert {
         $id = empty($id) ? uniqid(more_entropy: true) : $id;
         $theme ??= $this->defaultTheme;
 
         // Apply toast defaults if toast mode
-        if ($toast && $position === Position::CENTER) {
+        if ($toast && Position::CENTER === $position) {
             $position = Position::BOTTOM_END;
         }
 

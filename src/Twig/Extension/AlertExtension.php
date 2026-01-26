@@ -12,7 +12,7 @@ use Twig\TwigFunction;
 class AlertExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly Environment  $twig,
+        private readonly Environment $twig,
         private readonly AlertManagerInterface $alertManager,
     ) {
     }
@@ -27,7 +27,7 @@ class AlertExtension extends AbstractExtension
     public function scripts(): Markup
     {
         $stimulus = new StimulusHelper($this->twig);
-        $alerts = $this->alertManager->getAlerts();
+        $alerts   = $this->alertManager->getAlerts();
 
         $controllers['@pentiminax/ux-sweet-alert/sweetalert'] = [
             'view' => $alerts,

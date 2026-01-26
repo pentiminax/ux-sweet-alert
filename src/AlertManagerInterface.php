@@ -27,7 +27,7 @@ interface AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert;
 
     public function error(
@@ -39,7 +39,7 @@ interface AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert;
 
     public function warning(
@@ -51,7 +51,7 @@ interface AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert;
 
     public function info(
@@ -63,7 +63,7 @@ interface AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert;
 
     public function question(
@@ -75,7 +75,7 @@ interface AlertManagerInterface
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert;
 
     public function toast(
@@ -86,6 +86,6 @@ interface AlertManagerInterface
         Position $position = Position::BOTTOM_END,
         ?Theme $theme = null,
         ?int $timer = null,
-        bool $timerProgressBar = false
+        bool $timerProgressBar = false,
     ): Alert;
 }

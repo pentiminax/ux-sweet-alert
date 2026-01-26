@@ -41,7 +41,7 @@ class AlertManagerTest extends KernelTestCase
     #[DataProvider('alertMethodProvider')]
     public function testAlertFactoryMethods(
         string $method,
-        string $expectedIcon
+        string $expectedIcon,
     ): void {
         /** @var Alert $alert */
         $alert = $this->alertManager->$method(
@@ -51,30 +51,30 @@ class AlertManagerTest extends KernelTestCase
         );
 
         $expectedArray = [
-            'id' => $alert->getId(),
-            'title' => 'title',
-            'text' => 'text',
-            'icon' => $expectedIcon,
-            'confirmButtonText' => 'OK',
-            'showConfirmButton' => true,
-            'showCancelButton' => false,
-            'showDenyButton' => false,
-            'animation' => true,
-            'theme' => 'auto',
-            'allowEscapeKey' => true,
+            'id'                 => $alert->getId(),
+            'title'              => 'title',
+            'text'               => 'text',
+            'icon'               => $expectedIcon,
+            'confirmButtonText'  => 'OK',
+            'showConfirmButton'  => true,
+            'showCancelButton'   => false,
+            'showDenyButton'     => false,
+            'animation'          => true,
+            'theme'              => 'auto',
+            'allowEscapeKey'     => true,
             'confirmButtonColor' => '#3085d6',
-            'position' => 'bottom',
-            'customClass' => [],
-            'cancelButtonText' => 'Cancel',
-            'html' => null,
-            'backdrop' => true,
-            'allowOutsideClick' => true,
-            'footer' => null,
-            'imageUrl' => null,
-            'imageHeight' => null,
-            'imageAlt' => null,
-            'draggable' => false,
-            'focusConfirm' => true,
+            'position'           => 'bottom',
+            'customClass'        => [],
+            'cancelButtonText'   => 'Cancel',
+            'html'               => null,
+            'backdrop'           => true,
+            'allowOutsideClick'  => true,
+            'footer'             => null,
+            'imageUrl'           => null,
+            'imageHeight'        => null,
+            'imageAlt'           => null,
+            'draggable'          => false,
+            'focusConfirm'       => true,
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());

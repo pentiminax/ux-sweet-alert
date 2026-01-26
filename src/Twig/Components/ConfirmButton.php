@@ -5,7 +5,6 @@ namespace Pentiminax\UX\SweetAlert\Twig\Components;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
-use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Result;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -78,8 +77,8 @@ class ConfirmButton
         $this->context->addAlert($alert);
 
         $this->dispatchBrowserEvent('ux-sweet-alert:alert:added', [
-            'alert' => $alert,
-            'callback' => $this->callback
+            'alert'    => $alert,
+            'callback' => $this->callback,
         ]);
     }
 
@@ -90,7 +89,7 @@ class ConfirmButton
 
         $this->dispatchBrowserEvent('ux-sweet-alert:callback', [
             'result' => $result,
-            'args' => $args
+            'args'   => $args,
         ]);
 
         return null;

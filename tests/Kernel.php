@@ -2,7 +2,6 @@
 
 namespace Pentiminax\UX\SweetAlert\Tests;
 
-
 use Pentiminax\UX\SweetAlert\SweetAlertBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
