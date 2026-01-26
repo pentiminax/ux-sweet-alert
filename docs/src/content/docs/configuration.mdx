@@ -8,7 +8,35 @@ description: Default configuration options.
 ```yaml
 sweet_alert:
   auto_convert_flash_messages: false
-  theme: 'auto'
+  defaults:
+    position: 'center'
+    confirmButtonColor: '#3085d6'
+    confirmButtonText: 'OK'
+    cancelButtonText: 'Cancel'
+    denyButtonText: 'No'
+    showConfirmButton: true
+    showCancelButton: false
+    showDenyButton: false
+    animation: true
+    backdrop: true
+    allowOutsideClick: true
+    allowEscapeKey: true
+    focusConfirm: true
+    draggable: false
+    topLayer: false
+    timer: null
+    timerProgressBar: false
+    theme: 'auto'
+    customClass: []
+```
+
+## Setting alert defaults
+
+```yaml
+sweet_alert:
+  defaults:
+    confirmButtonText: 'Got it'
+    showCancelButton: true
 ```
 
 ## Available options
@@ -20,11 +48,142 @@ Default: `false`
 
 If set to `true`, the bundle will automatically convert flash messages to sweet alerts.
 
-### theme
+### defaults
+
+Type: `array`
+Default: See "Default configuration".
+
+Defines default values applied to alerts (including toasts) created by the bundle.
+
+#### defaults.position
+
+Type: `string`
+Default: `center`
+
+Defines the default SweetAlert position. This option maps directly to the Position enum: `Pentiminax\UX\SweetAlert\Enum\Position`
+
+#### defaults.confirmButtonColor
+
+Type: `string`
+Default: `#3085d6`
+
+Defines the default confirm button color.
+
+#### defaults.confirmButtonText
+
+Type: `string`
+Default: `OK`
+
+Defines the default confirm button label.
+
+#### defaults.cancelButtonText
+
+Type: `string`
+Default: `Cancel`
+
+Defines the default cancel button label.
+
+#### defaults.denyButtonText
+
+Type: `string`
+Default: `No`
+
+Defines the default deny button label.
+
+#### defaults.showConfirmButton
+
+Type: `bool`
+Default: `true`
+
+Controls whether the confirm button is shown by default.
+
+#### defaults.showCancelButton
+
+Type: `bool`
+Default: `false`
+
+Controls whether the cancel button is shown by default.
+
+#### defaults.showDenyButton
+
+Type: `bool`
+Default: `false`
+
+Controls whether the deny button is shown by default.
+
+#### defaults.animation
+
+Type: `bool`
+Default: `true`
+
+Controls whether animations are enabled by default.
+
+#### defaults.backdrop
+
+Type: `bool`
+Default: `true`
+
+Controls whether the modal backdrop is enabled by default.
+
+#### defaults.allowOutsideClick
+
+Type: `bool`
+Default: `true`
+
+Controls whether clicking outside closes the alert by default.
+
+#### defaults.allowEscapeKey
+
+Type: `bool`
+Default: `true`
+
+Controls whether the escape key closes the alert by default.
+
+#### defaults.focusConfirm
+
+Type: `bool`
+Default: `true`
+
+Controls whether the confirm button receives focus by default.
+
+#### defaults.draggable
+
+Type: `bool`
+Default: `false`
+
+Controls whether alerts are draggable by default.
+
+#### defaults.topLayer
+
+Type: `bool`
+Default: `false`
+
+Controls whether alerts are rendered in the top layer by default.
+
+#### defaults.timer
+
+Type: `int|null`
+Default: `null`
+
+Defines the default auto-close timer (in ms) for alerts.
+
+#### defaults.timerProgressBar
+
+Type: `bool`
+Default: `false`
+
+Controls whether the timer progress bar is shown by default.
+
+#### defaults.theme
 
 Type: `string`
 Default: `auto`
 
-Defines the default SweetAlert theme to use when displaying alerts.
+Defines the default SweetAlert theme to use when displaying alerts. This option maps directly to the Theme enum: `Pentiminax\UX\SweetAlert\Enum\Theme`
 
-This option maps directly to the Theme enum: `Pentiminax\UX\SweetAlert\Enum\Theme`
+#### defaults.customClass
+
+Type: `array`
+Default: `[]`
+
+Defines the default custom class list applied to alerts.
