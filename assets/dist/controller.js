@@ -23,7 +23,13 @@ class default_1 extends Controller {
                             return;
                         }
 
-                        const alert = JSON.parse(json);
+                        let alert;
+                        try {
+                            alert = JSON.parse(json);
+                        } catch (e) {
+                            console.error('Failed to parse JSON:', e);
+                            return;
+                        }
                         const alertId = alert.id;
 
                         delete alert.id;
@@ -39,10 +45,6 @@ class default_1 extends Controller {
                 }
             }));
         }
-
-        document.body.addEventListener('htmx:alert', function (e) {
-            console.log(e)
-        })
     }
 
     async connect() {

@@ -145,7 +145,7 @@ class AlertManager implements AlertManagerInterface
             text: $text,
             position: $position,
             theme: $theme,
-            icon: Icon::SUCCESS,
+            icon: $icon,
             customClass: [],
             toast: true,
             timer: $timer,
