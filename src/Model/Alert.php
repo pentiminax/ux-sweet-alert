@@ -66,6 +66,12 @@ class Alert implements \JsonSerializable
 
     private bool $topLayer = false;
 
+    private ?string $input = null;
+
+    private ?string $inputPlaceholder = null;
+
+    private ?string $inputValue = null;
+
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
         $alert = new static();
@@ -353,6 +359,42 @@ class Alert implements \JsonSerializable
         return $this;
     }
 
+    public function input(?string $input): static
+    {
+        $this->input = $input;
+
+        return $this;
+    }
+
+    public function getInput(): ?string
+    {
+        return $this->input;
+    }
+
+    public function inputPlaceholder(?string $inputPlaceholder): static
+    {
+        $this->inputPlaceholder = $inputPlaceholder;
+
+        return $this;
+    }
+
+    public function getInputPlaceholder(): ?string
+    {
+        return $this->inputPlaceholder;
+    }
+
+    public function inputValue(?string $inputValue): static
+    {
+        $this->inputValue = $inputValue;
+
+        return $this;
+    }
+
+    public function getInputValue(): ?string
+    {
+        return $this->inputValue;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
@@ -379,6 +421,9 @@ class Alert implements \JsonSerializable
             'draggable'          => $this->draggable,
             'focusConfirm'       => $this->focusConfirm,
             'topLayer'           => $this->topLayer,
+            'input'              => $this->input,
+            'inputPlaceholder'   => $this->inputPlaceholder,
+            'inputValue'         => $this->inputValue,
         ];
 
         if ($this->toast) {

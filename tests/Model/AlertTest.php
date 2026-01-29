@@ -49,8 +49,8 @@ class AlertTest extends TestCase
         $this->assertFalse($data['animation']);
         $this->assertEquals(Theme::Dark->value, $data['theme']);
         $this->assertFalse($data['backdrop']);
-        $this->assertTrue($data['allowOutsideClick']);
-        $this->assertTrue($data['allowEscapeKey']);
+        $this->assertFalse($data['allowOutsideClick']);
+        $this->assertFalse($data['allowEscapeKey']);
         $this->assertEquals('#ff0000', $data['confirmButtonColor']);
         $this->assertEquals(Position::CENTER->value, $data['position']);
         $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
