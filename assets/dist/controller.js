@@ -5,6 +5,8 @@ import {getComponent} from '@symfony/ux-live-component';
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
+        this.handleAlertAdded = null;
+        this.handleTurboBeforeStreamRender = null;
     }
 
     async initialize() {
@@ -12,7 +14,7 @@ class default_1 extends Controller {
             this.originalFetch = window.fetch;
             window.fetch = this.fetch.bind(this);
 
-            document.addEventListener('turbo:before-stream-render', ((e) => {
+            this.handleTurboBeforeStreamRender = ((e) => {
                 const fallbackToDefaultActions = e.detail.render;
 
                 e.detail.render = async function (streamElement) {
@@ -43,12 +45,14 @@ class default_1 extends Controller {
                         fallbackToDefaultActions(streamElement)
                     }
                 }
-            }));
+            });
+
+            document.addEventListener('turbo:before-stream-render', this.handleTurboBeforeStreamRender);
         }
     }
 
     async connect() {
-        document.addEventListener('ux-sweet-alert:alert:added', async (e) => {
+        this.handleAlertAdded = async (e) => {
             const alert = e.detail['alert'];
 
             console.log(e);
@@ -78,7 +82,9 @@ class default_1 extends Controller {
                     console.warn(e);
                 }
             }
-        });
+        };
+
+        document.addEventListener('ux-sweet-alert:alert:added', this.handleAlertAdded);
 
         const toasts = this.viewValue;
         for (const toast of toasts) {
@@ -87,6 +93,23 @@ class default_1 extends Controller {
             document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toast.id}:closed`, {
                 detail: result
             }));
+        }
+    }
+
+    disconnect() {
+        if (this.handleAlertAdded) {
+            document.removeEventListener('ux-sweet-alert:alert:added', this.handleAlertAdded);
+            this.handleAlertAdded = null;
+        }
+
+        if (this.handleTurboBeforeStreamRender) {
+            document.removeEventListener('turbo:before-stream-render', this.handleTurboBeforeStreamRender);
+            this.handleTurboBeforeStreamRender = null;
+        }
+
+        if (this.originalFetch) {
+            window.fetch = this.originalFetch;
+            this.originalFetch = null;
         }
     }
 

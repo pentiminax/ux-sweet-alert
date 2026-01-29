@@ -80,6 +80,9 @@ class AlertManagerTest extends KernelTestCase
             'draggable'          => false,
             'focusConfirm'       => true,
             'topLayer'           => false,
+            'input'              => null,
+            'inputPlaceholder'   => null,
+            'inputValue'         => null,
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
