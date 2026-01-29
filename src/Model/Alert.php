@@ -183,14 +183,14 @@ class Alert implements \JsonSerializable
 
     public function denyOutsideClick(): static
     {
-        $this->allowOutsideClick = true;
+        $this->allowOutsideClick = false;
 
         return $this;
     }
 
     public function denyEscapeKey(): static
     {
-        $this->allowEscapeKey = true;
+        $this->allowEscapeKey = false;
 
         return $this;
     }
