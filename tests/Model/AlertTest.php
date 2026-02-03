@@ -26,6 +26,9 @@ class AlertTest extends TestCase
 
         $alert
             ->confirmButtonColor('#ff0000')
+            ->cancelButtonColor('#00ff00')
+            ->denyButtonColor('#0000ff')
+            ->reverseButtons()
             ->denyEscapeKey()
             ->denyOutsideClick()
             ->theme(Theme::Dark)
@@ -52,6 +55,9 @@ class AlertTest extends TestCase
         $this->assertFalse($data['allowOutsideClick']);
         $this->assertFalse($data['allowEscapeKey']);
         $this->assertEquals('#ff0000', $data['confirmButtonColor']);
+        $this->assertEquals('#00ff00', $data['cancelButtonColor']);
+        $this->assertEquals('#0000ff', $data['denyButtonColor']);
+        $this->assertTrue($data['reverseButtons']);
         $this->assertEquals(Position::CENTER->value, $data['position']);
         $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
         $this->assertEquals('<b>html</b>', $data['html']);
@@ -125,12 +131,15 @@ class AlertTest extends TestCase
             position: Position::TOP_END,
             theme: Theme::Dark,
             confirmButtonColor: '#ff0000',
+            cancelButtonColor: '#00ff00',
+            denyButtonColor: '#0000ff',
             confirmButtonText: 'Confirmer',
             cancelButtonText: 'Annuler',
             denyButtonText: 'Non',
             showConfirmButton: true,
             showCancelButton: true,
             showDenyButton: true,
+            reverseButtons: true,
             backdrop: false,
             customClass: ['popup' => 'my-popup'],
             animation: false,
@@ -160,11 +169,14 @@ class AlertTest extends TestCase
         $this->assertSame(Position::TOP_END->value, $data['position']);
         $this->assertSame(Theme::Dark->value, $data['theme']);
         $this->assertSame('#ff0000', $data['confirmButtonColor']);
+        $this->assertSame('#00ff00', $data['cancelButtonColor']);
+        $this->assertSame('#0000ff', $data['denyButtonColor']);
         $this->assertSame('Confirmer', $data['confirmButtonText']);
         $this->assertSame('Annuler', $data['cancelButtonText']);
         $this->assertTrue($data['showConfirmButton']);
         $this->assertTrue($data['showCancelButton']);
         $this->assertTrue($data['showDenyButton']);
+        $this->assertTrue($data['reverseButtons']);
         $this->assertFalse($data['backdrop']);
         $this->assertSame(['popup' => 'my-popup'], $data['customClass']);
         $this->assertFalse($data['animation']);
@@ -213,6 +225,7 @@ class AlertTest extends TestCase
             confirmButtonColor: '#ff0000',
             confirmButtonText: 'Confirmer',
             showCancelButton: false,
+            reverseButtons: false,
         );
 
         $alert = Alert::withDefaults(
@@ -224,13 +237,15 @@ class AlertTest extends TestCase
         $alert
             ->confirmButtonColor('#00ff00')
             ->confirmButtonText('Override')
-            ->withCancelButton();
+            ->withCancelButton()
+            ->reverseButtons(true);
 
         $data = $alert->jsonSerialize();
 
         $this->assertSame('#00ff00', $data['confirmButtonColor']);
         $this->assertSame('Override', $data['confirmButtonText']);
         $this->assertTrue($data['showCancelButton']);
+        $this->assertTrue($data['reverseButtons']);
     }
 
     public function testWithDefaultsUsesAutoThemeWhenDefaultsThemeIsNull(): void
