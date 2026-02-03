@@ -9,8 +9,8 @@ class default_1 extends Controller {
         this.handleTurboBeforeStreamRender = null;
     }
 
-    async initialize() {
-        if (window.Turbo && window.Turbo.StreamActions) {
+    async connect() {
+        if (window.Turbo && window.Turbo.StreamActions && !this.handleTurboBeforeStreamRender) {
             this.originalFetch = window.fetch;
             window.fetch = this.fetch.bind(this);
 
@@ -49,9 +49,11 @@ class default_1 extends Controller {
 
             document.addEventListener('turbo:before-stream-render', this.handleTurboBeforeStreamRender);
         }
-    }
 
-    async connect() {
+        if (this.handleAlertAdded) {
+            document.removeEventListener('ux-sweet-alert:alert:added', this.handleAlertAdded);
+        }
+
         this.handleAlertAdded = async (e) => {
             const alert = e.detail['alert'];
 
