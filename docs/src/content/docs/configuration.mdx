@@ -11,12 +11,15 @@ sweet_alert:
   defaults:
     position: 'center'
     confirmButtonColor: '#3085d6'
+    cancelButtonColor: '#aaa'
+    denyButtonColor: '#dd6b55'
     confirmButtonText: 'OK'
     cancelButtonText: 'Cancel'
     denyButtonText: 'No'
     showConfirmButton: true
     showCancelButton: false
     showDenyButton: false
+    reverseButtons: false
     animation: true
     backdrop: true
     allowOutsideClick: true
@@ -69,6 +72,20 @@ Default: `#3085d6`
 
 Defines the default confirm button color.
 
+#### defaults.cancelButtonColor
+
+Type: `string`
+Default: `#dd6b55`
+
+Defines the default cancel button color.
+
+#### defaults.denyButtonColor
+
+Type: `string`
+Default: `#aaa`
+
+Defines the default deny button color.
+
 #### defaults.confirmButtonText
 
 Type: `string`
@@ -110,6 +127,13 @@ Type: `bool`
 Default: `false`
 
 Controls whether the deny button is shown by default.
+
+#### defaults.reverseButtons
+
+Type: `bool`
+Default: `false`
+
+Controls whether the button order is reversed by default.
 
 #### defaults.animation
 

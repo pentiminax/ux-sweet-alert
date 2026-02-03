@@ -26,6 +26,8 @@ class Alert implements \JsonSerializable
 
     private bool $showDenyButton = false;
 
+    private bool $reverseButtons = false;
+
     private bool $animation = true;
 
     private Theme $theme;
@@ -37,6 +39,10 @@ class Alert implements \JsonSerializable
     private bool $allowEscapeKey = true;
 
     private string $confirmButtonColor = '#3085d6';
+
+    private string $cancelButtonColor = '#aaa';
+
+    private string $denyButtonColor = '#dd6b55';
 
     private array $customClass = [];
 
@@ -106,12 +112,15 @@ class Alert implements \JsonSerializable
         $alert->theme              = $defaults->theme ?? Theme::Auto;
         $alert->customClass        = $customClass     ?? $defaults->customClass;
         $alert->confirmButtonColor = $defaults->confirmButtonColor;
+        $alert->cancelButtonColor  = $defaults->cancelButtonColor;
+        $alert->denyButtonColor    = $defaults->denyButtonColor;
         $alert->confirmButtonText  = $defaults->confirmButtonText;
         $alert->cancelButtonText   = $defaults->cancelButtonText;
         $alert->denyButtonText     = $defaults->denyButtonText;
         $alert->showConfirmButton  = $defaults->showConfirmButton;
         $alert->showCancelButton   = $defaults->showCancelButton;
         $alert->showDenyButton     = $defaults->showDenyButton;
+        $alert->reverseButtons     = $defaults->reverseButtons;
         $alert->backdrop           = $defaults->backdrop;
         $alert->animation          = $defaults->animation;
         $alert->allowOutsideClick  = $defaults->allowOutsideClick;
@@ -207,6 +216,33 @@ class Alert implements \JsonSerializable
     public function confirmButtonColor(string $color): static
     {
         $this->confirmButtonColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * @param string $color hex color code for the cancel button
+     */
+    public function cancelButtonColor(string $color): static
+    {
+        $this->cancelButtonColor = $color;
+
+        return $this;
+    }
+
+    /**
+     * @param string $color hex color code for the deny button
+     */
+    public function denyButtonColor(string $color): static
+    {
+        $this->denyButtonColor = $color;
+
+        return $this;
+    }
+
+    public function reverseButtons(bool $reverseButtons = true): static
+    {
+        $this->reverseButtons = $reverseButtons;
 
         return $this;
     }
@@ -406,10 +442,13 @@ class Alert implements \JsonSerializable
             'showConfirmButton'  => $this->showConfirmButton,
             'showCancelButton'   => $this->showCancelButton,
             'showDenyButton'     => $this->showDenyButton,
+            'reverseButtons'     => $this->reverseButtons,
             'animation'          => $this->animation,
             'theme'              => $this->theme->value,
             'allowEscapeKey'     => $this->allowEscapeKey,
             'confirmButtonColor' => $this->confirmButtonColor,
+            'cancelButtonColor'  => $this->cancelButtonColor,
+            'denyButtonColor'    => $this->denyButtonColor,
             'position'           => $this->position->value,
             'customClass'        => $this->customClass,
             'cancelButtonText'   => $this->cancelButtonText,
