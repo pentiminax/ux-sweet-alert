@@ -74,9 +74,13 @@ class Alert implements \JsonSerializable
 
     private ?string $input = null;
 
+    private ?string $inputLabel = null;
+
     private ?string $inputPlaceholder = null;
 
     private ?string $inputValue = null;
+
+    private array $inputAttributes = [];
 
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
     {
@@ -431,6 +435,30 @@ class Alert implements \JsonSerializable
         return $this->inputValue;
     }
 
+    public function inputLabel(?string $inputLabel): static
+    {
+        $this->inputLabel = $inputLabel;
+
+        return $this;
+    }
+
+    public function getInputLabel(): ?string
+    {
+        return $this->inputLabel;
+    }
+
+    public function inputAttributes(array $inputAttributes): static
+    {
+        $this->inputAttributes = $inputAttributes;
+
+        return $this;
+    }
+
+    public function getInputAttributes(): array
+    {
+        return $this->inputAttributes;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
@@ -463,6 +491,8 @@ class Alert implements \JsonSerializable
             'input'              => $this->input,
             'inputPlaceholder'   => $this->inputPlaceholder,
             'inputValue'         => $this->inputValue,
+            'inputLabel'         => $this->inputLabel,
+            'inputAttributes'    => $this->inputAttributes,
         ];
 
         if ($this->toast) {
