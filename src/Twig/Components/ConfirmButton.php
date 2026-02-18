@@ -53,7 +53,7 @@ class ConfirmButton
 
     protected ?TranslatorInterface $translator = null;
 
-    private readonly SweetAlertContextInterface $context;
+    private SweetAlertContextInterface $context;
 
     #[LiveListener('alertAdded')]
     public function alertAdded(): void

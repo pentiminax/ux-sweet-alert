@@ -6,7 +6,7 @@ use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 
-class Alert implements \JsonSerializable
+final class Alert implements \JsonSerializable
 {
     private string $id;
 
@@ -82,9 +82,9 @@ class Alert implements \JsonSerializable
 
     private array $inputAttributes = [];
 
-    public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): static
+    public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
-        $alert = new static();
+        $alert = new self();
 
         $alert->id          = empty($id) ? uniqid(more_entropy: true) : $id;
         $alert->title       = $title;
@@ -105,8 +105,8 @@ class Alert implements \JsonSerializable
         ?Icon $icon = Icon::SUCCESS,
         ?Position $position = null,
         ?array $customClass = null,
-    ): static {
-        $alert = new static();
+    ): self {
+        $alert = new self();
 
         $alert->id                 = empty($id) ? uniqid(more_entropy: true) : $id;
         $alert->title              = $title;
@@ -158,56 +158,56 @@ class Alert implements \JsonSerializable
         return $this->position;
     }
 
-    public function withoutAnimation(): static
+    public function withoutAnimation(): self
     {
         $this->animation = false;
 
         return $this;
     }
 
-    public function withoutBackdrop(): static
+    public function withoutBackdrop(): self
     {
         $this->backdrop = false;
 
         return $this;
     }
 
-    public function withCancelButton(): static
+    public function withCancelButton(): self
     {
         $this->showCancelButton = true;
 
         return $this;
     }
 
-    public function theme(Theme $theme): static
+    public function theme(Theme $theme): self
     {
         $this->theme = $theme;
 
         return $this;
     }
 
-    public function withoutConfirmButton(): static
+    public function withoutConfirmButton(): self
     {
         $this->showConfirmButton = false;
 
         return $this;
     }
 
-    public function withDenyButton(): static
+    public function withDenyButton(): self
     {
         $this->showDenyButton = true;
 
         return $this;
     }
 
-    public function denyOutsideClick(): static
+    public function denyOutsideClick(): self
     {
         $this->allowOutsideClick = false;
 
         return $this;
     }
 
-    public function denyEscapeKey(): static
+    public function denyEscapeKey(): self
     {
         $this->allowEscapeKey = false;
 
@@ -217,7 +217,7 @@ class Alert implements \JsonSerializable
     /**
      * @param string $color hex color code for the confirm button
      */
-    public function confirmButtonColor(string $color): static
+    public function confirmButtonColor(string $color): self
     {
         $this->confirmButtonColor = $color;
 
@@ -227,7 +227,7 @@ class Alert implements \JsonSerializable
     /**
      * @param string $color hex color code for the cancel button
      */
-    public function cancelButtonColor(string $color): static
+    public function cancelButtonColor(string $color): self
     {
         $this->cancelButtonColor = $color;
 
@@ -237,49 +237,49 @@ class Alert implements \JsonSerializable
     /**
      * @param string $color hex color code for the deny button
      */
-    public function denyButtonColor(string $color): static
+    public function denyButtonColor(string $color): self
     {
         $this->denyButtonColor = $color;
 
         return $this;
     }
 
-    public function reverseButtons(bool $reverseButtons = true): static
+    public function reverseButtons(bool $reverseButtons = true): self
     {
         $this->reverseButtons = $reverseButtons;
 
         return $this;
     }
 
-    public function position(Position $position): static
+    public function position(Position $position): self
     {
         $this->position = $position;
 
         return $this;
     }
 
-    public function confirmButtonText(string $text): static
+    public function confirmButtonText(string $text): self
     {
         $this->confirmButtonText = $text;
 
         return $this;
     }
 
-    public function cancelButtonText(string $text): static
+    public function cancelButtonText(string $text): self
     {
         $this->cancelButtonText = $text;
 
         return $this;
     }
 
-    public function html(string $html): static
+    public function html(string $html): self
     {
         $this->html = $html;
 
         return $this;
     }
 
-    public function asToast(): static
+    public function asToast(): self
     {
         $this->toast = true;
 
@@ -294,14 +294,14 @@ class Alert implements \JsonSerializable
     /**
      * @param int|null $timer Auto close timer of the popup. Set in ms (milliseconds).
      */
-    public function timer(?int $timer): static
+    public function timer(?int $timer): self
     {
         $this->timer = $timer;
 
         return $this;
     }
 
-    public function withTimerProgressBar(): static
+    public function withTimerProgressBar(): self
     {
         $this->timerProgressBar = true;
 
@@ -313,7 +313,7 @@ class Alert implements \JsonSerializable
         return $this->footer;
     }
 
-    public function setFooter(?string $footer): static
+    public function setFooter(?string $footer): self
     {
         $this->footer = $footer;
 
@@ -325,7 +325,7 @@ class Alert implements \JsonSerializable
         return $this->imageUrl;
     }
 
-    public function setImageUrl(?string $imageUrl): static
+    public function setImageUrl(?string $imageUrl): self
     {
         $this->imageUrl = $imageUrl;
 
@@ -337,7 +337,7 @@ class Alert implements \JsonSerializable
         return $this->imageAlt;
     }
 
-    public function setImageAlt(?string $imageAlt): static
+    public function setImageAlt(?string $imageAlt): self
     {
         $this->imageAlt = $imageAlt;
 
@@ -349,14 +349,14 @@ class Alert implements \JsonSerializable
         return $this->imageHeight;
     }
 
-    public function setImageHeight(?int $imageHeight): static
+    public function setImageHeight(?int $imageHeight): self
     {
         $this->imageHeight = $imageHeight;
 
         return $this;
     }
 
-    public function setDraggable(bool $draggable = true): static
+    public function setDraggable(bool $draggable = true): self
     {
         $this->draggable = $draggable;
 
@@ -368,7 +368,7 @@ class Alert implements \JsonSerializable
         return $this->draggable;
     }
 
-    public function setFocusConfirm(bool $focusConfirm = true): static
+    public function setFocusConfirm(bool $focusConfirm = true): self
     {
         $this->focusConfirm = $focusConfirm;
 
@@ -380,7 +380,7 @@ class Alert implements \JsonSerializable
         return $this->focusConfirm;
     }
 
-    public function setDenyButtonText(string $denyButtonText): static
+    public function setDenyButtonText(string $denyButtonText): self
     {
         $this->denyButtonText = $denyButtonText;
 
@@ -392,14 +392,14 @@ class Alert implements \JsonSerializable
         return $this->denyButtonText;
     }
 
-    public function setTopLayer(bool $topLayer = true): static
+    public function setTopLayer(bool $topLayer = true): self
     {
         $this->topLayer = $topLayer;
 
         return $this;
     }
 
-    public function input(?string $input): static
+    public function input(?string $input): self
     {
         $this->input = $input;
 
@@ -411,7 +411,7 @@ class Alert implements \JsonSerializable
         return $this->input;
     }
 
-    public function inputPlaceholder(?string $inputPlaceholder): static
+    public function inputPlaceholder(?string $inputPlaceholder): self
     {
         $this->inputPlaceholder = $inputPlaceholder;
 
@@ -423,7 +423,7 @@ class Alert implements \JsonSerializable
         return $this->inputPlaceholder;
     }
 
-    public function inputValue(?string $inputValue): static
+    public function inputValue(?string $inputValue): self
     {
         $this->inputValue = $inputValue;
 
@@ -435,7 +435,7 @@ class Alert implements \JsonSerializable
         return $this->inputValue;
     }
 
-    public function inputLabel(?string $inputLabel): static
+    public function inputLabel(?string $inputLabel): self
     {
         $this->inputLabel = $inputLabel;
 
@@ -447,7 +447,7 @@ class Alert implements \JsonSerializable
         return $this->inputLabel;
     }
 
-    public function inputAttributes(array $inputAttributes): static
+    public function inputAttributes(array $inputAttributes): self
     {
         $this->inputAttributes = $inputAttributes;
 
