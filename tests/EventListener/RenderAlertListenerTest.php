@@ -25,8 +25,8 @@ class RenderAlertListenerTest extends TestCase
     {
         parent::setUp();
 
-        if (!class_exists(\Symfony\UX\Turbo\TurboBundle::class)) {
-            class_alias(DummyTurboBundle::class, \Symfony\UX\Turbo\TurboBundle::class);
+        if (!class_exists('Symfony\UX\Turbo\TurboBundle')) {
+            class_alias(DummyTurboBundle::class, 'Symfony\UX\Turbo\TurboBundle');
         }
 
         $this->alertManager = $this->createMock(AlertManagerInterface::class);

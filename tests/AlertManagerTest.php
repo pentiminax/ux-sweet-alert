@@ -201,6 +201,33 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
+    public function testAlertsAreNotStoredInFlashBag(): void
+    {
+        $session = new Session(new MockArraySessionStorage());
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $alertDefaults = new AlertDefaults();
+
+        $alertManager = new AlertManager(
+            requestStack: $requestStack,
+            context: $this->createMock(SweetAlertContextInterface::class),
+            flashMessageConverter: new FlashMessageConverter($alertDefaults),
+            alertDefaults: $alertDefaults,
+        );
+
+        $alertManager->success(title: 'Test alert');
+
+        $this->assertEmpty(
+            $session->getFlashBag()->peekAll(),
+            'Alert objects must not be stored in the FlashBag'
+        );
+    }
+
     public static function alertMethodProvider(): \Generator
     {
         yield ['success', 'success'];

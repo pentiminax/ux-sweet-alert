@@ -9,8 +9,7 @@ use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AlertManager implements AlertManagerInterface
 {
@@ -25,10 +24,11 @@ class AlertManager implements AlertManagerInterface
 
     public function addAlert(Alert $alert): void
     {
-        $alerts   = $this->getFlashBag()->peek(AlertManagerInterface::ALERT_STORAGE_KEY, []);
+        $session  = $this->getSession();
+        $alerts   = $session->get(AlertManagerInterface::ALERT_STORAGE_KEY, []);
         $alerts[] = $alert;
 
-        $this->getSession()->getFlashBag()->set(AlertManagerInterface::ALERT_STORAGE_KEY, $alerts);
+        $session->set(AlertManagerInterface::ALERT_STORAGE_KEY, $alerts);
         $this->context->addAlert($alert);
     }
 
@@ -37,24 +37,27 @@ class AlertManager implements AlertManagerInterface
      */
     public function getAlerts(): array
     {
-        $alerts = [];
-        if ($this->autoConvertFlashMessages) {
-            foreach ($this->getFlashBag()->peekAll() as $key => $messages) {
-                if (AlertManagerInterface::ALERT_STORAGE_KEY === $key) {
-                    $alerts[] = $this->getFlashBag()->get($key);
-                } else {
-                    $alerts[] = $this->flashMessageConverter->convert($key, $messages);
-                    $this->getFlashBag()->get($key);
-                }
-            }
-        } else {
-            return $this->getFlashBag()->get(AlertManagerInterface::ALERT_STORAGE_KEY);
+        $session = $this->getSession();
+
+        // Consume alerts from session attribute (consume-on-read)
+        $storedAlerts = $session->get(AlertManagerInterface::ALERT_STORAGE_KEY, []);
+        $session->remove(AlertManagerInterface::ALERT_STORAGE_KEY);
+
+        if (!$this->autoConvertFlashMessages) {
+            return $storedAlerts;
+        }
+
+        $alerts = [$storedAlerts];
+
+        foreach ($this->getSession()->getFlashBag()->peekAll() as $key => $messages) {
+            $alerts[] = $this->flashMessageConverter->convert($key, $messages);
+            $this->getSession()->getFlashBag()->get($key);
         }
 
         return array_merge(...$alerts);
     }
 
-    public function getSession(): FlashBagAwareSessionInterface
+    public function getSession(): SessionInterface
     {
         return $this->requestStack->getSession();
     }
@@ -146,7 +149,6 @@ class AlertManager implements AlertManagerInterface
             position: $position,
             theme: $theme,
             icon: $icon,
-            customClass: [],
             toast: true,
             timer: $timer,
             timerProgressBar: $timerProgressBar
@@ -159,7 +161,7 @@ class AlertManager implements AlertManagerInterface
         string $text,
         Position $position,
         ?Theme $theme,
-        Icon $icon,
+        ?Icon $icon,
         array $customClass = [],
         bool $toast = false,
         ?int $timer = null,
@@ -195,10 +197,5 @@ class AlertManager implements AlertManagerInterface
         $this->addAlert($alert);
 
         return $alert;
-    }
-
-    private function getFlashBag(): FlashBagInterface
-    {
-        return $this->getSession()->getFlashBag();
     }
 }
