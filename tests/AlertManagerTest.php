@@ -88,6 +88,7 @@ class AlertManagerTest extends KernelTestCase
             'inputValue'         => null,
             'inputLabel'         => null,
             'inputAttributes'    => [],
+            'inputValidator'     => null,
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
@@ -226,6 +227,32 @@ class AlertManagerTest extends KernelTestCase
             $session->getFlashBag()->peekAll(),
             'Alert objects must not be stored in the FlashBag'
         );
+    }
+
+    public function testInputMethod(): void
+    {
+        $textInput = new \Pentiminax\UX\SweetAlert\InputType\Text(
+            label: 'Enter your name',
+            value: 'John Doe',
+            placeholder: 'Name',
+            validator: 'required'
+        );
+
+        $alert = $this->alertManager->input(
+            inputType: $textInput,
+            title: 'Please enter your name',
+            text: 'We need it for verification'
+        );
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertSame('Please enter your name', $data['title']);
+        $this->assertSame('We need it for verification', $data['text']);
+        $this->assertSame('text', $data['input']);
+        $this->assertSame('Enter your name', $data['inputLabel']);
+        $this->assertSame('John Doe', $data['inputValue']);
+        $this->assertSame('Name', $data['inputPlaceholder']);
+        $this->assertSame('required', $data['inputValidator']);
     }
 
     public static function alertMethodProvider(): \Generator

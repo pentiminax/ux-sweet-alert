@@ -82,6 +82,8 @@ final class Alert implements \JsonSerializable
 
     private array $inputAttributes = [];
 
+    private ?string $inputValidator = null;
+
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
         $alert = new self();
@@ -459,6 +461,18 @@ final class Alert implements \JsonSerializable
         return $this->inputAttributes;
     }
 
+    public function inputValidator(?string $inputValidator): self
+    {
+        $this->inputValidator = $inputValidator;
+
+        return $this;
+    }
+
+    public function getInputValidator(): ?string
+    {
+        return $this->inputValidator;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
@@ -493,6 +507,7 @@ final class Alert implements \JsonSerializable
             'inputValue'         => $this->inputValue,
             'inputLabel'         => $this->inputLabel,
             'inputAttributes'    => $this->inputAttributes,
+            'inputValidator'     => $this->inputValidator,
         ];
 
         if ($this->toast) {
