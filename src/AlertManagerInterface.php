@@ -99,8 +99,5 @@ interface AlertManagerInterface
         Position $position = Position::CENTER,
         ?Theme $theme = null,
         array $customClass = [],
-        bool $toast = false,
-        ?int $timer = null,
-        bool $timerProgressBar = false,
     ): Alert;
 }

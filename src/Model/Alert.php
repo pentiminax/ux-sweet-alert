@@ -82,7 +82,11 @@ final class Alert implements \JsonSerializable
 
     private array $inputAttributes = [];
 
-    private ?string $inputValidator = null;
+    private array $inputOptions = [];
+
+    private bool $returnInputValueOnDeny = false;
+
+    private ?string $validationMessage = null;
 
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
@@ -461,16 +465,40 @@ final class Alert implements \JsonSerializable
         return $this->inputAttributes;
     }
 
-    public function inputValidator(?string $inputValidator): self
+    public function inputOptions(array $inputOptions): self
     {
-        $this->inputValidator = $inputValidator;
+        $this->inputOptions = $inputOptions;
 
         return $this;
     }
 
-    public function getInputValidator(): ?string
+    public function getInputOptions(): array
     {
-        return $this->inputValidator;
+        return $this->inputOptions;
+    }
+
+    public function returnInputValueOnDeny(bool $returnInputValueOnDeny = true): self
+    {
+        $this->returnInputValueOnDeny = $returnInputValueOnDeny;
+
+        return $this;
+    }
+
+    public function isReturnInputValueOnDeny(): bool
+    {
+        return $this->returnInputValueOnDeny;
+    }
+
+    public function validationMessage(?string $validationMessage): self
+    {
+        $this->validationMessage = $validationMessage;
+
+        return $this;
+    }
+
+    public function getValidationMessage(): ?string
+    {
+        return $this->validationMessage;
     }
 
     public function jsonSerialize(): array
@@ -506,8 +534,10 @@ final class Alert implements \JsonSerializable
             'inputPlaceholder'   => $this->inputPlaceholder,
             'inputValue'         => $this->inputValue,
             'inputLabel'         => $this->inputLabel,
-            'inputAttributes'    => $this->inputAttributes,
-            'inputValidator'     => $this->inputValidator,
+            'inputAttributes'       => $this->inputAttributes,
+            'inputOptions'          => !empty($this->inputOptions) ? $this->inputOptions : null,
+            'returnInputValueOnDeny' => $this->returnInputValueOnDeny ?: null,
+            'validationMessage'     => $this->validationMessage,
         ];
 
         if ($this->toast) {

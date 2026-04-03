@@ -87,8 +87,10 @@ class AlertManagerTest extends KernelTestCase
             'inputPlaceholder'   => null,
             'inputValue'         => null,
             'inputLabel'         => null,
-            'inputAttributes'    => [],
-            'inputValidator'     => null,
+            'inputAttributes'        => [],
+            'inputOptions'           => null,
+            'returnInputValueOnDeny' => null,
+            'validationMessage'      => null,
         ];
 
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
@@ -235,7 +237,6 @@ class AlertManagerTest extends KernelTestCase
             label: 'Enter your name',
             value: 'John Doe',
             placeholder: 'Name',
-            validator: 'required'
         );
 
         $alert = $this->alertManager->input(
@@ -252,7 +253,17 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame('Enter your name', $data['inputLabel']);
         $this->assertSame('John Doe', $data['inputValue']);
         $this->assertSame('Name', $data['inputPlaceholder']);
-        $this->assertSame('required', $data['inputValidator']);
+        $this->assertArrayNotHasKey('inputValidator', $data);
+    }
+
+    public function testThemeOverridesDefault(): void
+    {
+        $alert = $this->alertManager->success(
+            title: 'title',
+            theme: Theme::Dark,
+        );
+
+        $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
     public static function alertMethodProvider(): \Generator

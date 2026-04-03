@@ -1,6 +1,6 @@
 ---
 title: Usage
-description: Initialize the bundle and trigger toasts.
+description: Initialize the bundle and trigger alerts, toasts, and input dialogs.
 ---
 
 ## Initialization
@@ -38,3 +38,33 @@ class HomeController extends AbstractController
     }
 }
 ```
+
+## Input dialogs
+
+Use `AlertManagerInterface::input()` with an input type object when you need to collect a value:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\InputType\Text;
+
+class ProfileController extends AbstractController
+{
+    #[Route('/profile', name: 'app_profile')]
+    public function edit(AlertManagerInterface $alertManager): Response
+    {
+        $alertManager->input(
+            inputType: new Text(
+                label: 'Display name',
+                value: 'Tanguy',
+                placeholder: 'Enter your display name',
+            ),
+            title: 'Update profile',
+            text: 'This value will be visible to other users.'
+        );
+
+        return $this->render('profile/index.html.twig');
+    }
+}
+```
+
+For Live Component-based confirmation and input buttons, see the [Live Component](/live-component/) guide.

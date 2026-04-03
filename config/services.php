@@ -12,6 +12,7 @@ use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\FlashMessageConverterInterface;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
+use Pentiminax\UX\SweetAlert\Twig\Components\InputModal;
 use Pentiminax\UX\SweetAlert\Twig\Extension\AlertExtension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -57,6 +58,23 @@ return static function (ContainerConfigurator $container) {
         ->call('setTranslator', [service(TranslatorInterface::class)->nullOnInvalid()])
         ->tag('twig.component', [
             'key' => 'SweetAlert:ConfirmButton',
+            'expose_public_props' => true,
+            'attributes_var' => 'attributes',
+            'live' => true,
+            'route' => 'ux_live_component',
+            'method' => 'post',
+            'url_reference_type' => true,
+        ])
+        ->tag('controller.service_arguments')
+        ->public();
+
+    $services
+        ->set(InputModal::class)
+        ->call('setLiveResponder', [service(LiveResponder::class)])
+        ->call('setContext', [service(SweetAlertContextInterface::class)])
+        ->call('setTranslator', [service(TranslatorInterface::class)->nullOnInvalid()])
+        ->tag('twig.component', [
+            'key' => 'SweetAlert:InputModal',
             'expose_public_props' => true,
             'attributes_var' => 'attributes',
             'live' => true,

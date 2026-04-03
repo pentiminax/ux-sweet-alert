@@ -36,7 +36,7 @@ class default_1 extends Controller {
 
                         delete alert.id;
 
-                        const result = await Swal.fire(alert);
+                        const result = await this.fireAlert(alert, this.element);
 
                         document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${alertId}:closed`, {
                             detail: result
@@ -44,7 +44,7 @@ class default_1 extends Controller {
                     } else {
                         fallbackToDefaultActions(streamElement)
                     }
-                }
+                }.bind(this);
             });
 
             document.addEventListener('turbo:before-stream-render', this.handleTurboBeforeStreamRender);
@@ -57,13 +57,11 @@ class default_1 extends Controller {
         this.handleAlertAdded = async (e) => {
             const alert = e.detail['alert'];
 
-            console.log(e);
-
-            const result = await Swal.fire(alert);
-
             if (alert.id) {
                 delete alert.id;
             }
+
+            const result = await this.fireAlert(alert, e.target);
 
             let callback = e.detail['callback'] ?? null;
 
@@ -90,12 +88,39 @@ class default_1 extends Controller {
 
         const toasts = this.viewValue;
         for (const toast of toasts) {
-            const result = await Swal.fire(toast);
+            const toastId = toast.id;
+            const result = await this.fireAlert(toast, this.element);
 
-            document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toast.id}:closed`, {
+            document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toastId}:closed`, {
                 detail: result
             }));
         }
+    }
+
+    async fireAlert(swalOptions, targetElement) {
+        const beforeFireEvent = new CustomEvent('sweetalert:before-fire', {
+            bubbles: true,
+            cancelable: true,
+            detail: { swalOptions },
+        });
+
+        targetElement.dispatchEvent(beforeFireEvent);
+
+        if (beforeFireEvent.defaultPrevented) {
+            return { isConfirmed: false, isDenied: false, isDismissed: true, dismiss: 'cancel' };
+        }
+
+        const result = await Swal.fire(swalOptions);
+
+        const afterFireEvent = new CustomEvent('sweetalert:after-fire', {
+            bubbles: true,
+            cancelable: false,
+            detail: { result, swalOptions },
+        });
+
+        targetElement.dispatchEvent(afterFireEvent);
+
+        return result;
     }
 
     disconnect() {

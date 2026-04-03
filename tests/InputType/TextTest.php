@@ -15,7 +15,6 @@ class TextTest extends TestCase
             label: 'Enter value',
             value: 'default value',
             placeholder: 'Wait...',
-            validator: 'validator',
             inputAttributes: ['maxlength' => '10']
         );
 
@@ -27,7 +26,23 @@ class TextTest extends TestCase
         $this->assertEquals('Enter value', $data['inputLabel']);
         $this->assertEquals('default value', $data['inputValue']);
         $this->assertEquals('Wait...', $data['inputPlaceholder']);
-        $this->assertEquals('validator', $data['inputValidator']);
         $this->assertEquals(['maxlength' => '10'], $data['inputAttributes']);
+        $this->assertArrayNotHasKey('inputValidator', $data);
+    }
+
+    public function testConfigureWithMinimalParams(): void
+    {
+        $alert = Alert::new('Test Alert');
+        $textInput = new Text(label: 'Enter value');
+
+        $textInput->configure($alert);
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertEquals('text', $data['input']);
+        $this->assertEquals('Enter value', $data['inputLabel']);
+        $this->assertNull($data['inputValue']);
+        $this->assertNull($data['inputPlaceholder']);
+        $this->assertEquals([], $data['inputAttributes']);
     }
 }
