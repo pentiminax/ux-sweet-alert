@@ -19,4 +19,9 @@ enum Theme: string
     case MaterialUI      = 'material-ui';
     case MaterialUILight = 'material-ui-light';
     case MaterialUIDark  = 'material-ui-dark';
+    case Bulma           = 'bulma';
+    case BulmaLight      = 'bulma-light';
+    case BulmaDark       = 'bulma-dark';
+    case Minimal         = 'minimal';
+    case EmbedIframe     = 'embed-iframe';
 }

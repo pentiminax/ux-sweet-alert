@@ -1,16 +1,16 @@
 ---
 title: Live Component
-description: Trigger confirmation dialogs with Live Components.
+description: Trigger confirmation and input dialogs with Symfony UX Live Components.
 ---
 
 ## Confirm Button
 
 The `ConfirmButton` Live Component lets you trigger a SweetAlert2 confirmation dialog when clicking a button.
-You can customize the title, text, icon, and the follow-up action via a callback.
+You can customize the title, text, icon, and the follow-up action via a browser callback or a Live Component action.
 
 ### Requirements
 
-- Your frontend must listen to the `ux-sweet-alert:alert:added` event and handle it with SweetAlert2.
+- Render `{{ ux_sweet_alert_scripts() }}` on the page so the Stimulus controller can react to the browser events dispatched by the Live Component.
 
 ### Usage example
 
@@ -31,30 +31,31 @@ You can customize the title, text, icon, and the follow-up action via a callback
 | `title`            | string | Title displayed in the confirmation dialog                       |
 | `text`             | string | Additional description text                                      |
 | `icon`             | string | `success`, `error`, `warning`, `info`, `question`                |
-| `showCancelButton` | bool   | Whether to show the "Cancel" button (default: `false`)           |
-| `callback`         | string | Live component method name to invoke if user confirms the dialog |
+| `showCancelButton` | bool   | Whether to show the "Cancel" button (default: `true`)            |
+| `callback`         | string | Optional browser callback name (`window[callback]`)              |
+| `confirmButtonText`| string | Confirm button label                                             |
+| `cancelButtonText` | string | Cancel button label                                              |
+| `customClass`      | string | JSON-encoded SweetAlert2 `customClass` object                    |
 
 ### Behavior
 
-1. Button triggers a `live#emit` event with the `alertAdded` identifier.
+1. Button triggers a `live#emitSelf` event with the `alertAdded` identifier.
 2. The LiveComponent method `alertAdded()` dispatches the JS event `ux-sweet-alert:alert:added`.
 3. Your frontend JS listens to this event and calls `Swal.fire(...)`.
-4. On confirmation, the `callback` method is invoked using LiveComponent.
+4. If `callback` matches a browser function, that function receives the SweetAlert2 result.
+5. Otherwise the Stimulus controller tries to call the component `callbackAction()` method with `result` and the current `data-live-item-*-param` values.
 
-### Example usage
+### Browser callback example
 
-```html
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <twig:SweetAlert:ConfirmButton
-                    title="Confirm"
-                    text="Are you sure?"
-                    callback="myCallback"
-            />
-        </div>
-    </div>
-</div>
+```twig
+<twig:SweetAlert:ConfirmButton
+    title="Confirm"
+    text="Are you sure?"
+    callback="myCallback"
+>
+    Delete item
+</twig:SweetAlert:ConfirmButton>
+
 <script>
     function myCallback(result) {
         if (result.isConfirmed) {
@@ -67,22 +68,18 @@ You can customize the title, text, icon, and the follow-up action via a callback
 ## Extending `ConfirmButton`
 
 You can extend the `ConfirmButton` component to handle logic when the user confirms the SweetAlert dialog. Override the
-`callbackAction` method in your subclass to perform custom actions.
+`callbackAction()` method in your subclass to perform custom actions after the result is sent back to PHP.
 
 ### Example: custom Live Component
 
-```html
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <twig:MyConfirmButton
-                    title="Confirm"
-                    text="Are you sure?"
-                    data-live-item-id-param="1"
-            />
-        </div>
-    </div>
-</div>
+```twig
+<twig:MyConfirmButton
+    title="Confirm"
+    text="Are you sure?"
+    data-live-item-id-param="1"
+>
+    Archive
+</twig:MyConfirmButton>
 ```
 
 ```php
@@ -107,3 +104,40 @@ class MyConfirmButton extends ConfirmButton
     }
 }
 ```
+
+## Input Modal
+
+`InputModal` is the Live Component equivalent for SweetAlert2 input dialogs. It exposes the same event pipeline as `ConfirmButton`, but lets you configure `input`, `inputOptions`, `inputAttributes`, and validation-related options directly from Twig.
+
+### Usage example
+
+```twig
+<twig:SweetAlert:InputModal
+    title="Choose a role"
+    text="This will be applied immediately."
+    icon="question"
+    inputType="select"
+    inputLabel="Role"
+    inputValue="editor"
+    inputOptions='{"admin":"Admin","editor":"Editor"}'
+    validationMessage="Please choose a role"
+    data-live-item-user-id-param="{{ user.id }}"
+>
+    Change role
+</twig:SweetAlert:InputModal>
+```
+
+### Input props
+
+| Name                      | Type   | Description                                           |
+|---------------------------|--------|-------------------------------------------------------|
+| `inputType`               | string | SweetAlert2 input type, e.g. `text`, `select`, `file` |
+| `inputLabel`              | string | Label displayed above the input                       |
+| `inputPlaceholder`        | string | Placeholder for compatible input types                |
+| `inputValue`              | string | Initial input value                                   |
+| `inputOptions`            | string | JSON-encoded options map for `select` and `radio`     |
+| `inputAttributes`         | string | JSON-encoded HTML attributes applied to the input     |
+| `validationMessage`       | string | Validation message displayed by SweetAlert2           |
+| `returnInputValueOnDeny`  | bool   | Returns the current input value when the deny button is used |
+
+The component currently expects JSON strings for `customClass`, `inputOptions`, and `inputAttributes`. Invalid JSON is ignored.

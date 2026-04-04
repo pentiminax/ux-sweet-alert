@@ -6,14 +6,13 @@ namespace Pentiminax\UX\SweetAlert\InputType;
 
 use Pentiminax\UX\SweetAlert\Enum\InputType;
 
-final class Text extends AbstractInputType
+final class Checkbox extends AbstractInputType
 {
     public function __construct(
         ?string $label = null,
         ?string $value = null,
-        ?string $placeholder = null,
         array $inputAttributes = [],
     ) {
-        parent::__construct(InputType::Text, $label, $value, $placeholder, $inputAttributes);
+        parent::__construct(InputType::Checkbox, $label, $value, null, $inputAttributes);
     }
 }

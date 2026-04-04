@@ -1,6 +1,6 @@
 # UX SweetAlert
 
-UX SweetAlert is a Symfony bundle that integrates the SweetAlert2 library into your Symfony applications. It provides PHP helpers and a Stimulus controller to easily display alerts and toast notifications.
+UX SweetAlert is a Symfony bundle that integrates the SweetAlert2 library into your Symfony applications. It provides PHP helpers, input-type abstractions, Live Components, and a Stimulus controller to display alerts, input dialogs, and toast notifications.
 
 ## Requirements
 
@@ -69,7 +69,37 @@ class HomeController extends AbstractController
 }
 ```
 
+## Input dialogs
+
+Use `AlertManagerInterface::input()` with one of the provided input type classes when you want to collect user input from PHP:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\InputType\Text;
+
+#[Route('/profile', name: 'app_profile')]
+public function index(AlertManagerInterface $alertManager): Response
+{
+    $alertManager->input(
+        inputType: new Text(
+            label: 'Display name',
+            value: 'Tanguy',
+            placeholder: 'Enter your display name',
+        ),
+        title: 'Update profile',
+        text: 'This change is visible to other users.'
+    );
+
+    return $this->render('profile/index.html.twig');
+}
+```
+
+Available helpers include `Text`, `Textarea`, `Select`, `Radio`, `Checkbox`, `File`, `Range`, and `HtmlInputType` for other native HTML input types.
+
+## Live Components
+
+The bundle also ships `SweetAlert:ConfirmButton` and `SweetAlert:InputModal` Live Components. Render `{{ ux_sweet_alert_scripts() }}` on the page, then use the component that matches your interaction pattern. See the online documentation for full examples.
+
 ## Documentation
 
 - [Online documentation](https://pentiminax.github.io/ux-sweet-alert/)
-

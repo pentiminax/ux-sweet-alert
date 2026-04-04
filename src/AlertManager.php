@@ -187,6 +187,10 @@ class AlertManager implements AlertManagerInterface
             customClass: $customClass
         );
 
+        if (null !== $theme) {
+            $alert->theme($theme);
+        }
+
         if ($toast) {
             $alert->asToast();
             $alert->timer($timer);
@@ -209,11 +213,8 @@ class AlertManager implements AlertManagerInterface
         Position $position = Position::CENTER,
         ?Theme $theme = null,
         array $customClass = [],
-        bool $toast = false,
-        ?int $timer = null,
-        bool $timerProgressBar = false,
     ): Alert {
-        $alert = $this->createAlert($id, $title, $text, $position, $theme, $icon, $customClass, $toast, $timer, $timerProgressBar);
+        $alert = $this->createAlert($id, $title, $text, $position, $theme, $icon, $customClass);
 
         $inputType->configure($alert);
 

@@ -9,7 +9,7 @@ The `AlertManagerInterface` provides a structured and expressive way to trigger 
 
 Alerts are modal dialogs used to notify users or require confirmation. Unlike toasts, alerts are blocking interactions and typically require user action (e.g., confirmation or cancellation).
 
-This library leverages Symfony’s session flash system to store alerts and renders them on the next page load.
+This library stores alerts in the session under an internal storage key and renders them on the next page load. Flash messages are only converted when the bundle is configured to auto-convert them.
 
 ## Usage
 
@@ -38,6 +38,7 @@ The following predefined alert types are available:
 - warning()
 - info()
 - question()
+- input()
 
 Each method returns an Alert object that can be further customized using a fluent API.
 
@@ -82,6 +83,46 @@ $alert
 | `denyOutsideClick()`          | Prevents closing the modal by clicking outside       |
 | `denyEscapeKey()`             | Prevents closing the modal with the ESC key          |
 
+## Input dialogs
+
+Use `input()` when you want to collect user data through a SweetAlert2 modal from PHP:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\InputType\Select;
+
+public function invite(AlertManagerInterface $alertManager): Response
+{
+    $alertManager->input(
+        inputType: new Select(
+            options: [
+                'admin' => 'Admin',
+                'editor' => 'Editor',
+            ],
+            label: 'Choose a role',
+            value: 'editor',
+        ),
+        title: 'Invite user',
+        text: 'Select the role to apply.',
+    );
+
+    return $this->redirectToRoute('dashboard');
+}
+```
+
+### Available input types
+
+- `Text`
+- `Textarea`
+- `Select`
+- `Radio`
+- `Checkbox`
+- `File`
+- `Range`
+- `HtmlInputType` for the remaining native HTML input types such as `email`, `password`, `number`, `date`, or `time`
+
+Each input type configures the underlying `Alert` instance for you, including `inputLabel`, `inputValue`, `inputPlaceholder`, `inputOptions`, and `inputAttributes` when relevant.
+
 ## Themes
 
 SweetAlert2 ships several themes. Set them directly from PHP:
@@ -118,5 +159,6 @@ $alerts = $alertManager->getAlerts();
 ```
 
 ## Notes
-- Alerts are stored in Symfony’s FlashBag and persist for one request.
+- Alerts are stored in the session and consumed on read.
 - Alerts must be rendered on the frontend with SweetAlert2-compatible JavaScript.
+- The Stimulus controller dispatches `sweetalert:before-fire` and `sweetalert:after-fire` browser events around each `Swal.fire(...)` call.
