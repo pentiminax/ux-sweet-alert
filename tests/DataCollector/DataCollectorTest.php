@@ -8,6 +8,8 @@ use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @internal
  */
-class DataCollectorTest extends TestCase
+#[CoversClass(SweetAlertDataCollector::class)]
+final class DataCollectorTest extends TestCase
 {
     private SweetAlertDataCollector $dataCollector;
 
@@ -33,12 +36,14 @@ class DataCollectorTest extends TestCase
         );
     }
 
-    public function test_get_name(): void
+    #[Test]
+    public function it_returns_the_correct_collector_name(): void
     {
         $this->assertSame('ux_sweetalert', $this->dataCollector->getName());
     }
 
-    public function test_get_data(): void
+    #[Test]
+    public function it_collects_alerts_and_toasts_from_context(): void
     {
         $alerts = [
             Alert::new('title', 'id', 'text'),

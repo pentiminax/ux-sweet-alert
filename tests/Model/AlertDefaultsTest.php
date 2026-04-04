@@ -7,70 +7,36 @@ namespace Pentiminax\UX\SweetAlert\Tests\Model;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class AlertDefaultsTest extends TestCase
+#[CoversClass(AlertDefaults::class)]
+final class AlertDefaultsTest extends TestCase
 {
-    public function test_default_values(): void
+    #[Test]
+    public function it_has_correct_default_values_from_constructor(): void
     {
         $defaults = new AlertDefaults();
 
-        $this->assertSame(Position::CENTER, $defaults->position);
+        $this->assertCommonDefaults($defaults);
         $this->assertNull($defaults->theme);
-        $this->assertSame('#3085d6', $defaults->confirmButtonColor);
-        $this->assertSame('#aaa', $defaults->cancelButtonColor);
-        $this->assertSame('#dd6b55', $defaults->denyButtonColor);
-        $this->assertSame('OK', $defaults->confirmButtonText);
-        $this->assertSame('Cancel', $defaults->cancelButtonText);
-        $this->assertSame('No', $defaults->denyButtonText);
-        $this->assertTrue($defaults->showConfirmButton);
-        $this->assertFalse($defaults->showCancelButton);
-        $this->assertFalse($defaults->showDenyButton);
-        $this->assertFalse($defaults->reverseButtons);
-        $this->assertTrue($defaults->backdrop);
-        $this->assertSame([], $defaults->customClass);
-        $this->assertTrue($defaults->animation);
-        $this->assertTrue($defaults->allowOutsideClick);
-        $this->assertTrue($defaults->allowEscapeKey);
-        $this->assertTrue($defaults->focusConfirm);
-        $this->assertFalse($defaults->draggable);
-        $this->assertFalse($defaults->topLayer);
-        $this->assertNull($defaults->timer);
-        $this->assertFalse($defaults->timerProgressBar);
     }
 
-    public function test_from_array_with_empty_array(): void
+    #[Test]
+    public function it_applies_default_values_when_from_array_receives_empty_array(): void
     {
         $defaults = AlertDefaults::fromArray([]);
 
-        $this->assertSame(Position::CENTER, $defaults->position);
+        $this->assertCommonDefaults($defaults);
         $this->assertSame(Theme::Auto, $defaults->theme);
-        $this->assertSame('#3085d6', $defaults->confirmButtonColor);
-        $this->assertSame('#aaa', $defaults->cancelButtonColor);
-        $this->assertSame('#dd6b55', $defaults->denyButtonColor);
-        $this->assertSame('OK', $defaults->confirmButtonText);
-        $this->assertSame('Cancel', $defaults->cancelButtonText);
-        $this->assertSame('No', $defaults->denyButtonText);
-        $this->assertTrue($defaults->showConfirmButton);
-        $this->assertFalse($defaults->showCancelButton);
-        $this->assertFalse($defaults->showDenyButton);
-        $this->assertFalse($defaults->reverseButtons);
-        $this->assertTrue($defaults->backdrop);
-        $this->assertSame([], $defaults->customClass);
-        $this->assertTrue($defaults->animation);
-        $this->assertTrue($defaults->allowOutsideClick);
-        $this->assertTrue($defaults->allowEscapeKey);
-        $this->assertTrue($defaults->focusConfirm);
-        $this->assertFalse($defaults->draggable);
-        $this->assertFalse($defaults->topLayer);
-        $this->assertNull($defaults->timer);
-        $this->assertFalse($defaults->timerProgressBar);
     }
 
-    public function test_from_array_with_custom_values(): void
+    #[Test]
+    public function it_maps_all_config_values_from_array(): void
     {
         $config = [
             'position'           => 'top-end',
@@ -123,7 +89,8 @@ class AlertDefaultsTest extends TestCase
         $this->assertTrue($defaults->timerProgressBar);
     }
 
-    public function test_from_array_config_theme_overrides_default_theme(): void
+    #[Test]
+    public function it_overrides_only_the_theme_value(): void
     {
         $config = [
             'theme' => 'light',
@@ -134,7 +101,8 @@ class AlertDefaultsTest extends TestCase
         $this->assertSame(Theme::Light, $defaults->theme);
     }
 
-    public function test_from_array_with_partial_config(): void
+    #[Test]
+    public function it_uses_default_values_for_unspecified_keys_in_partial_config(): void
     {
         $config = [
             'position'           => 'bottom-end',
@@ -145,8 +113,32 @@ class AlertDefaultsTest extends TestCase
 
         $this->assertSame(Position::BOTTOM_END, $defaults->position);
         $this->assertSame('#00ff00', $defaults->confirmButtonColor);
-        // Other values should be defaults
         $this->assertSame('OK', $defaults->confirmButtonText);
         $this->assertTrue($defaults->showConfirmButton);
+    }
+
+    private function assertCommonDefaults(AlertDefaults $defaults): void
+    {
+        $this->assertSame(Position::CENTER, $defaults->position);
+        $this->assertSame('#3085d6', $defaults->confirmButtonColor);
+        $this->assertSame('#aaa', $defaults->cancelButtonColor);
+        $this->assertSame('#dd6b55', $defaults->denyButtonColor);
+        $this->assertSame('OK', $defaults->confirmButtonText);
+        $this->assertSame('Cancel', $defaults->cancelButtonText);
+        $this->assertSame('No', $defaults->denyButtonText);
+        $this->assertTrue($defaults->showConfirmButton);
+        $this->assertFalse($defaults->showCancelButton);
+        $this->assertFalse($defaults->showDenyButton);
+        $this->assertFalse($defaults->reverseButtons);
+        $this->assertTrue($defaults->backdrop);
+        $this->assertSame([], $defaults->customClass);
+        $this->assertTrue($defaults->animation);
+        $this->assertTrue($defaults->allowOutsideClick);
+        $this->assertTrue($defaults->allowEscapeKey);
+        $this->assertTrue($defaults->focusConfirm);
+        $this->assertFalse($defaults->draggable);
+        $this->assertFalse($defaults->topLayer);
+        $this->assertNull($defaults->timer);
+        $this->assertFalse($defaults->timerProgressBar);
     }
 }

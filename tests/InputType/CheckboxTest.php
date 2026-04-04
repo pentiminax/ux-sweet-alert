@@ -6,14 +6,18 @@ namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\Checkbox;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class CheckboxTest extends TestCase
+#[CoversClass(Checkbox::class)]
+final class CheckboxTest extends TestCase
 {
-    public function test_configure(): void
+    #[Test]
+    public function it_configures_alert_with_checkbox_input(): void
     {
         $alert = Alert::new('Test');
         $input = new Checkbox(label: 'I agree to the terms');

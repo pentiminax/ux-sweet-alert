@@ -11,7 +11,9 @@ use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -21,7 +23,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 /**
  * @internal
  */
-class AlertManagerTest extends KernelTestCase
+#[CoversClass(AlertManager::class)]
+final class AlertManagerTest extends KernelTestCase
 {
     private AlertManager $alertManager;
 
@@ -29,26 +32,12 @@ class AlertManagerTest extends KernelTestCase
     {
         parent::setUp();
 
-        $session = new Session(new MockArraySessionStorage());
-
-        $request = new Request();
-        $request->setSession($session);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $alertDefaults = new AlertDefaults();
-
-        $this->alertManager = new AlertManager(
-            requestStack: $requestStack,
-            context: $this->createMock(SweetAlertContextInterface::class),
-            flashMessageConverter: new FlashMessageConverter($alertDefaults),
-            alertDefaults: $alertDefaults,
-        );
+        $this->alertManager = $this->createAlertManager();
     }
 
+    #[Test]
     #[DataProvider('alertMethodProvider')]
-    public function test_alert_factory_methods(
+    public function it_creates_alerts_via_factory_methods(
         string $method,
         string $expectedIcon,
     ): void {
@@ -79,8 +68,6 @@ class AlertManagerTest extends KernelTestCase
             'customClass'            => [],
             'cancelButtonText'       => 'Cancel',
             'html'                   => null,
-            'backdrop'               => true,
-            'allowOutsideClick'      => true,
             'footer'                 => null,
             'imageUrl'               => null,
             'imageHeight'            => null,
@@ -96,29 +83,17 @@ class AlertManagerTest extends KernelTestCase
             'inputOptions'           => null,
             'returnInputValueOnDeny' => null,
             'validationMessage'      => null,
+            'backdrop'               => true,
+            'allowOutsideClick'      => true,
         ];
 
-        $this->assertEquals($expectedArray, $alert->jsonSerialize());
+        $this->assertSame($expectedArray, $alert->jsonSerialize());
     }
 
-    public function test_uses_configured_default_theme(): void
+    #[Test]
+    public function it_uses_configured_default_theme(): void
     {
-        $session = new Session(new MockArraySessionStorage());
-
-        $request = new Request();
-        $request->setSession($session);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $alertDefaults = new AlertDefaults(theme: Theme::Dark);
-
-        $alertManager = new AlertManager(
-            requestStack: $requestStack,
-            context: $this->createMock(SweetAlertContextInterface::class),
-            flashMessageConverter: new FlashMessageConverter($alertDefaults),
-            alertDefaults: $alertDefaults,
-        );
+        $alertManager = $this->createAlertManager(new AlertDefaults(theme: Theme::Dark));
 
         $alert = $alertManager->success(
             title: 'title',
@@ -128,7 +103,8 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
-    public function test_toast_method(): void
+    #[Test]
+    public function it_creates_toast_with_timer_and_progress_bar(): void
     {
         $alert = $this->alertManager->toast(
             title: 'Toast notification',
@@ -149,7 +125,8 @@ class AlertManagerTest extends KernelTestCase
         $this->assertArrayNotHasKey('allowOutsideClick', $data);
     }
 
-    public function test_alert_with_toast_flag(): void
+    #[Test]
+    public function it_creates_toast_when_toast_flag_is_passed_to_success(): void
     {
         $alert = $this->alertManager->success(
             title: 'Success toast',
@@ -164,11 +141,11 @@ class AlertManagerTest extends KernelTestCase
         $this->assertTrue($data['toast']);
         $this->assertSame(5000, $data['timer']);
         $this->assertFalse($data['showConfirmButton']);
-        // When toast=true and position=CENTER (default), it should change to BOTTOM_END
         $this->assertSame(Position::BOTTOM_END->value, $data['position']);
     }
 
-    public function test_toast_with_custom_position(): void
+    #[Test]
+    public function it_preserves_custom_position_for_toasts(): void
     {
         $alert = $this->alertManager->success(
             title: 'Custom position toast',
@@ -182,24 +159,10 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Position::TOP_END->value, $data['position']);
     }
 
-    public function test_toast_uses_configured_theme(): void
+    #[Test]
+    public function it_applies_configured_default_theme_to_toasts(): void
     {
-        $session = new Session(new MockArraySessionStorage());
-
-        $request = new Request();
-        $request->setSession($session);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $alertDefaults = new AlertDefaults(theme: Theme::Dark);
-
-        $alertManager = new AlertManager(
-            requestStack: $requestStack,
-            context: $this->createMock(SweetAlertContextInterface::class),
-            flashMessageConverter: new FlashMessageConverter($alertDefaults),
-            alertDefaults: $alertDefaults,
-        );
+        $alertManager = $this->createAlertManager(new AlertDefaults(theme: Theme::Dark));
 
         $alert = $alertManager->toast(
             title: 'Toast',
@@ -209,19 +172,17 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
-    public function test_alerts_are_not_stored_in_flash_bag(): void
+    #[Test]
+    public function it_stores_alerts_in_session_attribute_not_flash_bag(): void
     {
         $session = new Session(new MockArraySessionStorage());
-
         $request = new Request();
         $request->setSession($session);
-
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
         $alertDefaults = new AlertDefaults();
-
-        $alertManager = new AlertManager(
+        $alertManager  = new AlertManager(
             requestStack: $requestStack,
             context: $this->createMock(SweetAlertContextInterface::class),
             flashMessageConverter: new FlashMessageConverter($alertDefaults),
@@ -236,7 +197,8 @@ class AlertManagerTest extends KernelTestCase
         );
     }
 
-    public function test_input_method(): void
+    #[Test]
+    public function it_configures_input_alert_via_input_type(): void
     {
         $textInput = new \Pentiminax\UX\SweetAlert\InputType\Text(
             label: 'Enter your name',
@@ -261,7 +223,8 @@ class AlertManagerTest extends KernelTestCase
         $this->assertArrayNotHasKey('inputValidator', $data);
     }
 
-    public function test_theme_overrides_default(): void
+    #[Test]
+    public function it_allows_per_alert_theme_to_override_default(): void
     {
         $alert = $this->alertManager->success(
             title: 'title',
@@ -278,5 +241,25 @@ class AlertManagerTest extends KernelTestCase
         yield ['warning', 'warning'];
         yield ['info', 'info'];
         yield ['question', 'question'];
+    }
+
+    private function createAlertManager(?AlertDefaults $defaults = null): AlertManager
+    {
+        $session = new Session(new MockArraySessionStorage());
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $alertDefaults = $defaults ?? new AlertDefaults();
+
+        return new AlertManager(
+            requestStack: $requestStack,
+            context: $this->createMock(SweetAlertContextInterface::class),
+            flashMessageConverter: new FlashMessageConverter($alertDefaults),
+            alertDefaults: $alertDefaults,
+        );
     }
 }

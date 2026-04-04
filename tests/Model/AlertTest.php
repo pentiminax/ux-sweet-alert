@@ -9,14 +9,18 @@ use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class AlertTest extends TestCase
+#[CoversClass(Alert::class)]
+final class AlertTest extends TestCase
 {
-    public function test_create_alert(): void
+    #[Test]
+    public function it_creates_alert_with_all_fluent_options(): void
     {
         $alert = Alert::new(
             title: 'title',
@@ -47,29 +51,30 @@ class AlertTest extends TestCase
 
         $data = $alert->jsonSerialize();
 
-        $this->assertEquals('id', $data['id']);
-        $this->assertEquals('title', $data['title']);
-        $this->assertEquals('text', $data['text']);
-        $this->assertEquals(Icon::INFO->value, $data['icon']);
+        $this->assertSame('id', $data['id']);
+        $this->assertSame('title', $data['title']);
+        $this->assertSame('text', $data['text']);
+        $this->assertSame(Icon::INFO->value, $data['icon']);
         $this->assertFalse($data['showConfirmButton']);
         $this->assertTrue($data['showCancelButton']);
         $this->assertTrue($data['showDenyButton']);
         $this->assertFalse($data['animation']);
-        $this->assertEquals(Theme::Dark->value, $data['theme']);
+        $this->assertSame(Theme::Dark->value, $data['theme']);
         $this->assertFalse($data['backdrop']);
         $this->assertFalse($data['allowOutsideClick']);
         $this->assertFalse($data['allowEscapeKey']);
-        $this->assertEquals('#ff0000', $data['confirmButtonColor']);
-        $this->assertEquals('#00ff00', $data['cancelButtonColor']);
-        $this->assertEquals('#0000ff', $data['denyButtonColor']);
+        $this->assertSame('#ff0000', $data['confirmButtonColor']);
+        $this->assertSame('#00ff00', $data['cancelButtonColor']);
+        $this->assertSame('#0000ff', $data['denyButtonColor']);
         $this->assertTrue($data['reverseButtons']);
-        $this->assertEquals(Position::CENTER->value, $data['position']);
-        $this->assertEquals(['confirmButton' => 'btn btn-success'], $data['customClass']);
-        $this->assertEquals('<b>html</b>', $data['html']);
+        $this->assertSame(Position::CENTER->value, $data['position']);
+        $this->assertSame(['confirmButton' => 'btn btn-success'], $data['customClass']);
+        $this->assertSame('<b>html</b>', $data['html']);
         $this->assertArrayNotHasKey('toast', $data);
     }
 
-    public function test_serialize_supports_bootstrap_theme(): void
+    #[Test]
+    public function it_serializes_bootstrap_theme(): void
     {
         $alert = Alert::new(
             title: 'title',
@@ -84,10 +89,11 @@ class AlertTest extends TestCase
 
         $data = $alert->jsonSerialize();
 
-        $this->assertEquals(Theme::Bootstrap5->value, $data['theme']);
+        $this->assertSame(Theme::Bootstrap5->value, $data['theme']);
     }
 
-    public function test_toast_mode(): void
+    #[Test]
+    public function it_configures_toast_mode_with_timer_and_progress_bar(): void
     {
         $alert = Alert::new(
             title: 'toast',
@@ -112,7 +118,8 @@ class AlertTest extends TestCase
         $this->assertArrayNotHasKey('allowOutsideClick', $data);
     }
 
-    public function test_standard_alert_does_not_include_toast_fields(): void
+    #[Test]
+    public function it_excludes_toast_fields_for_standard_alerts(): void
     {
         $alert = Alert::new(
             title: 'standard',
@@ -130,7 +137,8 @@ class AlertTest extends TestCase
         $this->assertArrayHasKey('allowOutsideClick', $data);
     }
 
-    public function test_with_defaults_uses_defaults(): void
+    #[Test]
+    public function it_applies_all_defaults_from_alert_defaults(): void
     {
         $defaults = new AlertDefaults(
             position: Position::TOP_END,
@@ -192,7 +200,8 @@ class AlertTest extends TestCase
         $this->assertTrue($data['topLayer']);
     }
 
-    public function test_with_defaults_position_can_be_overridden(): void
+    #[Test]
+    public function it_overrides_default_position(): void
     {
         $defaults = new AlertDefaults(
             position: Position::CENTER,
@@ -207,7 +216,8 @@ class AlertTest extends TestCase
         $this->assertSame(Position::TOP_END, $alert->getPosition());
     }
 
-    public function test_with_defaults_custom_class_can_be_overridden(): void
+    #[Test]
+    public function it_overrides_default_custom_class(): void
     {
         $defaults = new AlertDefaults(
             customClass: ['popup' => 'default-popup'],
@@ -224,7 +234,8 @@ class AlertTest extends TestCase
         $this->assertSame(['popup' => 'custom-popup'], $data['customClass']);
     }
 
-    public function test_with_defaults_fluent_methods_override_defaults(): void
+    #[Test]
+    public function it_allows_fluent_methods_to_override_defaults(): void
     {
         $defaults = new AlertDefaults(
             confirmButtonColor: '#ff0000',
@@ -238,7 +249,6 @@ class AlertTest extends TestCase
             title: 'Test',
         );
 
-        // Override defaults using fluent methods
         $alert
             ->confirmButtonColor('#00ff00')
             ->confirmButtonText('Override')
@@ -253,7 +263,8 @@ class AlertTest extends TestCase
         $this->assertTrue($data['reverseButtons']);
     }
 
-    public function test_with_defaults_uses_auto_theme_when_defaults_theme_is_null(): void
+    #[Test]
+    public function it_uses_auto_theme_when_defaults_theme_is_null(): void
     {
         $defaults = new AlertDefaults(
             theme: null,

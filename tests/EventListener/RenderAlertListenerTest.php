@@ -7,6 +7,9 @@ namespace Pentiminax\UX\SweetAlert\Tests\EventListener;
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use Pentiminax\UX\SweetAlert\Tests\Fixtures\DummyTurboBundle;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +21,8 @@ use Twig\Environment;
 /**
  * @internal
  */
-class RenderAlertListenerTest extends TestCase
+#[CoversClass(RenderAlertListener::class)]
+final class RenderAlertListenerTest extends TestCase
 {
     private RenderAlertListener $listener;
 
@@ -43,7 +47,8 @@ class RenderAlertListenerTest extends TestCase
         );
     }
 
-    public function test_on_kernel_response(): void
+    #[Test]
+    public function it_appends_turbo_stream_html_to_the_response(): void
     {
         $this->alertManager
             ->expects($this->once())
@@ -85,8 +90,4 @@ class RenderAlertListenerTest extends TestCase
             text: 'Text',
         );
     }
-}
-
-final class DummyTurboBundle
-{
 }

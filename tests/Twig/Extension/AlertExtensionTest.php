@@ -6,6 +6,8 @@ namespace Pentiminax\UX\SweetAlert\Tests\Twig\Extension;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Pentiminax\UX\SweetAlert\Twig\Extension\AlertExtension;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -13,9 +15,11 @@ use Twig\Loader\ArrayLoader;
 /**
  * @internal
  */
-class AlertExtensionTest extends TestCase
+#[CoversClass(AlertExtension::class)]
+final class AlertExtensionTest extends TestCase
 {
-    public function test_scripts_adds_turbo_temporary_attribute(): void
+    #[Test]
+    public function it_adds_turbo_temporary_attribute_to_scripts_markup(): void
     {
         $twig = new Environment(new ArrayLoader());
 

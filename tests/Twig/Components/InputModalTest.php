@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace Pentiminax\UX\SweetAlert\Tests\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
-use Pentiminax\UX\SweetAlert\Model\Result;
+use Pentiminax\UX\SweetAlert\Tests\Fixtures\BrowserEventsTrait;
+use Pentiminax\UX\SweetAlert\Tests\Fixtures\TestableInputModal;
 use Pentiminax\UX\SweetAlert\Twig\Components\InputModal;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\LiveResponder;
 
 /**
  * @internal
  */
-class InputModalTest extends TestCase
+#[CoversClass(InputModal::class)]
+final class InputModalTest extends TestCase
 {
-    public function test_alert_added_builds_configured_input_alert_and_dispatches_browser_event(): void
+    use BrowserEventsTrait;
+
+    #[Test]
+    public function it_builds_configured_input_alert_and_dispatches_browser_event(): void
     {
         $component = new InputModal();
         $component->setLiveResponder(new LiveResponder());
@@ -67,13 +74,14 @@ class InputModalTest extends TestCase
 
         $events = $this->browserEvents($component);
 
-        self::assertCount(1, $events);
-        self::assertSame('ux-sweet-alert:alert:added', $events[0]['event']);
-        self::assertSame('handleRoleSelection', $events[0]['payload']['callback']);
-        self::assertSame('Profile update', $events[0]['payload']['alert']->jsonSerialize()['title']);
+        $this->assertCount(1, $events);
+        $this->assertSame('ux-sweet-alert:alert:added', $events[0]['event']);
+        $this->assertSame('handleRoleSelection', $events[0]['payload']['callback']);
+        $this->assertSame('Profile update', $events[0]['payload']['alert']->jsonSerialize()['title']);
     }
 
-    public function test_alert_added_ignores_invalid_json_configuration(): void
+    #[Test]
+    public function it_ignores_invalid_json_in_custom_class_input_options_and_attributes(): void
     {
         $component = new InputModal();
         $component->setLiveResponder(new LiveResponder());
@@ -101,7 +109,8 @@ class InputModalTest extends TestCase
         $component->alertAdded();
     }
 
-    public function test_callback_action_calls_on_result_and_dispatches_browser_event(): void
+    #[Test]
+    public function it_calls_on_result_hook_and_dispatches_callback_browser_event(): void
     {
         $component = new TestableInputModal();
         $component->setLiveResponder(new LiveResponder());
@@ -117,48 +126,27 @@ class InputModalTest extends TestCase
 
         $component->callbackAction($result, $args);
 
-        self::assertTrue($component->receivedResult->isConfirmed);
-        self::assertSame('editor', $component->receivedResult->value);
-        self::assertSame(['id' => '42'], $component->receivedArgs);
+        $this->assertTrue($component->receivedResult->isConfirmed);
+        $this->assertSame('editor', $component->receivedResult->value);
+        $this->assertSame(['id' => '42'], $component->receivedArgs);
 
         $events = $this->browserEvents($component);
 
-        self::assertCount(1, $events);
-        self::assertSame('ux-sweet-alert:callback', $events[0]['event']);
-        self::assertSame($result, $events[0]['payload']['result']);
-        self::assertSame($args, $events[0]['payload']['args']);
+        $this->assertCount(1, $events);
+        $this->assertSame('ux-sweet-alert:callback', $events[0]['event']);
+        $this->assertSame($result, $events[0]['payload']['result']);
+        $this->assertSame($args, $events[0]['payload']['args']);
     }
 
-    public function test_is_disabled_reflects_public_property(): void
+    #[Test]
+    public function it_reflects_disabled_state_from_public_property(): void
     {
         $component = new InputModal();
 
-        self::assertFalse($component->isDisabled());
+        $this->assertFalse($component->isDisabled());
 
         $component->disabled = true;
 
-        self::assertTrue($component->isDisabled());
-    }
-
-    private function browserEvents(InputModal $component): array
-    {
-        $reflection = new \ReflectionClass(InputModal::class);
-        $property   = $reflection->getProperty('liveResponder');
-        $property->setAccessible(true);
-
-        return $property->getValue($component)->getBrowserEventsToDispatch();
-    }
-}
-
-final class TestableInputModal extends InputModal
-{
-    public ?Result $receivedResult = null;
-
-    public array $receivedArgs = [];
-
-    protected function onResult(Result $result, array $args = []): void
-    {
-        $this->receivedResult = $result;
-        $this->receivedArgs   = $args;
+        $this->assertTrue($component->isDisabled());
     }
 }

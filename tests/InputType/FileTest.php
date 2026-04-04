@@ -6,14 +6,18 @@ namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\File;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class FileTest extends TestCase
+#[CoversClass(File::class)]
+final class FileTest extends TestCase
 {
-    public function test_configure_with_accept(): void
+    #[Test]
+    public function it_configures_alert_with_file_input_and_accept_attribute(): void
     {
         $alert = Alert::new('Test');
         $input = new File(label: 'Upload image', accept: 'image/*');
@@ -26,7 +30,8 @@ class FileTest extends TestCase
         $this->assertSame(['accept' => 'image/*'], $data['inputAttributes']);
     }
 
-    public function test_configure_without_accept(): void
+    #[Test]
+    public function it_configures_alert_with_file_input_without_accept_attribute(): void
     {
         $alert = Alert::new('Test');
         $input = new File(label: 'Upload file');

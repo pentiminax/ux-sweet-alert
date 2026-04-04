@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Pentiminax\UX\SweetAlert\Tests\Enum;
 
 use Pentiminax\UX\SweetAlert\Enum\InputType;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class InputTypeTest extends TestCase
+#[CoversClass(InputType::class)]
+final class InputTypeTest extends TestCase
 {
-    public function test_all_eighteen_types_exist(): void
+    #[Test]
+    public function it_defines_all_eighteen_input_types(): void
     {
         $expectedValues = [
             'text', 'email', 'password', 'number', 'tel', 'url', 'search',
@@ -28,7 +32,8 @@ class InputTypeTest extends TestCase
         $this->assertSame($expectedValues, $actualValues);
     }
 
-    public function test_supports_input_options(): void
+    #[Test]
+    public function it_identifies_types_that_support_input_options(): void
     {
         $this->assertTrue(InputType::Select->supportsInputOptions());
         $this->assertTrue(InputType::Radio->supportsInputOptions());
@@ -39,7 +44,8 @@ class InputTypeTest extends TestCase
         $this->assertFalse(InputType::Textarea->supportsInputOptions());
     }
 
-    public function test_supports_placeholder(): void
+    #[Test]
+    public function it_identifies_types_that_support_placeholder(): void
     {
         $this->assertTrue(InputType::Text->supportsPlaceholder());
         $this->assertTrue(InputType::Email->supportsPlaceholder());

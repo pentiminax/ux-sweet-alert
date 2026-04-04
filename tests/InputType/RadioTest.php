@@ -6,14 +6,18 @@ namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\Radio;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class RadioTest extends TestCase
+#[CoversClass(Radio::class)]
+final class RadioTest extends TestCase
 {
-    public function test_configure_with_options(): void
+    #[Test]
+    public function it_configures_alert_with_radio_options(): void
     {
         $alert = Alert::new('Test');
         $input = new Radio(

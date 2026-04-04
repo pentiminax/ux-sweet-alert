@@ -6,14 +6,18 @@ namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\Text;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class TextTest extends TestCase
+#[CoversClass(Text::class)]
+final class TextTest extends TestCase
 {
-    public function test_configure(): void
+    #[Test]
+    public function it_configures_alert_with_all_text_input_options(): void
     {
         $alert     = Alert::new('Test Alert');
         $textInput = new Text(
@@ -27,15 +31,16 @@ class TextTest extends TestCase
 
         $data = $alert->jsonSerialize();
 
-        $this->assertEquals('text', $data['input']);
-        $this->assertEquals('Enter value', $data['inputLabel']);
-        $this->assertEquals('default value', $data['inputValue']);
-        $this->assertEquals('Wait...', $data['inputPlaceholder']);
-        $this->assertEquals(['maxlength' => '10'], $data['inputAttributes']);
+        $this->assertSame('text', $data['input']);
+        $this->assertSame('Enter value', $data['inputLabel']);
+        $this->assertSame('default value', $data['inputValue']);
+        $this->assertSame('Wait...', $data['inputPlaceholder']);
+        $this->assertSame(['maxlength' => '10'], $data['inputAttributes']);
         $this->assertArrayNotHasKey('inputValidator', $data);
     }
 
-    public function test_configure_with_minimal_params(): void
+    #[Test]
+    public function it_configures_alert_with_minimal_text_input_options(): void
     {
         $alert     = Alert::new('Test Alert');
         $textInput = new Text(label: 'Enter value');
@@ -44,10 +49,10 @@ class TextTest extends TestCase
 
         $data = $alert->jsonSerialize();
 
-        $this->assertEquals('text', $data['input']);
-        $this->assertEquals('Enter value', $data['inputLabel']);
+        $this->assertSame('text', $data['input']);
+        $this->assertSame('Enter value', $data['inputLabel']);
         $this->assertNull($data['inputValue']);
         $this->assertNull($data['inputPlaceholder']);
-        $this->assertEquals([], $data['inputAttributes']);
+        $this->assertSame([], $data['inputAttributes']);
     }
 }

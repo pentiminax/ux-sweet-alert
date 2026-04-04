@@ -12,14 +12,18 @@ use Pentiminax\UX\SweetAlert\InputType\Range;
 use Pentiminax\UX\SweetAlert\InputType\Select;
 use Pentiminax\UX\SweetAlert\InputType\Textarea;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class HtmlInputTypeTest extends TestCase
+#[CoversClass(HtmlInputType::class)]
+final class HtmlInputTypeTest extends TestCase
 {
-    public function test_configure_email(): void
+    #[Test]
+    public function it_configures_alert_with_email_input(): void
     {
         $alert = Alert::new('Test');
         $input = new HtmlInputType(
@@ -36,7 +40,8 @@ class HtmlInputTypeTest extends TestCase
         $this->assertSame('you@example.com', $data['inputPlaceholder']);
     }
 
-    public function test_configure_password(): void
+    #[Test]
+    public function it_configures_alert_with_password_input(): void
     {
         $alert = Alert::new('Test');
         $input = new HtmlInputType(InputType::Password, 'Password');
@@ -46,7 +51,8 @@ class HtmlInputTypeTest extends TestCase
         $this->assertSame('password', $alert->jsonSerialize()['input']);
     }
 
-    public function test_configure_number(): void
+    #[Test]
+    public function it_configures_alert_with_number_input_and_attributes(): void
     {
         $alert = Alert::new('Test');
         $input = new HtmlInputType(
@@ -62,7 +68,8 @@ class HtmlInputTypeTest extends TestCase
         $this->assertSame(['min' => '0', 'max' => '120'], $data['inputAttributes']);
     }
 
-    public function test_rejects_select_type(): void
+    #[Test]
+    public function it_rejects_select_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Select::class);
@@ -70,14 +77,16 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::Select);
     }
 
-    public function test_rejects_radio_type(): void
+    #[Test]
+    public function it_rejects_radio_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new HtmlInputType(InputType::Radio);
     }
 
-    public function test_rejects_checkbox_type(): void
+    #[Test]
+    public function it_rejects_checkbox_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Checkbox::class);
@@ -85,7 +94,8 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::Checkbox);
     }
 
-    public function test_rejects_file_type(): void
+    #[Test]
+    public function it_rejects_file_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(File::class);
@@ -93,7 +103,8 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::File);
     }
 
-    public function test_rejects_range_type(): void
+    #[Test]
+    public function it_rejects_range_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Range::class);
@@ -101,7 +112,8 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::Range);
     }
 
-    public function test_rejects_textarea_type(): void
+    #[Test]
+    public function it_rejects_textarea_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Textarea::class);

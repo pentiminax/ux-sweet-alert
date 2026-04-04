@@ -6,14 +6,18 @@ namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\Select;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class SelectTest extends TestCase
+#[CoversClass(Select::class)]
+final class SelectTest extends TestCase
 {
-    public function test_configure_with_flat_options(): void
+    #[Test]
+    public function it_configures_alert_with_flat_options(): void
     {
         $alert = Alert::new('Test');
         $input = new Select(
@@ -31,7 +35,8 @@ class SelectTest extends TestCase
         $this->assertSame(['cat' => 'Cat', 'dog' => 'Dog', 'bird' => 'Bird'], $data['inputOptions']);
     }
 
-    public function test_configure_with_optgroup_options(): void
+    #[Test]
+    public function it_configures_alert_with_optgroup_options(): void
     {
         $alert = Alert::new('Test');
         $input = new Select(
@@ -50,7 +55,8 @@ class SelectTest extends TestCase
         $this->assertSame(['apple' => 'Apple', 'banana' => 'Banana'], $data['inputOptions']['Fruits']);
     }
 
-    public function test_configure_with_empty_options(): void
+    #[Test]
+    public function it_sets_input_options_to_null_when_no_options_provided(): void
     {
         $alert = Alert::new('Test');
         $input = new Select(label: 'Choose');

@@ -5,16 +5,23 @@ declare(strict_types=1);
 namespace Pentiminax\UX\SweetAlert\Tests\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
+use Pentiminax\UX\SweetAlert\Tests\Fixtures\BrowserEventsTrait;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\LiveResponder;
 
 /**
  * @internal
  */
-class ConfirmButtonTest extends TestCase
+#[CoversClass(ConfirmButton::class)]
+final class ConfirmButtonTest extends TestCase
 {
-    public function test_alert_added_falls_back_to_empty_custom_class_when_json_is_invalid(): void
+    use BrowserEventsTrait;
+
+    #[Test]
+    public function it_falls_back_to_empty_custom_class_when_json_is_invalid(): void
     {
         $component = new ConfirmButton();
         $component->setLiveResponder(new LiveResponder());
@@ -38,16 +45,7 @@ class ConfirmButtonTest extends TestCase
 
         $events = $this->browserEvents($component);
 
-        self::assertCount(1, $events);
-        self::assertSame('ux-sweet-alert:alert:added', $events[0]['event']);
-    }
-
-    private function browserEvents(ConfirmButton $component): array
-    {
-        $reflection = new \ReflectionClass(ConfirmButton::class);
-        $property   = $reflection->getProperty('liveResponder');
-        $property->setAccessible(true);
-
-        return $property->getValue($component)->getBrowserEventsToDispatch();
+        $this->assertCount(1, $events);
+        $this->assertSame('ux-sweet-alert:alert:added', $events[0]['event']);
     }
 }

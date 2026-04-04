@@ -6,14 +6,18 @@ namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\Textarea;
 use Pentiminax\UX\SweetAlert\Model\Alert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  */
-class TextareaTest extends TestCase
+#[CoversClass(Textarea::class)]
+final class TextareaTest extends TestCase
 {
-    public function test_configure(): void
+    #[Test]
+    public function it_configures_alert_with_textarea_input(): void
     {
         $alert = Alert::new('Test');
         $input = new Textarea(
