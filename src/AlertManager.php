@@ -6,6 +6,7 @@ use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
+use Pentiminax\UX\SweetAlert\InputType\InputTypeInterface;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,8 +20,7 @@ class AlertManager implements AlertManagerInterface
         private readonly FlashMessageConverter $flashMessageConverter,
         private readonly AlertDefaults $alertDefaults,
         private readonly bool $autoConvertFlashMessages = false,
-    ) {
-    }
+    ) {}
 
     public function addAlert(Alert $alert): void
     {
@@ -155,7 +155,7 @@ class AlertManager implements AlertManagerInterface
         );
     }
 
-    private function createAndAddAlert(
+    private function createAlert(
         string $id,
         string $title,
         string $text,
@@ -193,6 +193,44 @@ class AlertManager implements AlertManagerInterface
                 $alert->withTimerProgressBar();
             }
         }
+
+        return $alert;
+    }
+    public function input(
+        InputTypeInterface $inputType,
+        string $title,
+        string $id = '',
+        string $text = '',
+        ?Icon $icon = null,
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false,
+    ): Alert {
+        $alert = $this->createAlert($id, $title, $text, $position, $theme, $icon, $customClass, $toast, $timer, $timerProgressBar);
+
+        $inputType->configure($alert);
+
+        $this->addAlert($alert);
+
+        return $alert;
+    }
+
+    private function createAndAddAlert(
+        string $id,
+        string $title,
+        string $text,
+        Position $position,
+        ?Theme $theme,
+        ?Icon $icon,
+        array $customClass = [],
+        bool $toast = false,
+        ?int $timer = null,
+        bool $timerProgressBar = false,
+    ): Alert {
+        $alert = $this->createAlert($id, $title, $text, $position, $theme, $icon, $customClass, $toast, $timer, $timerProgressBar);
 
         $this->addAlert($alert);
 

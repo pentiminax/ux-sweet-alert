@@ -5,6 +5,7 @@ namespace Pentiminax\UX\SweetAlert;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
+use Pentiminax\UX\SweetAlert\InputType\InputTypeInterface;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 
 interface AlertManagerInterface
@@ -85,6 +86,20 @@ interface AlertManagerInterface
         ?Icon $icon = Icon::SUCCESS,
         Position $position = Position::BOTTOM_END,
         ?Theme $theme = null,
+        ?int $timer = null,
+        bool $timerProgressBar = false,
+    ): Alert;
+
+    public function input(
+        InputTypeInterface $inputType,
+        string $title,
+        string $id = '',
+        string $text = '',
+        ?Icon $icon = null,
+        Position $position = Position::CENTER,
+        ?Theme $theme = null,
+        array $customClass = [],
+        bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
     ): Alert;
