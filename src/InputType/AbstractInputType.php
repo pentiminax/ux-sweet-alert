@@ -15,7 +15,8 @@ abstract class AbstractInputType implements InputTypeInterface
         protected readonly ?string $value = null,
         protected readonly ?string $placeholder = null,
         protected readonly array $inputAttributes = [],
-    ) {}
+    ) {
+    }
 
     public function configure(Alert $alert): void
     {

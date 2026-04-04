@@ -8,9 +8,12 @@ use Pentiminax\UX\SweetAlert\InputType\Textarea;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class TextareaTest extends TestCase
 {
-    public function testConfigure(): void
+    public function test_configure(): void
     {
         $alert = Alert::new('Test');
         $input = new Textarea(

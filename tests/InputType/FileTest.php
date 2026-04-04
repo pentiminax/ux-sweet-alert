@@ -8,9 +8,12 @@ use Pentiminax\UX\SweetAlert\InputType\File;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class FileTest extends TestCase
 {
-    public function testConfigureWithAccept(): void
+    public function test_configure_with_accept(): void
     {
         $alert = Alert::new('Test');
         $input = new File(label: 'Upload image', accept: 'image/*');
@@ -23,7 +26,7 @@ class FileTest extends TestCase
         $this->assertSame(['accept' => 'image/*'], $data['inputAttributes']);
     }
 
-    public function testConfigureWithoutAccept(): void
+    public function test_configure_without_accept(): void
     {
         $alert = Alert::new('Test');
         $input = new File(label: 'Upload file');

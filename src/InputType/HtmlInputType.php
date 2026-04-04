@@ -25,21 +25,9 @@ final class HtmlInputType extends AbstractInputType
         array $inputAttributes = [],
     ) {
         if (\in_array($type, self::SPECIALIZED_TYPES, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Input type "%s" requires a specialized class. Use %s instead.',
-                    $type->value,
-                    match ($type) {
-                        InputType::Select   => Select::class,
-                        InputType::Radio    => Radio::class,
-                        InputType::Checkbox => Checkbox::class,
-                        InputType::File     => File::class,
-                        InputType::Range    => Range::class,
-                        InputType::Textarea => Textarea::class,
-                        default             => 'a specialized InputType class',
-                    }
-                )
-            );
+            throw new \InvalidArgumentException(\sprintf('Input type "%s" requires a specialized class. Use %s instead.', $type->value, match ($type) {
+                InputType::Select => Select::class, InputType::Radio => Radio::class, InputType::Checkbox => Checkbox::class, InputType::File => File::class, InputType::Range => Range::class, InputType::Textarea => Textarea::class, default => 'a specialized InputType class',
+            }));
         }
 
         parent::__construct($type, $label, $value, $placeholder, $inputAttributes);

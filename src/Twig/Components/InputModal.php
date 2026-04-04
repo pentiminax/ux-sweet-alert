@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
@@ -115,14 +117,14 @@ class InputModal
 
         if (!empty($this->inputOptions)) {
             $options = json_decode($this->inputOptions, true);
-            if (is_array($options)) {
+            if (\is_array($options)) {
                 $alert->inputOptions($options);
             }
         }
 
         if (!empty($this->inputAttributes)) {
             $attrs = json_decode($this->inputAttributes, true);
-            if (is_array($attrs)) {
+            if (\is_array($attrs)) {
                 $alert->inputAttributes($attrs);
             }
         }
@@ -160,7 +162,6 @@ class InputModal
 
     protected function onResult(Result $result, array $args = []): void
     {
-
     }
 
     #[Required]

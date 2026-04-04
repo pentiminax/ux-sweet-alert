@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
@@ -7,15 +9,18 @@ use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\LiveResponder;
 
+/**
+ * @internal
+ */
 class ConfirmButtonTest extends TestCase
 {
-    public function testAlertAddedFallsBackToEmptyCustomClassWhenJsonIsInvalid(): void
+    public function test_alert_added_falls_back_to_empty_custom_class_when_json_is_invalid(): void
     {
         $component = new ConfirmButton();
         $component->setLiveResponder(new LiveResponder());
         $component->setTranslator(null);
-        $component->title = 'Archive';
-        $component->text = 'Archive this item?';
+        $component->title       = 'Archive';
+        $component->text        = 'Archive this item?';
         $component->customClass = '{invalid';
 
         $context = $this->createMock(SweetAlertContextInterface::class);
@@ -40,7 +45,7 @@ class ConfirmButtonTest extends TestCase
     private function browserEvents(ConfirmButton $component): array
     {
         $reflection = new \ReflectionClass(ConfirmButton::class);
-        $property = $reflection->getProperty('liveResponder');
+        $property   = $reflection->getProperty('liveResponder');
         $property->setAccessible(true);
 
         return $property->getValue($component)->getBrowserEventsToDispatch();

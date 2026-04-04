@@ -8,9 +8,12 @@ use Pentiminax\UX\SweetAlert\InputType\Range;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class RangeTest extends TestCase
 {
-    public function testConfigureWithMinMaxStep(): void
+    public function test_configure_with_min_max_step(): void
     {
         $alert = Alert::new('Test');
         $input = new Range(label: 'Volume', value: '50', min: 0, max: 100, step: 5);
@@ -24,7 +27,7 @@ class RangeTest extends TestCase
         $this->assertSame(['min' => '0', 'max' => '100', 'step' => '5'], $data['inputAttributes']);
     }
 
-    public function testConfigureWithoutConstraints(): void
+    public function test_configure_without_constraints(): void
     {
         $alert = Alert::new('Test');
         $input = new Range(label: 'Slider');

@@ -8,9 +8,12 @@ use Pentiminax\UX\SweetAlert\InputType\Radio;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class RadioTest extends TestCase
 {
-    public function testConfigureWithOptions(): void
+    public function test_configure_with_options(): void
     {
         $alert = Alert::new('Test');
         $input = new Radio(

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\Twig\Components;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
@@ -8,27 +10,30 @@ use Pentiminax\UX\SweetAlert\Twig\Components\InputModal;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\LiveResponder;
 
+/**
+ * @internal
+ */
 class InputModalTest extends TestCase
 {
-    public function testAlertAddedBuildsConfiguredInputAlertAndDispatchesBrowserEvent(): void
+    public function test_alert_added_builds_configured_input_alert_and_dispatches_browser_event(): void
     {
         $component = new InputModal();
         $component->setLiveResponder(new LiveResponder());
         $component->setTranslator(null);
-        $component->title = 'Profile update';
-        $component->text = 'Pick your role';
-        $component->icon = 'question';
-        $component->callback = 'handleRoleSelection';
-        $component->customClass = '{"popup":"role-modal"}';
-        $component->confirmButtonText = 'Save';
-        $component->cancelButtonText = 'Dismiss';
-        $component->inputType = 'select';
-        $component->inputLabel = 'Role';
-        $component->inputPlaceholder = 'Ignored for select';
-        $component->inputValue = 'admin';
-        $component->inputOptions = '{"admin":"Admin","editor":"Editor"}';
-        $component->inputAttributes = '{"data-test":"role-select"}';
-        $component->validationMessage = 'Role is required';
+        $component->title                  = 'Profile update';
+        $component->text                   = 'Pick your role';
+        $component->icon                   = 'question';
+        $component->callback               = 'handleRoleSelection';
+        $component->customClass            = '{"popup":"role-modal"}';
+        $component->confirmButtonText      = 'Save';
+        $component->cancelButtonText       = 'Dismiss';
+        $component->inputType              = 'select';
+        $component->inputLabel             = 'Role';
+        $component->inputPlaceholder       = 'Ignored for select';
+        $component->inputValue             = 'admin';
+        $component->inputOptions           = '{"admin":"Admin","editor":"Editor"}';
+        $component->inputAttributes        = '{"data-test":"role-select"}';
+        $component->validationMessage      = 'Role is required';
         $component->returnInputValueOnDeny = true;
 
         $context = $this->createMock(SweetAlertContextInterface::class);
@@ -68,14 +73,14 @@ class InputModalTest extends TestCase
         self::assertSame('Profile update', $events[0]['payload']['alert']->jsonSerialize()['title']);
     }
 
-    public function testAlertAddedIgnoresInvalidJsonConfiguration(): void
+    public function test_alert_added_ignores_invalid_json_configuration(): void
     {
         $component = new InputModal();
         $component->setLiveResponder(new LiveResponder());
         $component->setTranslator(null);
-        $component->title = 'Broken payload';
-        $component->customClass = '{invalid';
-        $component->inputOptions = '{invalid';
+        $component->title           = 'Broken payload';
+        $component->customClass     = '{invalid';
+        $component->inputOptions    = '{invalid';
         $component->inputAttributes = '{invalid';
 
         $context = $this->createMock(SweetAlertContextInterface::class);
@@ -96,7 +101,7 @@ class InputModalTest extends TestCase
         $component->alertAdded();
     }
 
-    public function testCallbackActionCallsOnResultAndDispatchesBrowserEvent(): void
+    public function test_callback_action_calls_on_result_and_dispatches_browser_event(): void
     {
         $component = new TestableInputModal();
         $component->setLiveResponder(new LiveResponder());
@@ -104,9 +109,9 @@ class InputModalTest extends TestCase
 
         $result = [
             'isConfirmed' => true,
-            'isDenied' => false,
+            'isDenied'    => false,
             'isDismissed' => false,
-            'value' => 'editor',
+            'value'       => 'editor',
         ];
         $args = ['id' => '42'];
 
@@ -124,7 +129,7 @@ class InputModalTest extends TestCase
         self::assertSame($args, $events[0]['payload']['args']);
     }
 
-    public function testIsDisabledReflectsPublicProperty(): void
+    public function test_is_disabled_reflects_public_property(): void
     {
         $component = new InputModal();
 
@@ -138,7 +143,7 @@ class InputModalTest extends TestCase
     private function browserEvents(InputModal $component): array
     {
         $reflection = new \ReflectionClass(InputModal::class);
-        $property = $reflection->getProperty('liveResponder');
+        $property   = $reflection->getProperty('liveResponder');
         $property->setAccessible(true);
 
         return $property->getValue($component)->getBrowserEventsToDispatch();
@@ -154,6 +159,6 @@ final class TestableInputModal extends InputModal
     protected function onResult(Result $result, array $args = []): void
     {
         $this->receivedResult = $result;
-        $this->receivedArgs = $args;
+        $this->receivedArgs   = $args;
     }
 }

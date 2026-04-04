@@ -14,9 +14,12 @@ use Pentiminax\UX\SweetAlert\InputType\Textarea;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class HtmlInputTypeTest extends TestCase
 {
-    public function testConfigureEmail(): void
+    public function test_configure_email(): void
     {
         $alert = Alert::new('Test');
         $input = new HtmlInputType(
@@ -33,7 +36,7 @@ class HtmlInputTypeTest extends TestCase
         $this->assertSame('you@example.com', $data['inputPlaceholder']);
     }
 
-    public function testConfigurePassword(): void
+    public function test_configure_password(): void
     {
         $alert = Alert::new('Test');
         $input = new HtmlInputType(InputType::Password, 'Password');
@@ -43,7 +46,7 @@ class HtmlInputTypeTest extends TestCase
         $this->assertSame('password', $alert->jsonSerialize()['input']);
     }
 
-    public function testConfigureNumber(): void
+    public function test_configure_number(): void
     {
         $alert = Alert::new('Test');
         $input = new HtmlInputType(
@@ -59,7 +62,7 @@ class HtmlInputTypeTest extends TestCase
         $this->assertSame(['min' => '0', 'max' => '120'], $data['inputAttributes']);
     }
 
-    public function testRejectsSelectType(): void
+    public function test_rejects_select_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Select::class);
@@ -67,14 +70,14 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::Select);
     }
 
-    public function testRejectsRadioType(): void
+    public function test_rejects_radio_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new HtmlInputType(InputType::Radio);
     }
 
-    public function testRejectsCheckboxType(): void
+    public function test_rejects_checkbox_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Checkbox::class);
@@ -82,7 +85,7 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::Checkbox);
     }
 
-    public function testRejectsFileType(): void
+    public function test_rejects_file_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(File::class);
@@ -90,7 +93,7 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::File);
     }
 
-    public function testRejectsRangeType(): void
+    public function test_rejects_range_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Range::class);
@@ -98,7 +101,7 @@ class HtmlInputTypeTest extends TestCase
         new HtmlInputType(InputType::Range);
     }
 
-    public function testRejectsTextareaType(): void
+    public function test_rejects_textarea_type(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(Textarea::class);

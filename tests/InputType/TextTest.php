@@ -35,9 +35,9 @@ class TextTest extends TestCase
         $this->assertArrayNotHasKey('inputValidator', $data);
     }
 
-    public function testConfigureWithMinimalParams(): void
+    public function test_configure_with_minimal_params(): void
     {
-        $alert = Alert::new('Test Alert');
+        $alert     = Alert::new('Test Alert');
         $textInput = new Text(label: 'Enter value');
 
         $textInput->configure($alert);
