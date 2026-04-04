@@ -1,5 +1,10 @@
 # UX SweetAlert
 
+[![Latest Stable Version](https://img.shields.io/packagist/v/pentiminax/ux-sweet-alert.svg?style=flat-square)](https://packagist.org/packages/pentiminax/ux-sweet-alert)
+[![PHP Version](https://img.shields.io/packagist/php-v/pentiminax/ux-sweet-alert?style=flat-square)](https://packagist.org/packages/pentiminax/ux-sweet-alert)
+[![Downloads total](https://img.shields.io/packagist/dt/pentiminax/ux-sweet-alert.svg?style=flat-square)](https://packagist.org/packages/pentiminax/ux-sweet-alert/stats)
+[![Coverage](https://img.shields.io/codecov/c/github/pentiminax/ux-sweet-alert?style=flat-square)](https://codecov.io/gh/pentiminax/ux-sweet-alert)
+
 UX SweetAlert is a Symfony bundle that integrates the SweetAlert2 library into your Symfony applications. It provides PHP helpers, input-type abstractions, Live Components, and a Stimulus controller to display alerts, input dialogs, and toast notifications.
 
 ## Requirements
