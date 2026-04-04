@@ -9,7 +9,7 @@ UX SweetAlert is a Symfony bundle that integrates the SweetAlert2 library into y
 
 ## Requirements
 
-- PHP 8.2 or higher
+- PHP 8.3 or higher
 - Symfony StimulusBundle
 - Composer
 
