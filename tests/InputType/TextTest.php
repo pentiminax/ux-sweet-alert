@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\InputType;
 
 use Pentiminax\UX\SweetAlert\InputType\Text;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class TextTest extends TestCase
 {
-    public function testConfigure(): void
+    public function test_configure(): void
     {
-        $alert = Alert::new('Test Alert');
+        $alert     = Alert::new('Test Alert');
         $textInput = new Text(
             label: 'Enter value',
             value: 'default value',

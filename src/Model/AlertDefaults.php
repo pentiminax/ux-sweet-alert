@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Model;
 
 use Pentiminax\UX\SweetAlert\Enum\Position;
@@ -39,8 +41,8 @@ final readonly class AlertDefaults
             position: isset($config['position']) ? Position::from($config['position']) : Position::CENTER,
             theme: isset($config['theme']) ? Theme::from($config['theme']) : Theme::Auto,
             confirmButtonColor: $config['confirmButtonColor'] ?? '#3085d6',
-            cancelButtonColor: $config['cancelButtonColor'] ?? '#aaa',
-            denyButtonColor: $config['denyButtonColor'] ?? '#dd6b55',
+            cancelButtonColor: $config['cancelButtonColor']   ?? '#aaa',
+            denyButtonColor: $config['denyButtonColor']       ?? '#dd6b55',
             confirmButtonText: $config['confirmButtonText']   ?? 'OK',
             cancelButtonText: $config['cancelButtonText']     ?? 'Cancel',
             denyButtonText: $config['denyButtonText']         ?? 'No',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\DataCollector;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
@@ -11,6 +13,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @internal
+ */
 class DataCollectorTest extends TestCase
 {
     private SweetAlertDataCollector $dataCollector;
@@ -28,12 +33,12 @@ class DataCollectorTest extends TestCase
         );
     }
 
-    public function testGetName(): void
+    public function test_get_name(): void
     {
         $this->assertSame('ux_sweetalert', $this->dataCollector->getName());
     }
 
-    public function testGetData(): void
+    public function test_get_data(): void
     {
         $alerts = [
             Alert::new('title', 'id', 'text'),

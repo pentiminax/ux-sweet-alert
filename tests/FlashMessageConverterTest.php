@@ -10,6 +10,9 @@ use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 final class FlashMessageConverterTest extends TestCase
 {
     private FlashMessageConverter $converter;
@@ -20,7 +23,7 @@ final class FlashMessageConverterTest extends TestCase
     }
 
     #[DataProvider('provideFlashCases')]
-    public function testConvert(string $key, array $messages, Icon $expectedIcon): void
+    public function test_convert(string $key, array $messages, Icon $expectedIcon): void
     {
         $alerts = $this->converter->convert($key, $messages);
 

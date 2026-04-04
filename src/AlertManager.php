@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert;
 
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
@@ -20,7 +22,8 @@ class AlertManager implements AlertManagerInterface
         private readonly FlashMessageConverter $flashMessageConverter,
         private readonly AlertDefaults $alertDefaults,
         private readonly bool $autoConvertFlashMessages = false,
-    ) {}
+    ) {
+    }
 
     public function addAlert(Alert $alert): void
     {
@@ -196,6 +199,7 @@ class AlertManager implements AlertManagerInterface
 
         return $alert;
     }
+
     public function input(
         InputTypeInterface $inputType,
         string $title,

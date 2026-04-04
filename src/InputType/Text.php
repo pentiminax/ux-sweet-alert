@@ -16,7 +16,8 @@ final class Text implements InputTypeInterface
         private readonly ?string $placeholder = null,
         private readonly ?string $validator = null,
         private readonly array $inputAttributes = [],
-    ) {}
+    ) {
+    }
 
     public function configure(Alert $alert): void
     {

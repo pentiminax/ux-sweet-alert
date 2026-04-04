@@ -54,5 +54,10 @@
       "name": "symfony/ux",
       "url": "https://github.com/symfony/ux"
     }
+  },
+  "scripts": {
+    "fix": [
+      "vendor/bin/php-cs-fixer fix"
+    ]
   }
 }
