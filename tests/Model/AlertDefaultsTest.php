@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\Model;
 
 use Pentiminax\UX\SweetAlert\Enum\Position;
@@ -7,9 +9,12 @@ use Pentiminax\UX\SweetAlert\Enum\Theme;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class AlertDefaultsTest extends TestCase
 {
-    public function testDefaultValues(): void
+    public function test_default_values(): void
     {
         $defaults = new AlertDefaults();
 
@@ -37,7 +42,7 @@ class AlertDefaultsTest extends TestCase
         $this->assertFalse($defaults->timerProgressBar);
     }
 
-    public function testFromArrayWithEmptyArray(): void
+    public function test_from_array_with_empty_array(): void
     {
         $defaults = AlertDefaults::fromArray([]);
 
@@ -65,7 +70,7 @@ class AlertDefaultsTest extends TestCase
         $this->assertFalse($defaults->timerProgressBar);
     }
 
-    public function testFromArrayWithCustomValues(): void
+    public function test_from_array_with_custom_values(): void
     {
         $config = [
             'position'           => 'top-end',
@@ -118,7 +123,7 @@ class AlertDefaultsTest extends TestCase
         $this->assertTrue($defaults->timerProgressBar);
     }
 
-    public function testFromArrayConfigThemeOverridesDefaultTheme(): void
+    public function test_from_array_config_theme_overrides_default_theme(): void
     {
         $config = [
             'theme' => 'light',
@@ -129,7 +134,7 @@ class AlertDefaultsTest extends TestCase
         $this->assertSame(Theme::Light, $defaults->theme);
     }
 
-    public function testFromArrayWithPartialConfig(): void
+    public function test_from_array_with_partial_config(): void
     {
         $config = [
             'position'           => 'bottom-end',

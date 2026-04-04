@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\EventListener;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
@@ -13,6 +15,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Twig\Environment;
 
+/**
+ * @internal
+ */
 class RenderAlertListenerTest extends TestCase
 {
     private RenderAlertListener $listener;
@@ -38,7 +43,7 @@ class RenderAlertListenerTest extends TestCase
         );
     }
 
-    public function testOnKernelResponse(): void
+    public function test_on_kernel_response(): void
     {
         $this->alertManager
             ->expects($this->once())

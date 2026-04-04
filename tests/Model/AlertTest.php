@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests\Model;
 
 use Pentiminax\UX\SweetAlert\Enum\Icon;
@@ -9,9 +11,12 @@ use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class AlertTest extends TestCase
 {
-    public function testCreateAlert(): void
+    public function test_create_alert(): void
     {
         $alert = Alert::new(
             title: 'title',
@@ -64,7 +69,7 @@ class AlertTest extends TestCase
         $this->assertArrayNotHasKey('toast', $data);
     }
 
-    public function testSerializeSupportsBootstrapTheme(): void
+    public function test_serialize_supports_bootstrap_theme(): void
     {
         $alert = Alert::new(
             title: 'title',
@@ -82,7 +87,7 @@ class AlertTest extends TestCase
         $this->assertEquals(Theme::Bootstrap5->value, $data['theme']);
     }
 
-    public function testToastMode(): void
+    public function test_toast_mode(): void
     {
         $alert = Alert::new(
             title: 'toast',
@@ -107,7 +112,7 @@ class AlertTest extends TestCase
         $this->assertArrayNotHasKey('allowOutsideClick', $data);
     }
 
-    public function testStandardAlertDoesNotIncludeToastFields(): void
+    public function test_standard_alert_does_not_include_toast_fields(): void
     {
         $alert = Alert::new(
             title: 'standard',
@@ -125,7 +130,7 @@ class AlertTest extends TestCase
         $this->assertArrayHasKey('allowOutsideClick', $data);
     }
 
-    public function testWithDefaultsUsesDefaults(): void
+    public function test_with_defaults_uses_defaults(): void
     {
         $defaults = new AlertDefaults(
             position: Position::TOP_END,
@@ -187,7 +192,7 @@ class AlertTest extends TestCase
         $this->assertTrue($data['topLayer']);
     }
 
-    public function testWithDefaultsPositionCanBeOverridden(): void
+    public function test_with_defaults_position_can_be_overridden(): void
     {
         $defaults = new AlertDefaults(
             position: Position::CENTER,
@@ -202,7 +207,7 @@ class AlertTest extends TestCase
         $this->assertSame(Position::TOP_END, $alert->getPosition());
     }
 
-    public function testWithDefaultsCustomClassCanBeOverridden(): void
+    public function test_with_defaults_custom_class_can_be_overridden(): void
     {
         $defaults = new AlertDefaults(
             customClass: ['popup' => 'default-popup'],
@@ -219,7 +224,7 @@ class AlertTest extends TestCase
         $this->assertSame(['popup' => 'custom-popup'], $data['customClass']);
     }
 
-    public function testWithDefaultsFluentMethodsOverrideDefaults(): void
+    public function test_with_defaults_fluent_methods_override_defaults(): void
     {
         $defaults = new AlertDefaults(
             confirmButtonColor: '#ff0000',
@@ -248,7 +253,7 @@ class AlertTest extends TestCase
         $this->assertTrue($data['reverseButtons']);
     }
 
-    public function testWithDefaultsUsesAutoThemeWhenDefaultsThemeIsNull(): void
+    public function test_with_defaults_uses_auto_theme_when_defaults_theme_is_null(): void
     {
         $defaults = new AlertDefaults(
             theme: null,

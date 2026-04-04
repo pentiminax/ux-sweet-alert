@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pentiminax\UX\SweetAlert\Tests;
 
 use Pentiminax\UX\SweetAlert\AlertManager;
@@ -16,6 +18,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
+/**
+ * @internal
+ */
 class AlertManagerTest extends KernelTestCase
 {
     private AlertManager $alertManager;
@@ -43,7 +48,7 @@ class AlertManagerTest extends KernelTestCase
     }
 
     #[DataProvider('alertMethodProvider')]
-    public function testAlertFactoryMethods(
+    public function test_alert_factory_methods(
         string $method,
         string $expectedIcon,
     ): void {
@@ -96,7 +101,7 @@ class AlertManagerTest extends KernelTestCase
         $this->assertEquals($expectedArray, $alert->jsonSerialize());
     }
 
-    public function testUsesConfiguredDefaultTheme(): void
+    public function test_uses_configured_default_theme(): void
     {
         $session = new Session(new MockArraySessionStorage());
 
@@ -123,7 +128,7 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
-    public function testToastMethod(): void
+    public function test_toast_method(): void
     {
         $alert = $this->alertManager->toast(
             title: 'Toast notification',
@@ -144,7 +149,7 @@ class AlertManagerTest extends KernelTestCase
         $this->assertArrayNotHasKey('allowOutsideClick', $data);
     }
 
-    public function testAlertWithToastFlag(): void
+    public function test_alert_with_toast_flag(): void
     {
         $alert = $this->alertManager->success(
             title: 'Success toast',
@@ -163,7 +168,7 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Position::BOTTOM_END->value, $data['position']);
     }
 
-    public function testToastWithCustomPosition(): void
+    public function test_toast_with_custom_position(): void
     {
         $alert = $this->alertManager->success(
             title: 'Custom position toast',
@@ -177,7 +182,7 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Position::TOP_END->value, $data['position']);
     }
 
-    public function testToastUsesConfiguredTheme(): void
+    public function test_toast_uses_configured_theme(): void
     {
         $session = new Session(new MockArraySessionStorage());
 
@@ -204,7 +209,7 @@ class AlertManagerTest extends KernelTestCase
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
-    public function testAlertsAreNotStoredInFlashBag(): void
+    public function test_alerts_are_not_stored_in_flash_bag(): void
     {
         $session = new Session(new MockArraySessionStorage());
 
@@ -231,7 +236,7 @@ class AlertManagerTest extends KernelTestCase
         );
     }
 
-    public function testInputMethod(): void
+    public function test_input_method(): void
     {
         $textInput = new \Pentiminax\UX\SweetAlert\InputType\Text(
             label: 'Enter your name',
