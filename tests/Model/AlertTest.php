@@ -279,4 +279,25 @@ final class AlertTest extends TestCase
 
         $this->assertSame(Theme::Auto->value, $data['theme']);
     }
+
+    #[Test]
+    public function it_includes_callback_url_in_serialized_output(): void
+    {
+        $alert = Alert::new(title: 'Test');
+        $alert->callbackUrl('/api/callback');
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertSame('/api/callback', $data['callbackUrl']);
+    }
+
+    #[Test]
+    public function it_omits_callback_url_from_serialized_output_when_not_set(): void
+    {
+        $alert = Alert::new(title: 'Test');
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertArrayNotHasKey('callbackUrl', $data);
+    }
 }

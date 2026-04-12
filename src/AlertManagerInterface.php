@@ -101,5 +101,6 @@ interface AlertManagerInterface
         Position $position = Position::CENTER,
         ?Theme $theme = null,
         array $customClass = [],
+        string $callback = '',
     ): Alert;
 }

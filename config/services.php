@@ -14,6 +14,7 @@ use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Pentiminax\UX\SweetAlert\Twig\Components\ConfirmButton;
 use Pentiminax\UX\SweetAlert\Twig\Components\InputModal;
 use Pentiminax\UX\SweetAlert\Twig\Extension\AlertExtension;
+use Pentiminax\UX\SweetAlert\ValueResolver\ResultValueResolver;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\LiveResponder;
@@ -112,4 +113,8 @@ return static function (ContainerConfigurator $container) {
         ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
         ->arg('$twig', new Reference('twig'))
         ->tag('kernel.event_listener', ['event' => 'kernel.response']);
+
+    $services
+        ->set(ResultValueResolver::class)
+        ->tag('controller.argument_value_resolver', ['priority' => 50]);
 };

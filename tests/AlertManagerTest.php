@@ -234,6 +234,33 @@ final class AlertManagerTest extends KernelTestCase
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
     }
 
+    #[Test]
+    public function it_stores_callback_url_on_input_alert(): void
+    {
+        $alert = $this->alertManager->input(
+            inputType: new \Pentiminax\UX\SweetAlert\InputType\Text(label: 'Name'),
+            title: 'Enter name',
+            callback: '/profile/update',
+        );
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertSame('/profile/update', $data['callbackUrl']);
+    }
+
+    #[Test]
+    public function it_does_not_include_callback_url_when_not_provided(): void
+    {
+        $alert = $this->alertManager->input(
+            inputType: new \Pentiminax\UX\SweetAlert\InputType\Text(label: 'Name'),
+            title: 'Enter name',
+        );
+
+        $data = $alert->jsonSerialize();
+
+        $this->assertArrayNotHasKey('callbackUrl', $data);
+    }
+
     public static function alertMethodProvider(): \Generator
     {
         yield ['success', 'success'];

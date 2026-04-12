@@ -213,10 +213,15 @@ class AlertManager implements AlertManagerInterface
         Position $position = Position::CENTER,
         ?Theme $theme = null,
         array $customClass = [],
+        string $callback = '',
     ): Alert {
         $alert = $this->createAlert($id, $title, $text, $position, $theme, $icon, $customClass);
 
         $inputType->configure($alert);
+
+        if ($callback !== '') {
+            $alert->callbackUrl($callback);
+        }
 
         $this->addAlert($alert);
 
