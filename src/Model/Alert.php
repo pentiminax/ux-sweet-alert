@@ -90,7 +90,7 @@ final class Alert implements \JsonSerializable
 
     private ?string $validationMessage = null;
 
-    private string $callbackUrl = '';
+    private ?string $callbackUrl = null;
 
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
@@ -551,7 +551,7 @@ final class Alert implements \JsonSerializable
             'validationMessage'      => $this->validationMessage,
         ];
 
-        if ($this->callbackUrl !== '') {
+        if (null !== $this->callbackUrl) {
             $data['callbackUrl'] = $this->callbackUrl;
         }
 
