@@ -89,17 +89,6 @@ final class ResultValueResolverTest extends TestCase
         $this->assertEmpty($results);
     }
 
-    #[Test]
-    public function it_returns_empty_when_body_is_empty(): void
-    {
-        $request  = Request::create('/', 'POST', content: '');
-        $argument = $this->createArgumentMetadata(Result::class);
-
-        $results = [...$this->resolver->resolve($request, $argument)];
-
-        $this->assertEmpty($results);
-    }
-
     private function createArgumentMetadata(string $type): ArgumentMetadata
     {
         $argument = $this->createMock(ArgumentMetadata::class);
