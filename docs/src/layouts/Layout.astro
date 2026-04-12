@@ -44,7 +44,24 @@ const docsPages = (await getCollection('docs'))
           <div class="flex items-center gap-4">
             <a href={siteConfig.basePath + '/'} class="group inline-flex items-center gap-3">
               <span class="doc-logo">
-                <span></span>
+                <svg class="doc-logo-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                  <circle cx="16" cy="5.35" r="1.35" fill="currentColor" />
+                  <path
+                    d="M16 7.75c-4.14 0-7.5 3.36-7.5 7.5v2.1c0 1.69-.54 3.33-1.54 4.69l-.37.51c-.61.84-.01 2.03 1.03 2.03h16.76c1.04 0 1.64-1.19 1.03-2.03l-.37-.51a7.93 7.93 0 0 1-1.54-4.69v-2.1c0-4.14-3.36-7.5-7.5-7.5Z"
+                    stroke="currentColor"
+                    stroke-width="2.15"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M13.35 24.6a2.65 2.65 0 0 0 5.3 0"
+                    stroke="currentColor"
+                    stroke-width="2.15"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle cx="16" cy="20.2" r="1.4" fill="currentColor" opacity="0.95" />
+                </svg>
               </span>
               <span>
                 <span class="block font-display text-lg font-semibold text-[color:var(--doc-heading)]">

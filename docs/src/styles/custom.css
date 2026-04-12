@@ -119,11 +119,11 @@ pre {
   box-shadow: 0 14px 34px rgba(255, 107, 79, 0.24);
 }
 
-.doc-logo span {
-  width: 1rem;
-  height: 1rem;
-  border-radius: 999px;
-  border: 2px solid rgba(255, 255, 255, 0.88);
+.doc-logo-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+  color: rgba(255, 255, 255, 0.94);
+  filter: drop-shadow(0 3px 8px rgba(120, 34, 17, 0.18));
 }
 
 .doc-button {
