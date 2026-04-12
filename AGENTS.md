@@ -16,7 +16,7 @@ Repository specifics for contributors and automation. Keep this doc close when a
 - If you modify the Stimulus controller source, rebuild `assets/dist/controller.js` with your bundler of choice before committing (expected output: ESM).
 
 ## Coding Style & Naming Conventions
-- Target PHP 8.2+, strict typing, PSR-4 namespaces, and 4-space indentation; keep services constructor-injected and classes small.
+- Target PHP 8.3+, strict typing, PSR-4 namespaces, and 4-space indentation; keep services constructor-injected and classes small.
 - Keep interfaces beside implementations (`*ManagerInterface.php`); prefer value objects/enums from `Enum/`.
 - Twig helper IDs and Stimulus controller IDs follow `ux_sweet_alert_*` and `sweetalert`.
 - Composer packages are sorted via `"sort-packages": true`; avoid trailing commas in JSON.
