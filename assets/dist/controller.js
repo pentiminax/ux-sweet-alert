@@ -97,29 +97,33 @@ class default_1 extends Controller {
             const result = await this.fireAlert(swalOptions, this.element);
 
             if (callbackUrl) {
-                const response = await fetch(callbackUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: JSON.stringify({
-                        isConfirmed: result.isConfirmed,
-                        isDenied: result.isDenied,
-                        isDismissed: result.isDismissed,
-                        value: result.value ?? null,
-                    }),
-                    redirect: 'follow',
-                });
+                try {
+                    const response = await fetch(callbackUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        body: JSON.stringify({
+                            isConfirmed: result.isConfirmed,
+                            isDenied: result.isDenied,
+                            isDismissed: result.isDismissed,
+                            value: result.value ?? null,
+                        }),
+                        redirect: 'follow',
+                    });
 
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else if (response.headers.get('Content-Type')?.includes('application/json')) {
-                    const data = await response.json();
-                    this.element.dispatchEvent(new CustomEvent('ux-sweet-alert:callback:response', {
-                        bubbles: true,
-                        detail: data,
-                    }));
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else if (response.headers.get('Content-Type')?.includes('application/json')) {
+                        const data = await response.json();
+                        this.element.dispatchEvent(new CustomEvent('ux-sweet-alert:callback:response', {
+                            bubbles: true,
+                            detail: data,
+                        }));
+                    }
+                } catch (e) {
+                    console.warn('[ux-sweet-alert] Callback URL request failed:', e);
                 }
             } else {
                 document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toastId}:closed`, {
