@@ -11,20 +11,7 @@ sidebar:
 This guide shows the smallest useful setup: render the Twig helper once, inject
 `AlertManagerInterface`, and queue a SweetAlert from PHP.
 
-## 1. Render the controller once
-
-```twig
-{# templates/base.html.twig #}
-<!DOCTYPE html>
-<html>
-    <body>
-        {{ ux_sweet_alert_scripts() }}
-        {% block body %}{% endblock %}
-    </body>
-</html>
-```
-
-## 2. Queue an alert from a controller
+## 1. Queue an alert from a controller
 
 ```php
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
@@ -47,7 +34,7 @@ final class SettingsController extends AbstractController
 }
 ```
 
-## 3. Queue a toast instead
+## 2. Queue a toast instead
 
 ```php
 use Pentiminax\UX\SweetAlert\Enum\Position;
@@ -64,7 +51,7 @@ $alertManager->toast(
 `toast()` automatically switches the alert to toast mode, hides the confirm button, and keeps the
 SweetAlert2 timer settings when you provide them.
 
-## 4. Ask for input from PHP
+## 3. Ask for input from PHP
 
 ```php
 use Pentiminax\UX\SweetAlert\InputType\Text;
@@ -82,7 +69,7 @@ $alertManager->input(
 
 The input type object configures the underlying `Alert` instance for you.
 
-## 5. Move deeper
+## 4. Move deeper
 
 - [Alerts](../../guide/alerts/) explains the fluent alert API.
 - [Toasts](../../guide/toasts/) covers toast-specific behavior.
