@@ -1,0 +1,77 @@
+---
+title: Themes & Styling
+description: Apply SweetAlert2 themes, custom button colors, and CSS classes from PHP.
+sidebar:
+  label: Themes & Styling
+  order: 5
+---
+
+# Themes & Styling
+
+UX SweetAlert passes theme and styling data directly into the serialized alert payload. That keeps
+your Symfony code in charge of the visual intent while SweetAlert2 handles the rendering.
+
+## Theme enum support
+
+The `Theme` enum includes:
+
+- `Auto`, `Light`, `Dark`, `Borderless`, `Minimal`, `EmbedIframe`
+- `Bootstrap4`, `Bootstrap4Light`, `Bootstrap4Dark`
+- `Bootstrap5`, `Bootstrap5Light`, `Bootstrap5Dark`
+- `MaterialUI`, `MaterialUILight`, `MaterialUIDark`
+- `Bulma`, `BulmaLight`, `BulmaDark`
+
+## Applying a theme
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Theme;
+
+$alertManager
+    ->success('Saved')
+    ->theme(Theme::Bootstrap5Dark);
+```
+
+## Loading the matching CSS
+
+The package metadata exposes SweetAlert2 theme files in `assets/package.json`, but the optional
+theme styles are not auto-enabled by default. If you want a framework theme, make sure the matching
+SweetAlert2 CSS is imported by your asset pipeline.
+
+## Fine-grained styling
+
+The `Alert` object lets you control button colors and CSS hooks:
+
+```php
+$alertManager
+    ->question('Archive item?')
+    ->confirmButtonColor('#ff6b4f')
+    ->cancelButtonColor('#2f4858')
+    ->denyButtonColor('#f4b400')
+    ->theme(Theme::Dark);
+```
+
+You can also pass a `customClass` array when creating alerts through the manager helpers.
+
+## Content-level styling options
+
+Beyond the theme name, the alert model supports:
+
+- `html(...)` for rich HTML content
+- `setFooter(...)` for footer text or markup
+- `setImageUrl(...)`, `setImageAlt(...)`, and `setImageHeight(...)`
+- `setDraggable(...)` and `setTopLayer(...)`
+
+## Styling lifecycle events
+
+The frontend controller emits two useful browser events around every modal render:
+
+- `sweetalert:before-fire`
+- `sweetalert:after-fire`
+
+Both expose the SweetAlert options object, making them useful when your application needs to add
+cross-cutting frontend tweaks without changing the PHP API.
+
+<Aside type="note">
+  Prefer themes and `customClass` for structural styling. Use the browser events only when a visual
+  adjustment truly belongs on the frontend side.
+</Aside>

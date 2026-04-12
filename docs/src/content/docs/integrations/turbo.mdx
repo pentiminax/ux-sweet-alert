@@ -1,0 +1,75 @@
+---
+title: Turbo
+description: Understand how UX SweetAlert appends Turbo streams to HTML and JSON responses.
+sidebar:
+  label: Turbo
+  order: 2
+---
+
+# Turbo Integration
+
+When `Symfony\UX\Turbo\TurboBundle` is available, the response listener renders each queued alert as
+a `<turbo-stream action="alert">` fragment.
+
+## What happens on the server
+
+For main requests that are not redirects:
+
+- alerts are read from the manager
+- the listener renders `@SweetAlert/turbo/alert.html.twig`
+- HTML responses get the generated Turbo stream appended to their content
+- JSON responses receive an extra `alerts` field containing the Turbo stream payload
+
+## HTML responses
+
+For a classic HTML response, the generated stream is appended directly to the response body:
+
+```html
+<turbo-stream action="alert">
+    <template>{"title":"Saved","icon":"success"}</template>
+</turbo-stream>
+```
+
+## JSON and fetch flows
+
+The bundled Stimulus controller wraps `window.fetch` when Turbo stream support is available. It
+detects two cases:
+
+- `text/vnd.turbo-stream.html` responses
+- `application/json` responses containing an `alerts` field
+
+In both cases, the controller injects the hidden stream markup into the DOM so Turbo can execute the
+custom `alert` action.
+
+## Minimal controller example
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+public function __invoke(AlertManagerInterface $alertManager): JsonResponse
+{
+    $alertManager->info(
+        title: 'Background sync finished',
+        text: 'Your cache is fresh again.'
+    );
+
+    return $this->json(['status' => 'ok']);
+}
+```
+
+The resulting JSON response still contains your original payload, plus the extra `alerts` key added
+by the listener.
+
+## Why it matters
+
+This approach lets the same PHP API work for:
+
+- full-page HTML responses
+- Turbo-enabled fetch calls
+- JSON endpoints used by interactive dashboards or admin screens
+
+<Aside type="note">
+  If Turbo is not installed, the bundle falls back to HTMX-style header dispatch. See the
+  [HTMX](../htmx/) page for that path.
+</Aside>

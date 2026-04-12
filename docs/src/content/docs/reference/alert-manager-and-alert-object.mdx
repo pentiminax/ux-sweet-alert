@@ -1,0 +1,64 @@
+---
+title: Alert Manager & Alert Object
+description: Reference for the alert manager helpers and the fluent Alert model.
+sidebar:
+  label: Alert Manager & Alert Object
+  order: 1
+---
+
+# Alert Manager & Alert Object
+
+`AlertManagerInterface` is the main entry point of the bundle. Its job is to create an `Alert`,
+store it, and expose it to the frontend controller.
+
+## Manager methods
+
+<Table
+  headers={['Method', 'Purpose']}
+  rows={[
+    ['success(), error(), warning(), info(), question()', 'Create modal alerts with a predefined icon.'],
+    ['toast()', 'Create a non-blocking toast notification.'],
+    ['input()', 'Create an alert configured by an input type object.'],
+    ['addAlert(Alert $alert)', 'Push a manually created alert into storage.'],
+    ['getAlerts()', 'Consume queued alerts, optionally converting flash messages.'],
+  ]}
+/>
+
+## Manual alert creation
+
+`Alert::new()` creates a standalone alert with an optional icon, position, and custom class array.
+`Alert::withDefaults()` is what the manager uses internally when bundle defaults should be applied.
+
+## Selected `Alert` capabilities
+
+<Table
+  headers={['Category', 'Available methods']}
+  rows={[
+    ['Buttons', 'withCancelButton(), withDenyButton(), withoutConfirmButton(), reverseButtons(), confirmButtonText(), cancelButtonText(), setDenyButtonText()'],
+    ['Behavior', 'withoutAnimation(), withoutBackdrop(), denyOutsideClick(), denyEscapeKey(), setFocusConfirm(), setDraggable(), setTopLayer()'],
+    ['Layout', 'position(), theme(), customClass through manager helper arguments'],
+    ['Content', 'html(), setFooter(), setImageUrl(), setImageAlt(), setImageHeight()'],
+    ['Input-related', 'input(), inputLabel(), inputPlaceholder(), inputValue(), inputAttributes(), inputOptions(), validationMessage(), returnInputValueOnDeny()'],
+    ['Callbacks', 'callbackUrl()'],
+  ]}
+/>
+
+## Serialization
+
+The `Alert` object implements `JsonSerializable`. The JSON payload sent to the frontend includes the
+modal settings and, when relevant:
+
+- `toast`, `timer`, and `timerProgressBar` for toast mode
+- `backdrop` and `allowOutsideClick` for modal mode
+- `callbackUrl` when a backend callback was configured
+
+## Storage lifecycle
+
+Alerts are stored in the session under the `ux-sweet-alert:alerts` key. `getAlerts()` behaves as a
+consume-on-read operation: once the alerts are read for rendering, they are removed from session
+storage.
+
+<Aside type="tip">
+  If you need a modal with unusual content or backend result handling, start with a manager helper,
+  then customize the returned `Alert`. That keeps bundle defaults and transports intact.
+</Aside>

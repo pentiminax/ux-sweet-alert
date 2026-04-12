@@ -1,0 +1,89 @@
+---
+title: Quick Start
+description: Queue your first alert, toast, and input dialog from Symfony.
+sidebar:
+  label: Quick Start
+  order: 3
+---
+
+# Quick Start
+
+This guide shows the smallest useful setup: render the Twig helper once, inject
+`AlertManagerInterface`, and queue a SweetAlert from PHP.
+
+## 1. Render the controller once
+
+```twig
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html>
+    <body>
+        {{ ux_sweet_alert_scripts() }}
+        {% block body %}{% endblock %}
+    </body>
+</html>
+```
+
+## 2. Queue an alert from a controller
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+final class SettingsController extends AbstractController
+{
+    #[Route('/settings/save', name: 'app_settings_save')]
+    public function save(AlertManagerInterface $alertManager): Response
+    {
+        $alertManager->success(
+            title: 'Settings saved',
+            text: 'Your preferences have been updated.'
+        );
+
+        return $this->redirectToRoute('app_settings_show');
+    }
+}
+```
+
+## 3. Queue a toast instead
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Position;
+
+$alertManager->toast(
+    title: 'Profile updated',
+    text: 'Changes were saved successfully.',
+    position: Position::TOP_END,
+    timer: 3000,
+    timerProgressBar: true
+);
+```
+
+`toast()` automatically switches the alert to toast mode, hides the confirm button, and keeps the
+SweetAlert2 timer settings when you provide them.
+
+## 4. Ask for input from PHP
+
+```php
+use Pentiminax\UX\SweetAlert\InputType\Text;
+
+$alertManager->input(
+    inputType: new Text(
+        label: 'Display name',
+        value: 'Tanguy',
+        placeholder: 'Enter your public name'
+    ),
+    title: 'Update profile',
+    text: 'This value will be shown to other users.'
+);
+```
+
+The input type object configures the underlying `Alert` instance for you.
+
+## 5. Move deeper
+
+- [Alerts](../../guide/alerts/) explains the fluent alert API.
+- [Toasts](../../guide/toasts/) covers toast-specific behavior.
+- [Input Dialogs](../../guide/input-dialogs/) shows the supported input types and callback patterns.

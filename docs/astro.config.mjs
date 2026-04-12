@@ -1,43 +1,35 @@
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from 'astro/config'
+import sitemap from '@astrojs/sitemap'
+import mdx from '@astrojs/mdx'
+import tailwindcss from '@tailwindcss/vite'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
 export default defineConfig({
   site: 'https://pentiminax.github.io',
   base: '/ux-sweet-alert',
-  integrations: [
-    starlight({
-      title: 'UX SweetAlert',
-      customCss: [
-        './src/styles/custom.css',
-      ],
-      description: 'Online documentation for the UX SweetAlert bundle.',
-      sidebar: [
+  integrations: [sitemap(), mdx()],
+  markdown: {
+    rehypePlugins: [
+      [
+        rehypeAutolinkHeadings,
         {
-          label: 'Getting Started',
-          items: [
-            { label: 'Installation', slug: 'installation' },
-            { label: 'Usage', slug: 'usage' },
-            { label: 'Configuration', slug: 'configuration' }
-          ]
+          behavior: 'append',
+          properties: {
+            class: 'heading-anchor',
+            ariaHidden: 'true',
+            tabIndex: -1,
+          },
+          content: {
+            type: 'element',
+            tagName: 'span',
+            properties: { ariaHidden: 'true' },
+            children: [{ type: 'text', value: '#' }],
+          },
         },
-        {
-          label: 'Features',
-          items: [
-            { label: 'Alerts', slug: 'alerts' },
-            { label: 'Toasts', slug: 'toasts' },
-            { label: 'Live Component', slug: 'live-component' },
-            { label: 'Turbo Integration', slug: 'turbo' },
-            { label: 'HTMX Integration', slug: 'htmx' }
-          ]
-        }
       ],
-      defaultLocale: 'root',
-      locales: {
-        root: {
-          label: 'English',
-          lang: 'en',
-        },
-      },
-    })
-  ]
-});
+    ],
+  },
+  vite: {
+    plugins: [tailwindcss()],
+  },
+})

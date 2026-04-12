@@ -1,0 +1,244 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { siteConfig, withBase } from '../config/navigation'
+
+const heroSnippet = `$alertManager->question(
+    title: 'Archive conversation?',
+    text: 'This cannot be undone.'
+)->withCancelButton();`
+
+const showcaseSnippet = `#[Route('/danger-zone', name: 'app_danger_zone')]
+public function __invoke(AlertManagerInterface $alertManager): Response
+{
+    $alertManager->warning(
+        title: 'Danger zone',
+        text: 'Only administrators should continue.'
+    )
+        ->withCancelButton()
+        ->denyOutsideClick();
+
+    return $this->redirectToRoute('app_dashboard');
+}`
+---
+
+<Layout title="Symfony alerts without frontend glue" description={siteConfig.description}>
+  <section class="relative overflow-hidden">
+    <div class="hero-orb hero-orb-coral"></div>
+    <div class="hero-orb hero-orb-mint"></div>
+    <div class="mx-auto grid max-w-7xl gap-16 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.95fr)] lg:px-8 lg:py-24">
+      <div class="relative z-10">
+        <div class="flex flex-wrap gap-3">
+          <span class="doc-pill">Symfony UX</span>
+          <span class="doc-pill">SweetAlert2</span>
+          <span class="doc-pill">Turbo + HTMX + Live Components</span>
+        </div>
+
+        <h1 class="mt-8 max-w-3xl font-display text-5xl font-semibold leading-none tracking-[-0.04em] text-[color:var(--doc-heading)] sm:text-6xl lg:text-7xl">
+          Sweet alerts for Symfony,
+          <span class="doc-gradient-text">without the frontend glue code.</span>
+        </h1>
+
+        <p class="mt-8 max-w-2xl text-lg leading-8 text-[color:var(--doc-muted)] sm:text-xl">
+          UX SweetAlert lets you trigger polished modals, toasts, and input flows from PHP while the
+          Stimulus controller handles Turbo streams, JSON callback flows, and Live Component events.
+        </p>
+
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a class="doc-button doc-button-primary" href={withBase('/getting-started/installation/')}>
+            Install the bundle
+          </a>
+          <a class="doc-button doc-button-secondary" href={withBase('/getting-started/quick-start/')}>
+            Open quick start
+          </a>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-3">
+          <div class="doc-stat-card">
+            <p class="doc-stat-value">PHP-first</p>
+            <p class="doc-stat-label">Trigger alerts and collect results from controllers and components.</p>
+          </div>
+          <div class="doc-stat-card">
+            <p class="doc-stat-value">No boilerplate</p>
+            <p class="doc-stat-label">One Twig helper wires the Stimulus controller on the page.</p>
+          </div>
+          <div class="doc-stat-card">
+            <p class="doc-stat-value">Progressive</p>
+            <p class="doc-stat-label">Works with plain requests, Turbo, HTMX, and Live Components.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div class="hero-stage">
+          <div class="hero-grid"></div>
+
+          <div class="hero-toast hero-toast-success">
+            <span class="hero-toast-dot"></span>
+            <div>
+              <p class="hero-toast-title">Profile updated</p>
+              <p class="hero-toast-text">Toast queued from the controller.</p>
+            </div>
+          </div>
+
+          <div class="hero-modal">
+            <div class="hero-modal-header">
+              <div class="hero-modal-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span>SweetAlert result flow</span>
+            </div>
+            <div class="hero-modal-body">
+              <div class="hero-icon-ring">
+                <div class="hero-icon-core">!</div>
+              </div>
+              <h2>Archive this conversation?</h2>
+              <p>
+                The confirmation modal is created in PHP, rendered through the UX controller, and the
+                result can be posted back to Symfony.
+              </p>
+              <div class="hero-modal-actions">
+                <button type="button" class="hero-button hero-button-secondary">Cancel</button>
+                <button type="button" class="hero-button hero-button-primary">Archive</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-code-card">
+            <div class="hero-code-label">Controller snippet</div>
+            <pre><code>{heroSnippet}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-[color:var(--doc-line)] bg-[color:var(--doc-surface-strong)]">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl text-center">
+        <p class="doc-kicker">Why teams use it</p>
+        <h2 class="mt-4 font-display text-4xl font-semibold tracking-[-0.03em] text-[color:var(--doc-heading)]">
+          One bundle for every SweetAlert delivery path.
+        </h2>
+        <p class="mt-5 text-lg leading-8 text-[color:var(--doc-muted)]">
+          The same alert model powers page loads, async fetch responses, Turbo stream rendering, HTMX triggers,
+          and interactive Live Component callbacks.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <article class="feature-card">
+          <p class="feature-card-icon">01</p>
+          <h3>Alert and toast helpers</h3>
+          <p>Use `success()`, `error()`, `question()`, `toast()`, and `input()` from `AlertManagerInterface`.</p>
+        </article>
+        <article class="feature-card">
+          <p class="feature-card-icon">02</p>
+          <h3>Input abstractions</h3>
+          <p>Configure text, select, radio, file, range, and HTML input types without manual JS mapping.</p>
+        </article>
+        <article class="feature-card">
+          <p class="feature-card-icon">03</p>
+          <h3>Result-aware workflows</h3>
+          <p>Send modal results back to Symfony through callback URLs or Live Component actions.</p>
+        </article>
+        <article class="feature-card">
+          <p class="feature-card-icon">04</p>
+          <h3>Theme-ready output</h3>
+          <p>Apply SweetAlert2 themes, button colors, custom classes, and input attributes from PHP.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] lg:items-center">
+      <div class="doc-showcase-panel">
+        <div class="doc-showcase-label">Server-side API</div>
+        <pre><code>{showcaseSnippet}</code></pre>
+      </div>
+
+      <div class="hidden justify-center lg:flex">
+        <div class="doc-arrow">
+          <span></span>
+        </div>
+      </div>
+
+      <div class="doc-showcase-panel doc-showcase-panel-result">
+        <div class="doc-showcase-label">Rendered experience</div>
+        <div class="doc-result-stack">
+          <div class="doc-result-browser">
+            <div class="doc-result-toolbar">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="doc-result-alert">
+              <div class="doc-result-alert-icon">!</div>
+              <h3>Danger zone</h3>
+              <p>Only administrators should continue.</p>
+              <div class="doc-result-buttons">
+                <span>Cancel</span>
+                <span class="primary">Continue</span>
+              </div>
+            </div>
+          </div>
+          <div class="doc-result-toast">`sweetalert:after-fire` emitted with the modal result</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-[color:var(--doc-line)] bg-[color:var(--doc-surface-strong)]">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div>
+          <p class="doc-kicker">Integration surface</p>
+          <h2 class="mt-4 font-display text-4xl font-semibold tracking-[-0.03em] text-[color:var(--doc-heading)]">
+            Built for the Symfony UX stack you already use.
+          </h2>
+          <p class="mt-5 text-lg leading-8 text-[color:var(--doc-muted)]">
+            UX SweetAlert does not ask you to choose one transport. It adapts to the response model already
+            used by your application.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <article class="integration-card">
+            <h3>Turbo</h3>
+            <p>Turbo stream fragments are appended to HTML responses and injected from JSON fetch responses.</p>
+          </article>
+          <article class="integration-card">
+            <h3>HTMX</h3>
+            <p>When Turbo is absent, the bundle emits `HX-Trigger` headers that dispatch alert payloads.</p>
+          </article>
+          <article class="integration-card">
+            <h3>Live Components</h3>
+            <p>`ConfirmButton` and `InputModal` can resolve browser callbacks or invoke server-side actions.</p>
+          </article>
+          <article class="integration-card">
+            <h3>Stimulus</h3>
+            <p>The bundled controller fires lifecycle events before and after each modal and toast.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div class="cta-panel">
+      <div>
+        <p class="doc-kicker">Ready to ship it</p>
+        <h2 class="mt-4 font-display text-4xl font-semibold tracking-[-0.03em] text-[color:var(--doc-heading)]">
+          Install the bundle, render one Twig helper, and start queuing alerts from PHP.
+        </h2>
+        <p class="mt-5 max-w-2xl text-lg leading-8 text-[color:var(--doc-muted)]">
+          The docs below cover the delivery pipeline end-to-end, from the first `composer require` to
+          callback URLs, flash conversion, and Live Component result handling.
+        </p>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a class="doc-button doc-button-primary" href={withBase('/getting-started/installation/')}>Start with installation</a>
+        <a class="doc-button doc-button-secondary" href={withBase('/reference/alert-manager-and-alert-object/')}>Read the API reference</a>
+      </div>
+    </div>
+  </section>
+</Layout>

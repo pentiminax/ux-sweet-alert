@@ -1,0 +1,37 @@
+---
+interface Props {
+  headers: string[]
+  rows: string[][]
+}
+
+const { headers, rows } = Astro.props
+---
+
+<div class="my-8 overflow-x-auto rounded-[1.5rem] border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)]">
+  <table class="w-full min-w-[640px] border-collapse text-left text-sm">
+    <thead class="bg-[color:var(--doc-surface-soft)]">
+      <tr>
+        {
+          headers.map((header) => (
+            <th class="border-b border-[color:var(--doc-line)] px-5 py-4 font-semibold text-[color:var(--doc-heading)]">
+              {header}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr class="transition-colors even:bg-[color:rgba(255,255,255,0.02)] hover:bg-[color:rgba(255,107,79,0.06)]">
+            {row.map((cell) => (
+              <td class="border-b border-[color:var(--doc-line)] px-5 py-4 align-top text-[color:var(--doc-text)]">
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

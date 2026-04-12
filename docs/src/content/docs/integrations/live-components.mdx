@@ -1,0 +1,104 @@
+---
+title: Live Components
+description: Use ConfirmButton and InputModal with browser callbacks or server-side Live actions.
+sidebar:
+  label: Live Components
+  order: 1
+---
+
+# Live Components
+
+The bundle ships two Twig Live Components:
+
+- `SweetAlert:ConfirmButton`
+- `SweetAlert:InputModal`
+
+Both components dispatch `ux-sweet-alert:alert:added`, which is already handled by the bundled
+Stimulus controller.
+
+## ConfirmButton
+
+```twig
+<twig:SweetAlert:ConfirmButton
+    title="Archive conversation?"
+    text="This action cannot be undone."
+    icon="warning"
+    showCancelButton="true"
+    confirmButtonText="Archive"
+    cancelButtonText="Keep it"
+/>
+```
+
+### Main props
+
+<Table
+  headers={['Prop', 'Purpose']}
+  rows={[
+    ['title', 'Alert title shown in the modal.'],
+    ['text', 'Supporting text.'],
+    ['icon', 'SweetAlert icon value such as success, error, or warning.'],
+    ['showCancelButton', 'Whether the modal should expose a cancel action.'],
+    ['callback', 'Optional browser callback function name.'],
+    ['customClass', 'JSON-encoded SweetAlert `customClass` object.'],
+    ['confirmButtonText', 'Confirm button label.'],
+    ['cancelButtonText', 'Cancel button label.'],
+  ]}
+/>
+
+## InputModal
+
+`InputModal` exposes the same core props, plus input-specific options such as `inputType`,
+`inputLabel`, `inputPlaceholder`, `inputValue`, `inputOptions`, `inputAttributes`,
+`validationMessage`, and `returnInputValueOnDeny`.
+
+```twig
+<twig:SweetAlert:InputModal
+    title="Choose a role"
+    text="This will be applied immediately."
+    inputType="select"
+    inputLabel="Role"
+    inputOptions='{"admin":"Admin","editor":"Editor"}'
+    inputValue="editor"
+/>
+```
+
+## Browser callback mode
+
+If `callback` points to a browser function name, the frontend controller calls it with the
+SweetAlert result object:
+
+```twig
+<twig:SweetAlert:ConfirmButton
+    title="Confirm deletion"
+    callback="handleDeletionConfirmation"
+>
+    Delete
+</twig:SweetAlert:ConfirmButton>
+
+<script>
+  function handleDeletionConfirmation(result) {
+    if (result.isConfirmed) {
+      console.log('Confirmed')
+    }
+  }
+</script>
+```
+
+## Server-side Live action mode
+
+If there is no browser callback, the Stimulus controller tries to resolve the current Live
+Component and invoke `callbackAction` with the modal result and `data-live-item-*-param` values.
+
+### Extending `ConfirmButton`
+
+Override `callbackAction()` when you need custom server-side logic after confirmation.
+
+### Extending `InputModal`
+
+Override the protected `onResult(Result $result, array $args = [])` hook for result handling.
+
+<Aside type="tip">
+  Keep `{{ ux_sweet_alert_scripts() }}` on the page even when the interaction starts from a Live
+  Component. The component dispatches browser events, but the Stimulus controller still does the
+  actual SweetAlert rendering.
+</Aside>

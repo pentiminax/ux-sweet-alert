@@ -1,0 +1,51 @@
+---
+import { docsFooterSections, siteConfig } from '../config/navigation'
+---
+
+<footer class="border-t border-[color:var(--doc-line)] bg-[color:var(--doc-surface-strong)]">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.2fr_1fr_1fr_1fr] lg:px-8">
+    <div class="max-w-sm">
+      <p class="font-display text-2xl font-semibold text-[color:var(--doc-heading)]">
+        {siteConfig.title}
+      </p>
+      <p class="mt-4 text-sm leading-7 text-[color:var(--doc-muted)]">{siteConfig.description}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="doc-button doc-button-primary" href={siteConfig.packagistUrl} target="_blank" rel="noreferrer">
+          Packagist
+        </a>
+        <a class="doc-button doc-button-secondary" href={siteConfig.githubUrl} target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    {
+      docsFooterSections.map((section) => (
+        <div>
+          <h2 class="text-sm font-semibold tracking-[0.18em] uppercase text-[color:var(--doc-heading)]">
+            {section.label}
+          </h2>
+          <ul class="mt-4 space-y-3 text-sm">
+            {section.items.map((item) => (
+              <li>
+                <a class="text-[color:var(--doc-muted)] transition-colors hover:text-[color:var(--doc-heading)]" href={item.href}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="border-t border-[color:var(--doc-line)]">
+    <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-6 text-sm text-[color:var(--doc-muted)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+      <p>&copy; {new Date().getFullYear()} UX SweetAlert. Built by <a class="text-[color:var(--doc-heading)]" href={siteConfig.ownerUrl} target="_blank" rel="noreferrer">Pentiminax</a>.</p>
+      <div class="flex gap-4">
+        <a href={siteConfig.issuesUrl} target="_blank" rel="noreferrer">Report an issue</a>
+        <a href={siteConfig.packagistUrl} target="_blank" rel="noreferrer">Package details</a>
+      </div>
+    </div>
+  </div>
+</footer>

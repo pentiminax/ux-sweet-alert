@@ -1,0 +1,83 @@
+---
+title: Installation
+description: Install the bundle, wire the frontend controller, and verify the first alert.
+sidebar:
+  label: Installation
+  order: 2
+---
+
+# Installation
+
+<Aside type="note">
+  UX SweetAlert expects Symfony UX StimulusBundle to be available in your application.
+</Aside>
+
+## Install the bundle
+
+<Steps>
+### Add the package
+
+```bash
+composer require pentiminax/ux-sweet-alert
+```
+
+### Make sure the frontend controller can run
+
+<Tabs>
+  <TabItem label="AssetMapper / default Symfony UX setup">
+    If your project already uses the standard Symfony UX setup, the package metadata in
+    `assets/package.json` exposes the `sweetalert` controller and the related import map entries.
+    In that setup, you usually do not need extra manual JavaScript wiring.
+  </TabItem>
+  <TabItem label="Webpack Encore">
+    If your frontend assets are managed manually, install JavaScript dependencies and rebuild the
+    asset pipeline:
+
+    ```bash
+    npm install --force
+    npm run watch
+    ```
+  </TabItem>
+</Tabs>
+
+### Render the Twig helper
+
+Add the helper to the base layout that should display alerts and toasts:
+
+```twig
+{{ ux_sweet_alert_scripts() }}
+```
+</Steps>
+
+## Minimal verification
+
+Create a controller action that queues a toast or alert, then redirects to a rendered page:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+final class DashboardController extends AbstractController
+{
+    #[Route('/dashboard', name: 'app_dashboard')]
+    public function __invoke(AlertManagerInterface $alertManager): Response
+    {
+        $alertManager->success(
+            title: 'Installed',
+            text: 'UX SweetAlert is ready to render.'
+        );
+
+        return $this->render('dashboard/index.html.twig');
+    }
+}
+```
+
+If the helper is mounted correctly, the success modal appears when the page renders.
+
+## What to read next
+
+- [Quick Start](../quick-start/) for the smallest working example.
+- [Configuration](../../guide/configuration/) for defaults and flash conversion.
+- [Themes & Styling](../../guide/themes-and-styling/) for SweetAlert2 theme assets.
