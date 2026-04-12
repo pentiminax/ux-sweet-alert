@@ -89,11 +89,43 @@ class default_1 extends Controller {
         const toasts = this.viewValue;
         for (const toast of toasts) {
             const toastId = toast.id;
-            const result = await this.fireAlert(toast, this.element);
+            const callbackUrl = toast.callbackUrl ?? null;
 
-            document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toastId}:closed`, {
-                detail: result
-            }));
+            const swalOptions = Object.assign({}, toast);
+            delete swalOptions.callbackUrl;
+
+            const result = await this.fireAlert(swalOptions, this.element);
+
+            if (callbackUrl) {
+                const response = await fetch(callbackUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({
+                        isConfirmed: result.isConfirmed,
+                        isDenied: result.isDenied,
+                        isDismissed: result.isDismissed,
+                        value: result.value ?? null,
+                    }),
+                    redirect: 'follow',
+                });
+
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else if (response.headers.get('Content-Type')?.includes('application/json')) {
+                    const data = await response.json();
+                    this.element.dispatchEvent(new CustomEvent('ux-sweet-alert:callback:response', {
+                        bubbles: true,
+                        detail: data,
+                    }));
+                }
+            } else {
+                document.dispatchEvent(new CustomEvent(`ux-sweet-alert:${toastId}:closed`, {
+                    detail: result
+                }));
+            }
         }
     }
 
