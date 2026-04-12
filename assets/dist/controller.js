@@ -10,10 +10,12 @@ class default_1 extends Controller {
     }
 
     async connect() {
-        if (window.Turbo && window.Turbo.StreamActions && !this.handleTurboBeforeStreamRender) {
+        if (!this.originalFetch) {
             this.originalFetch = window.fetch;
             window.fetch = this.fetch.bind(this);
+        }
 
+        if (window.Turbo && window.Turbo.StreamActions && !this.handleTurboBeforeStreamRender) {
             this.handleTurboBeforeStreamRender = ((e) => {
                 const fallbackToDefaultActions = e.detail.render;
 
@@ -202,6 +204,21 @@ class default_1 extends Controller {
             const data = await response.clone().json();
             if (data.alerts) {
                 this.injectHiddenHtml(data.alerts);
+            }
+        }
+
+        const hxTrigger = response.headers.get('HX-Trigger');
+        if (hxTrigger) {
+            try {
+                const triggers = JSON.parse(hxTrigger);
+                const alertEvent = triggers['ux-sweet-alert:alert:added'];
+                if (alertEvent) {
+                    document.dispatchEvent(new CustomEvent('ux-sweet-alert:alert:added', {
+                        detail: alertEvent,
+                    }));
+                }
+            } catch (e) {
+                // Not valid JSON, ignore
             }
         }
     }
