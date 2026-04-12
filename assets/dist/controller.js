@@ -93,6 +93,7 @@ class default_1 extends Controller {
 
             const swalOptions = Object.assign({}, toast);
             delete swalOptions.callbackUrl;
+            delete swalOptions.id;
 
             const result = await this.fireAlert(swalOptions, this.element);
 
