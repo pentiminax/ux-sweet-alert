@@ -34,7 +34,7 @@ enum InputType: string
     {
         return match ($this) {
             self::Select, self::Radio => true,
-            default => false,
+            default                   => false,
         };
     }
 
@@ -42,7 +42,7 @@ enum InputType: string
     {
         return match ($this) {
             self::Select, self::Checkbox, self::File, self::Range => false,
-            default => true,
+            default                                               => true,
         };
     }
 }

@@ -8,11 +8,14 @@ use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
+use Pentiminax\UX\SweetAlert\Event\AlertQueuedEvent;
+use Pentiminax\UX\SweetAlert\Event\BeforeAlertQueuedEvent;
 use Pentiminax\UX\SweetAlert\InputType\InputTypeInterface;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AlertManager implements AlertManagerInterface
 {
@@ -21,18 +24,25 @@ class AlertManager implements AlertManagerInterface
         private readonly SweetAlertContextInterface $context,
         private readonly FlashMessageConverter $flashMessageConverter,
         private readonly AlertDefaults $alertDefaults,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly bool $autoConvertFlashMessages = false,
     ) {
     }
 
     public function addAlert(Alert $alert): void
     {
+        $beforeEvent = new BeforeAlertQueuedEvent($alert);
+        $this->eventDispatcher->dispatch($beforeEvent);
+
+        $alert    = $beforeEvent->getAlert();
         $session  = $this->getSession();
         $alerts   = $session->get(AlertManagerInterface::ALERT_STORAGE_KEY, []);
         $alerts[] = $alert;
 
         $session->set(AlertManagerInterface::ALERT_STORAGE_KEY, $alerts);
         $this->context->addAlert($alert);
+
+        $this->eventDispatcher->dispatch(new AlertQueuedEvent($alert));
     }
 
     /**
@@ -219,7 +229,7 @@ class AlertManager implements AlertManagerInterface
 
         $inputType->configure($alert);
 
-        if ($callback !== '') {
+        if ('' !== $callback) {
             $alert->callbackUrl($callback);
         }
 

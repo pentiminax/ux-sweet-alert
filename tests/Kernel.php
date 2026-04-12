@@ -7,8 +7,12 @@ namespace Pentiminax\UX\SweetAlert\Tests;
 use Pentiminax\UX\SweetAlert\SweetAlertBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\UX\LiveComponent\LiveComponentBundle;
+use Symfony\UX\StimulusBundle\StimulusBundle;
+use Symfony\UX\TwigComponent\TwigComponentBundle;
 
 class Kernel extends BaseKernel
 {
@@ -18,6 +22,10 @@ class Kernel extends BaseKernel
     {
         return [
             new FrameworkBundle(),
+            new StimulusBundle(),
+            new TwigBundle(),
+            new TwigComponentBundle(),
+            new LiveComponentBundle(),
             new SweetAlertBundle(),
         ];
     }
@@ -25,7 +33,12 @@ class Kernel extends BaseKernel
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->extension('framework', [
-            'test' => true,
+            'test'   => true,
+            'secret' => 'test-secret',
+        ]);
+
+        $container->extension('twig', [
+            'default_path' => '%kernel.project_dir%/templates',
         ]);
     }
 }

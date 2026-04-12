@@ -58,6 +58,38 @@ Alerts are stored in the session under the `ux-sweet-alert:alerts` key. `getAler
 consume-on-read operation: once the alerts are read for rendering, they are removed from session
 storage.
 
+## Symfony queue events
+
+The manager dispatches two Symfony events around `addAlert(Alert $alert)`:
+
+<Table
+  headers={['Event', 'When it fires', 'Typical use']}
+  rows={[
+    ['`BeforeAlertQueuedEvent`', 'Before the alert is stored in session/context.', 'Enrich or adjust the mutable `Alert` instance.'],
+    ['`AlertQueuedEvent`', 'After the alert has been stored.', 'Observe, log, or trigger side effects.'],
+  ]}
+/>
+
+Listeners receive the same `Alert` object that the manager persists, so changes made during
+`BeforeAlertQueuedEvent` are reflected in storage and rendering.
+
+```php
+use Pentiminax\UX\SweetAlert\Event\BeforeAlertQueuedEvent;
+use Pentiminax\UX\SweetAlert\Enum\Theme;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
+#[AsEventListener]
+final class BrandAlertsListener
+{
+    public function __invoke(BeforeAlertQueuedEvent $event): void
+    {
+        $event->getAlert()
+            ->theme(Theme::Dark)
+            ->withCancelButton();
+    }
+}
+```
+
 <Aside type="tip">
   If you need a modal with unusual content or backend result handling, start with a manager helper,
   then customize the returned `Alert`. That keeps bundle defaults and transports intact.
