@@ -38,6 +38,7 @@ return static function (ContainerConfigurator $container) {
         ->arg('$context', new Reference('sweet_alert.context'))
         ->arg('$flashMessageConverter', new Reference('sweet_alert.flash_message_converter'))
         ->arg('$alertDefaults', new Reference('sweet_alert.alert_defaults'))
+        ->arg('$eventDispatcher', new Reference('event_dispatcher'))
         ->arg('$autoConvertFlashMessages', '%sweet_alert.auto_convert_flash_messages%')
         ->private();
 

@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Pentiminax\UX\SweetAlert\Tests;
 
 use Pentiminax\UX\SweetAlert\AlertManager;
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
+use Pentiminax\UX\SweetAlert\Event\AlertQueuedEvent;
+use Pentiminax\UX\SweetAlert\Event\BeforeAlertQueuedEvent;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
@@ -19,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @internal
@@ -187,6 +192,7 @@ final class AlertManagerTest extends KernelTestCase
             context: $this->createMock(SweetAlertContextInterface::class),
             flashMessageConverter: new FlashMessageConverter($alertDefaults),
             alertDefaults: $alertDefaults,
+            eventDispatcher: $this->createStub(EventDispatcherInterface::class),
         );
 
         $alertManager->success(title: 'Test alert');
@@ -261,6 +267,97 @@ final class AlertManagerTest extends KernelTestCase
         $this->assertArrayNotHasKey('callbackUrl', $data);
     }
 
+    #[Test]
+    public function it_dispatches_queue_events_in_order_and_persists_the_mutated_alert(): void
+    {
+        $context = new SweetAlertContext();
+        $events  = [];
+
+        $dispatcher = new class($events) implements EventDispatcherInterface {
+            private array $events;
+
+            public function __construct(array &$events)
+            {
+                $this->events = &$events;
+            }
+
+            public function dispatch(object $event, ?string $eventName = null): object
+            {
+                $this->events[] = $event::class;
+
+                if ($event instanceof BeforeAlertQueuedEvent) {
+                    $event->getAlert()
+                        ->theme(Theme::Dark)
+                        ->withCancelButton();
+                }
+
+                return $event;
+            }
+        };
+
+        $alertManager = $this->createAlertManager(
+            context: $context,
+            dispatcher: $dispatcher,
+        );
+
+        $alert        = $alertManager->success(title: 'Queued alert');
+        $storedAlerts = $alertManager->getSession()->get(AlertManagerInterface::ALERT_STORAGE_KEY, []);
+
+        $this->assertSame([
+            BeforeAlertQueuedEvent::class,
+            AlertQueuedEvent::class,
+        ], $events);
+        $this->assertCount(1, $storedAlerts);
+        $this->assertSame(Theme::Dark->value, $storedAlerts[0]->jsonSerialize()['theme']);
+        $this->assertTrue($storedAlerts[0]->jsonSerialize()['showCancelButton']);
+        $this->assertSame($alert, $storedAlerts[0]);
+        $this->assertSame([$alert], $context->getAlerts());
+    }
+
+    #[Test]
+    public function it_dispatches_events_for_input_alerts(): void
+    {
+        $events = [];
+
+        $dispatcher = new class($events) implements EventDispatcherInterface {
+            private array $events;
+
+            public function __construct(array &$events)
+            {
+                $this->events = &$events;
+            }
+
+            public function dispatch(object $event, ?string $eventName = null): object
+            {
+                $this->events[] = $event::class;
+
+                return $event;
+            }
+        };
+
+        $alertManager = $this->createAlertManager(dispatcher: $dispatcher);
+
+        $alertManager->input(
+            inputType: new \Pentiminax\UX\SweetAlert\InputType\Text(label: 'Name'),
+            title: 'Enter name',
+        );
+
+        $this->assertSame([
+            BeforeAlertQueuedEvent::class,
+            AlertQueuedEvent::class,
+        ], $events);
+    }
+
+    #[Test]
+    public function it_is_registered_in_the_test_container(): void
+    {
+        self::bootKernel();
+
+        $service = self::getContainer()->get(AlertManagerInterface::class);
+
+        $this->assertInstanceOf(AlertManager::class, $service);
+    }
+
     public static function alertMethodProvider(): \Generator
     {
         yield ['success', 'success'];
@@ -270,8 +367,11 @@ final class AlertManagerTest extends KernelTestCase
         yield ['question', 'question'];
     }
 
-    private function createAlertManager(?AlertDefaults $defaults = null): AlertManager
-    {
+    private function createAlertManager(
+        ?AlertDefaults $defaults = null,
+        ?SweetAlertContextInterface $context = null,
+        ?EventDispatcherInterface $dispatcher = null,
+    ): AlertManager {
         $session = new Session(new MockArraySessionStorage());
 
         $request = new Request();
@@ -284,9 +384,10 @@ final class AlertManagerTest extends KernelTestCase
 
         return new AlertManager(
             requestStack: $requestStack,
-            context: $this->createMock(SweetAlertContextInterface::class),
+            context: $context ?? $this->createMock(SweetAlertContextInterface::class),
             flashMessageConverter: new FlashMessageConverter($alertDefaults),
             alertDefaults: $alertDefaults,
+            eventDispatcher: $dispatcher ?? $this->createStub(EventDispatcherInterface::class),
         );
     }
 }

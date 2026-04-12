@@ -34,11 +34,11 @@ class FlashMessageConverter implements FlashMessageConverterInterface
     private function convertKeyToIcon(string $key): Icon
     {
         return match ($key) {
-            'error'   => Icon::ERROR,
-            'warning' => Icon::WARNING,
+            'error'          => Icon::ERROR,
+            'warning'        => Icon::WARNING,
             'info', 'notice' => Icon::INFO,
-            'question' => Icon::QUESTION,
-            default    => Icon::SUCCESS,
+            'question'       => Icon::QUESTION,
+            default          => Icon::SUCCESS,
         };
     }
 }
