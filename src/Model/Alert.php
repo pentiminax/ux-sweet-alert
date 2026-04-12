@@ -90,6 +90,8 @@ final class Alert implements \JsonSerializable
 
     private ?string $validationMessage = null;
 
+    private string $callbackUrl = '';
+
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
         $alert = new self();
@@ -503,6 +505,13 @@ final class Alert implements \JsonSerializable
         return $this->validationMessage;
     }
 
+    public function callbackUrl(string $url): self
+    {
+        $this->callbackUrl = $url;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
@@ -541,6 +550,10 @@ final class Alert implements \JsonSerializable
             'returnInputValueOnDeny' => $this->returnInputValueOnDeny ?: null,
             'validationMessage'      => $this->validationMessage,
         ];
+
+        if ($this->callbackUrl !== '') {
+            $data['callbackUrl'] = $this->callbackUrl;
+        }
 
         if ($this->toast) {
             $data['toast']            = true;
