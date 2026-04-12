@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content'
 import Aside from '../components/Aside.astro'
 import Badge from '../components/Badge.astro'
+import CodeBlock from '../components/CodeBlock.astro'
 import DocsLayout from '../layouts/DocsLayout.astro'
 import Steps from '../components/Steps.astro'
 import Table from '../components/Table.astro'
@@ -23,6 +24,7 @@ const { Content } = await render(entry)
 const components = {
   Aside,
   Badge,
+  pre: CodeBlock,
   Steps,
   Table,
   Tabs,

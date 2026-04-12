@@ -49,7 +49,7 @@ const pathname = Astro.url.pathname
 
     <div class="mt-8 grid gap-8 md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px]">
       <aside class="hidden md:block">
-        <nav class="doc-sidebar sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-4">
+        <nav class="doc-sidebar sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-[1.5rem] border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)] p-5 pr-4">
           {
             docsSidebarSections.map((section) => (
               <div class="mb-8">

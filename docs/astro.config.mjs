@@ -9,6 +9,11 @@ export default defineConfig({
   base: '/ux-sweet-alert',
   integrations: [sitemap(), mdx()],
   markdown: {
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      theme: 'github-dark',
+      wrap: true,
+    },
     rehypePlugins: [
       [
         rehypeAutolinkHeadings,

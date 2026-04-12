@@ -13,6 +13,9 @@
   --doc-amber: #f4b400;
   --doc-mint: #51c1a2;
   --doc-ivory: #fff4e7;
+  --doc-code-bg: #0d1117;
+  --doc-code-border: rgba(255, 255, 255, 0.08);
+  --doc-code-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   --doc-shadow: 0 32px 80px rgba(0, 0, 0, 0.28);
 }
 
@@ -458,6 +461,28 @@ pre {
   background: rgba(0, 0, 0, 0.18);
   color: var(--doc-ivory);
   line-height: 1.75;
+}
+
+.hero-code-card .astro-code,
+.doc-showcase-panel .astro-code,
+.doc-content .doc-code-block {
+  width: 100%;
+  margin: 1rem 0 0;
+  padding: 1rem 1.15rem !important;
+  border: 1px solid var(--doc-code-border);
+  border-radius: 1.2rem;
+  background: var(--doc-code-bg) !important;
+  box-shadow: var(--doc-code-shadow);
+  color: var(--doc-ivory);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+.hero-code-card .astro-code code,
+.doc-showcase-panel .astro-code code,
+.doc-content .doc-code-block code {
+  display: block;
+  min-width: max-content;
 }
 
 .doc-stat-card,
