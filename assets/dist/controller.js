@@ -121,6 +121,11 @@ class default_1 extends Controller {
                             bubbles: true,
                             detail: data,
                         }));
+                    } else {
+                        this.element.dispatchEvent(new CustomEvent('ux-sweet-alert:callback:response', {
+                            bubbles: true,
+                            detail: null,
+                        }));
                     }
                 } catch (e) {
                     console.warn('[ux-sweet-alert] Callback URL request failed:', e);
