@@ -1,0 +1,25 @@
+---
+interface Props {
+  text: string
+  variant?: 'neutral' | 'coral' | 'amber' | 'mint'
+}
+
+const { text, variant = 'neutral' } = Astro.props
+
+const variants = {
+  neutral:
+    'border-[color:rgba(255,255,255,0.14)] bg-[color:rgba(255,255,255,0.06)] text-[color:var(--doc-heading)]',
+  coral:
+    'border-[color:rgba(255,107,79,0.28)] bg-[color:rgba(255,107,79,0.14)] text-[color:var(--doc-coral)]',
+  amber:
+    'border-[color:rgba(244,180,0,0.28)] bg-[color:rgba(244,180,0,0.14)] text-[color:var(--doc-amber)]',
+  mint:
+    'border-[color:rgba(81,193,162,0.28)] bg-[color:rgba(81,193,162,0.14)] text-[color:var(--doc-mint)]',
+}
+---
+
+<span
+  class={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold tracking-[0.18em] uppercase ${variants[variant]}`}
+>
+  {text}
+</span>

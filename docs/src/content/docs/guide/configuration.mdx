@@ -1,0 +1,91 @@
+---
+title: Configuration
+description: Configure default alert behavior and optional flash message conversion.
+sidebar:
+  label: Configuration
+  order: 4
+---
+
+# Configuration
+
+The bundle configuration controls two things:
+
+- whether flash messages should be converted automatically
+- which default values should be applied to new alerts and toasts
+
+## Default configuration
+
+```yaml
+sweet_alert:
+  auto_convert_flash_messages: false
+  defaults:
+    position: 'center'
+    confirmButtonColor: '#3085d6'
+    cancelButtonColor: '#aaa'
+    denyButtonColor: '#dd6b55'
+    confirmButtonText: 'OK'
+    cancelButtonText: 'Cancel'
+    denyButtonText: 'No'
+    showConfirmButton: true
+    showCancelButton: false
+    showDenyButton: false
+    reverseButtons: false
+    animation: true
+    backdrop: true
+    allowOutsideClick: true
+    allowEscapeKey: true
+    focusConfirm: true
+    draggable: false
+    topLayer: false
+    timer: null
+    timerProgressBar: false
+    theme: 'auto'
+    customClass: []
+```
+
+## Typical overrides
+
+```yaml
+sweet_alert:
+  auto_convert_flash_messages: true
+  defaults:
+    position: 'top-end'
+    confirmButtonText: 'Continue'
+    cancelButtonText: 'Go back'
+    showCancelButton: true
+```
+
+## Key options
+
+<Table
+  headers={['Option', 'Meaning']}
+  rows={[
+    ['auto_convert_flash_messages', 'Converts flash bag entries to alerts when alerts are consumed.'],
+    ['defaults.position', 'Default `Position` enum value used by new alerts.'],
+    ['defaults.theme', 'Default `Theme` enum value for generated alerts.'],
+    ['defaults.confirmButtonText', 'Default confirm button label.'],
+    ['defaults.showCancelButton', 'Whether new alerts show a cancel action by default.'],
+    ['defaults.allowOutsideClick', 'Whether clicking the backdrop can dismiss the modal.'],
+    ['defaults.draggable', 'Passes SweetAlert2 draggable mode through the alert model.'],
+    ['defaults.timer', 'Default timeout used by toast flows when you keep toast mode enabled.'],
+  ]}
+/>
+
+## Flash message conversion
+
+When `auto_convert_flash_messages` is enabled, `AlertManager::getAlerts()` inspects the flash bag and
+maps flash keys to SweetAlert icons:
+
+- `error` -> `Icon::ERROR`
+- `warning` -> `Icon::WARNING`
+- `info` and `notice` -> `Icon::INFO`
+- `question` -> `Icon::QUESTION`
+- everything else -> `Icon::SUCCESS`
+
+The flash message text becomes the alert title. Position and other defaults come from
+`AlertDefaults`.
+
+<Aside type="tip">
+  This is useful when you already rely on Symfony flash messages and want them to appear as
+  SweetAlert2 popups without rewriting controller code everywhere.
+</Aside>

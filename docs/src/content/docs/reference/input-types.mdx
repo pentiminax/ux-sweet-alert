@@ -1,0 +1,75 @@
+---
+title: Input Types
+description: Reference for the bundled input classes used by AlertManager::input().
+sidebar:
+  label: Input Types
+  order: 2
+---
+
+# Input Types
+
+Input type classes configure an `Alert` instance for SweetAlert2 input mode. The bundle ships both
+specialized classes and a generic HTML input wrapper.
+
+## Constructor overview
+
+<Table
+  headers={['Class', 'Key constructor arguments']}
+  rows={[
+    ['Text', 'label, value, placeholder, inputAttributes'],
+    ['Textarea', 'label, value, placeholder, inputAttributes'],
+    ['Select', 'options, label, value, inputAttributes'],
+    ['Radio', 'options, label, value, inputAttributes'],
+    ['Checkbox', 'label, value, inputAttributes'],
+    ['File', 'label, accept, inputAttributes'],
+    ['Range', 'label, value, min, max, step, inputAttributes'],
+    ['HtmlInputType', 'InputType enum value, label, value, placeholder, inputAttributes'],
+  ]}
+/>
+
+## Generic HTML inputs
+
+Use `HtmlInputType` when you want a native HTML input that does **not** require a dedicated class,
+for example:
+
+- `email`
+- `password`
+- `number`
+- `tel`
+- `url`
+- `search`
+- `date`
+- `datetime-local`
+- `time`
+- `week`
+- `month`
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\InputType;
+use Pentiminax\UX\SweetAlert\InputType\HtmlInputType;
+
+$alertManager->input(
+    inputType: new HtmlInputType(
+        type: InputType::Email,
+        label: 'Work email',
+        placeholder: 'name@company.com'
+    ),
+    title: 'Invite a colleague'
+);
+```
+
+## Why specialized classes still exist
+
+`Select`, `Radio`, `Checkbox`, `File`, `Range`, and `Textarea` are intentionally specialized because
+they need custom option handling, placeholder rules, or attribute transformations.
+
+For example:
+
+- `Select` and `Radio` translate `options` into SweetAlert `inputOptions`
+- `File` can write an `accept` attribute for you
+- `Range` maps `min`, `max`, and `step` to input attributes
+
+## Placeholder support
+
+Not every SweetAlert input mode supports placeholders. The underlying `InputType` enum encodes these
+rules so unsupported placeholders are ignored automatically.

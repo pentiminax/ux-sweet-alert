@@ -1,0 +1,126 @@
+---
+import Layout from './Layout.astro'
+import { docsSidebarSections } from '../config/navigation'
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description } = Astro.props
+const pathname = Astro.url.pathname
+---
+
+<Layout title={title} description={description}>
+  <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <details class="docs-mobile-nav rounded-[1.5rem] border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)] p-5 md:hidden">
+      <summary class="cursor-pointer list-none font-display text-lg font-semibold text-[color:var(--doc-heading)]">
+        Browse documentation
+      </summary>
+      <div class="mt-4 space-y-6">
+        {
+          docsSidebarSections.map((section) => (
+            <div>
+              <p class="text-xs font-semibold tracking-[0.18em] uppercase text-[color:var(--doc-muted)]">
+                {section.label}
+              </p>
+              <ul class="mt-3 space-y-2">
+                {section.items.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class:list={[
+                        'block rounded-xl px-3 py-2 text-sm transition-colors',
+                        pathname === item.href
+                          ? 'bg-[color:rgba(255,107,79,0.12)] text-[color:var(--doc-heading)]'
+                          : 'text-[color:var(--doc-muted)] hover:text-[color:var(--doc-heading)]',
+                      ]}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </details>
+
+    <div class="mt-8 grid gap-8 md:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px]">
+      <aside class="hidden md:block">
+        <nav class="doc-sidebar sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-[1.5rem] border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)] p-5 pr-4">
+          {
+            docsSidebarSections.map((section) => (
+              <div class="mb-8">
+                <h2 class="mb-3 text-xs font-semibold tracking-[0.18em] uppercase text-[color:var(--doc-muted)]">
+                  {section.label}
+                </h2>
+                <ul class="space-y-1.5">
+                  {section.items.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        class:list={[
+                          'block rounded-2xl border px-4 py-3 text-sm transition-colors',
+                          pathname === item.href
+                            ? 'border-[color:rgba(255,107,79,0.28)] bg-[color:rgba(255,107,79,0.12)] text-[color:var(--doc-heading)]'
+                            : 'border-transparent text-[color:var(--doc-muted)] hover:border-[color:var(--doc-line)] hover:bg-[color:var(--doc-surface)] hover:text-[color:var(--doc-heading)]',
+                        ]}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </nav>
+      </aside>
+
+      <article class="doc-content min-w-0" data-doc-content>
+        <slot />
+      </article>
+
+      <aside class="hidden xl:block">
+        <div class="doc-toc sticky top-24 rounded-[1.5rem] border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)] p-5">
+          <p class="text-xs font-semibold tracking-[0.18em] uppercase text-[color:var(--doc-muted)]">
+            On this page
+          </p>
+          <ul class="mt-4 space-y-2 text-sm" data-doc-toc></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <script is:inline>
+    ;(() => {
+      const content = document.querySelector('[data-doc-content]')
+      const toc = document.querySelector('[data-doc-toc]')
+      if (!content || !toc) return
+
+      const headings = Array.from(content.querySelectorAll('h2, h3')).filter((heading) => heading.id)
+
+      if (headings.length === 0) {
+        toc.parentElement?.classList.add('hidden')
+        return
+      }
+
+      toc.innerHTML = ''
+
+      headings.forEach((heading) => {
+        const item = document.createElement('li')
+        const link = document.createElement('a')
+        link.href = `#${heading.id}`
+        link.textContent = heading.textContent || ''
+        link.className =
+          heading.tagName === 'H3'
+            ? 'block pl-4 text-[color:var(--doc-muted)] transition-colors hover:text-[color:var(--doc-heading)]'
+            : 'block text-[color:var(--doc-muted)] transition-colors hover:text-[color:var(--doc-heading)]'
+        item.appendChild(link)
+        toc.appendChild(item)
+      })
+    })()
+  </script>
+</Layout>

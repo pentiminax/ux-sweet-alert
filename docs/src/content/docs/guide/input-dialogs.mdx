@@ -1,0 +1,104 @@
+---
+title: Input Dialogs
+description: Collect values with the bundle input type abstractions and callback-aware alerts.
+sidebar:
+  label: Input Dialogs
+  order: 3
+---
+
+# Input Dialogs
+
+`AlertManagerInterface::input()` creates a regular alert, then delegates the actual field
+configuration to an input type object.
+
+## Basic text input
+
+```php
+use Pentiminax\UX\SweetAlert\InputType\Text;
+
+$alertManager->input(
+    inputType: new Text(
+        label: 'Display name',
+        value: 'Tanguy',
+        placeholder: 'Enter your public name'
+    ),
+    title: 'Update profile',
+    text: 'This change is visible to other users.'
+);
+```
+
+## Select and radio inputs
+
+`Select` and `Radio` accept an `options` array that becomes SweetAlert2 `inputOptions`.
+
+```php
+use Pentiminax\UX\SweetAlert\InputType\Select;
+
+$alertManager->input(
+    inputType: new Select(
+        options: [
+            'admin' => 'Admin',
+            'editor' => 'Editor',
+        ],
+        label: 'Role',
+        value: 'editor'
+    ),
+    title: 'Invite user'
+);
+```
+
+## Range, file, textarea, and HTML inputs
+
+<Table
+  headers={['Class', 'Use case']}
+  rows={[
+    ['Text', 'Simple text field with optional placeholder and attributes.'],
+    ['Textarea', 'Long-form text input.'],
+    ['Select', 'Select list powered by input options.'],
+    ['Radio', 'Choice list rendered as radio buttons.'],
+    ['Checkbox', 'Boolean or opt-in interactions.'],
+    ['File', 'File picker with optional accept attribute.'],
+    ['Range', 'Numeric slider with min, max, and step.'],
+    ['HtmlInputType', 'HTML-native inputs like email, password, number, date, or url.'],
+  ]}
+/>
+
+## Posting the result back to Symfony
+
+`input()` exposes a `callback` argument. When it is non-empty, the created alert stores a callback
+URL and the frontend controller performs a `POST` request with the SweetAlert result.
+
+```php
+use Pentiminax\UX\SweetAlert\InputType\Text;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+$alertManager->input(
+    inputType: new Text(label: 'Project name'),
+    title: 'Create project',
+    callback: $this->generateUrl('app_project_modal_result', referenceType: UrlGeneratorInterface::ABSOLUTE_URL)
+);
+```
+
+The request body matches the `Result` shape: `isConfirmed`, `isDenied`, `isDismissed`, and `value`.
+
+## Validation and extra attributes
+
+You can keep customizing the returned `Alert` object after `input()`:
+
+```php
+$alertManager
+    ->input(
+        inputType: new Text(
+            label: 'Display name',
+            inputAttributes: ['maxlength' => '40']
+        ),
+        title: 'Update profile'
+    )
+    ->validationMessage('A display name is required.')
+    ->withCancelButton();
+```
+
+## Related pages
+
+- [Input Types](../../reference/input-types/) for constructor-level details.
+- [Result & Callbacks](../../reference/result-and-callbacks/) for the backend callback flow.

@@ -1,0 +1,93 @@
+---
+title: Alerts
+description: Create modal alerts with the fluent alert API and the AlertManager helpers.
+sidebar:
+  label: Alerts
+  order: 1
+---
+
+# Alerts
+
+Alerts are the blocking SweetAlert2 modals created through `AlertManagerInterface`. They are queued
+server-side, stored in the bundle session storage key, then consumed by the frontend controller.
+
+## Built-in helper methods
+
+The alert manager exposes one helper per icon:
+
+- `success()`
+- `error()`
+- `warning()`
+- `info()`
+- `question()`
+
+Each helper returns the created `Alert` instance so you can continue to customize it fluently.
+
+```php
+$alert = $alertManager->warning(
+    title: 'Danger zone',
+    text: 'This action cannot be undone.'
+);
+
+$alert
+    ->withCancelButton()
+    ->withDenyButton()
+    ->denyOutsideClick()
+    ->denyEscapeKey();
+```
+
+## Common customization methods
+
+<Table
+  headers={['Method', 'What it changes']}
+  rows={[
+    ['withCancelButton()', 'Displays the cancel action.'],
+    ['withDenyButton()', 'Displays a secondary deny action.'],
+    ['withoutConfirmButton()', 'Hides the default confirm button.'],
+    ['withoutAnimation()', 'Disables SweetAlert animation.'],
+    ['withoutBackdrop()', 'Removes the modal backdrop.'],
+    ['theme(Theme $theme)', 'Sets the SweetAlert2 theme name.'],
+    ['position(Position $position)', 'Changes where the modal is rendered.'],
+    ['confirmButtonColor(...)', 'Overrides the confirm button color.'],
+    ['cancelButtonColor(...)', 'Overrides the cancel button color.'],
+    ['denyButtonColor(...)', 'Overrides the deny button color.'],
+    ['reverseButtons()', 'Swaps the button order.'],
+  ]}
+/>
+
+## Creating a custom `Alert` instance
+
+If you need direct control, build the object yourself and hand it to the manager:
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Icon;
+use Pentiminax\UX\SweetAlert\Enum\Position;
+use Pentiminax\UX\SweetAlert\Model\Alert;
+
+$alert = Alert::new(
+    title: 'Custom alert',
+    text: 'Created manually.',
+    icon: Icon::INFO,
+    position: Position::TOP
+)
+    ->html('<strong>Rich content</strong>')
+    ->setFooter('Need help? Contact support.');
+
+$alertManager->addAlert($alert);
+```
+
+## Server-side defaults still apply
+
+Alerts built through `AlertManagerInterface` are created with `Alert::withDefaults(...)`, so the
+bundle configuration can predefine button labels, colors, positioning, timers, and interaction
+rules.
+
+<Aside type="tip">
+  Use the manager helpers for most cases. Reach for `Alert::new()` only when you want to own the
+  object lifecycle directly.
+</Aside>
+
+## Related pages
+
+- [Toasts](../toasts/) for non-blocking notifications.
+- [Alert Manager & Alert Object](../../reference/alert-manager-and-alert-object/) for the reference view.

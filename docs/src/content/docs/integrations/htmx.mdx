@@ -1,0 +1,58 @@
+---
+title: HTMX
+description: Dispatch SweetAlert payloads with HX-Trigger headers when Turbo is not installed.
+sidebar:
+  label: HTMX
+  order: 3
+---
+
+# HTMX Integration
+
+When Turbo is **not** installed, the response listener falls back to HTMX-friendly headers. It
+serializes the first queued alert and writes it to the `HX-Trigger` response header under the
+`ux-sweet-alert:alert:added` event name.
+
+## Automatic dispatch
+
+```http
+HX-Trigger: {"ux-sweet-alert:alert:added":{"alert":{"title":"Saved","icon":"success"}}}
+```
+
+HTMX turns this header into a browser event, and the SweetAlert Stimulus controller already listens
+for that event name.
+
+<Aside type="caution">
+  The current HTMX fallback sends the first alert only. If you queue multiple alerts on the same
+  HTMX response, only the first one is dispatched through `HX-Trigger`.
+</Aside>
+
+## Manual helper
+
+If you need full control over the response object, use `HxTriggerHelper::withAlert()`:
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Htmx\HxTriggerHelper;
+use Symfony\Component\HttpFoundation\Response;
+
+public function save(AlertManagerInterface $alertManager): Response
+{
+    $alert = $alertManager->success(
+        title: 'Saved',
+        text: 'Your changes are now persisted.'
+    );
+
+    return HxTriggerHelper::withAlert(new Response('OK'), $alert);
+}
+```
+
+## Requirements
+
+- HTMX must be present on the page.
+- `ux_sweet_alert_scripts()` must still be rendered so the Stimulus controller can react to the
+  dispatched browser event.
+
+## When to prefer HTMX
+
+Use this path when your application already leans on HTMX request/response patterns and does not use
+Turbo. If Turbo is present, the bundle intentionally prefers Turbo stream rendering.

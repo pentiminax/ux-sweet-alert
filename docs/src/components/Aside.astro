@@ -1,0 +1,31 @@
+---
+interface Props {
+  type?: 'note' | 'tip' | 'caution' | 'danger'
+  title?: string
+}
+
+const { type = 'note', title } = Astro.props
+
+const variants = {
+  note: 'border-[color:rgba(255,255,255,0.12)] bg-[color:rgba(255,248,242,0.06)] text-[color:var(--doc-text)]',
+  tip: 'border-[color:rgba(81,193,162,0.24)] bg-[color:rgba(81,193,162,0.12)] text-[color:var(--doc-text)]',
+  caution: 'border-[color:rgba(244,180,0,0.28)] bg-[color:rgba(244,180,0,0.12)] text-[color:var(--doc-text)]',
+  danger: 'border-[color:rgba(255,107,79,0.28)] bg-[color:rgba(255,107,79,0.12)] text-[color:var(--doc-text)]',
+}
+
+const titles = {
+  note: 'Note',
+  tip: 'Tip',
+  caution: 'Caution',
+  danger: 'Danger',
+}
+---
+
+<aside class={`doc-aside my-8 rounded-2xl border px-5 py-4 ${variants[type]}`}>
+  <p class="mb-2 text-xs font-semibold tracking-[0.24em] uppercase text-[color:var(--doc-heading)]">
+    {title ?? titles[type]}
+  </p>
+  <div class="text-sm leading-7 text-[color:var(--doc-text)]">
+    <slot />
+  </div>
+</aside>

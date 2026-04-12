@@ -1,0 +1,76 @@
+---
+title: Toasts
+description: Show lightweight non-blocking notifications with the toast helper.
+sidebar:
+  label: Toasts
+  order: 2
+---
+
+# Toasts
+
+Toasts are lightweight notifications rendered through the same alert pipeline, but with toast mode
+enabled on the `Alert` object.
+
+## Basic usage
+
+```php
+use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Enum\Position;
+
+$alertManager->toast(
+    title: 'Profile updated',
+    text: 'Changes have been saved.',
+    position: Position::BOTTOM_END,
+    timer: 3500,
+    timerProgressBar: true
+);
+```
+
+## Toast behavior
+
+When the manager creates a toast, it:
+
+- marks the alert with `asToast()`
+- keeps the timer you pass through `timer(...)`
+- calls `withoutConfirmButton()`
+- keeps `timerProgressBar` when explicitly enabled
+
+If you call `toast()` with the center position, the manager automatically falls back to
+`Position::BOTTOM_END`.
+
+## Choosing an icon
+
+`toast()` accepts an optional `Icon` argument:
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Icon;
+
+$alertManager->toast(
+    title: 'Heads up',
+    text: 'You are close to your rate limit.',
+    icon: Icon::WARNING,
+    timer: 5000
+);
+```
+
+## Applying themes
+
+Toasts use the same theme API as modal alerts:
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Theme;
+
+$toast = $alertManager->toast(title: 'Saved');
+$toast->theme(Theme::MaterialUILight);
+```
+
+<Aside type="note">
+  Theme names alone are not enough. If you use a SweetAlert2 theme, make sure the matching CSS is
+  actually loaded by your frontend setup.
+</Aside>
+
+## When to use a toast vs an alert
+
+- Use a toast for status feedback that does not require a decision.
+- Use an alert for confirmation, denial, or input collection.
+- Use an input dialog when the next step depends on user-provided data.

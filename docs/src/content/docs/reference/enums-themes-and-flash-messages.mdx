@@ -1,0 +1,72 @@
+---
+title: Enums, Themes & Flash Messages
+description: Reference for the bundle enums, theme names, and flash message icon mapping.
+sidebar:
+  label: Enums, Themes & Flash Messages
+  order: 4
+---
+
+# Enums, Themes & Flash Messages
+
+The bundle relies on small enums to keep alert configuration type-safe.
+
+## `Icon`
+
+Available icon values:
+
+- `SUCCESS`
+- `ERROR`
+- `WARNING`
+- `INFO`
+- `QUESTION`
+
+These values map directly to SweetAlert2 icon strings.
+
+## `Position`
+
+Available positions:
+
+- `TOP`
+- `TOP_START`
+- `TOP_END`
+- `CENTER`
+- `CENTER_START`
+- `CENTER_END`
+- `BOTTOM`
+- `BOTTOM_START`
+- `BOTTOM_END`
+
+## `InputType`
+
+The input enum powers both `HtmlInputType` and the specialized input classes. It includes text-like
+inputs, date/time inputs, and the dedicated SweetAlert input modes.
+
+## `Theme`
+
+The theme enum includes generic themes plus framework-specific variants. See
+[Themes & Styling](../../guide/themes-and-styling/) for guidance on loading the actual CSS assets.
+
+## Flash message conversion rules
+
+When automatic flash conversion is enabled, the flash key selects the icon:
+
+<Table
+  headers={['Flash key', 'Resolved icon']}
+  rows={[
+    ['error', 'ERROR'],
+    ['warning', 'WARNING'],
+    ['info', 'INFO'],
+    ['notice', 'INFO'],
+    ['question', 'QUESTION'],
+    ['anything else', 'SUCCESS'],
+  ]}
+/>
+
+## Why this matters
+
+These enums and conversion rules are what keep the bundle API predictable:
+
+- helper methods always emit known SweetAlert icon names
+- positions are validated before they reach the browser
+- input modes can enforce placeholder and option constraints
+- flash messages can become rich notifications without free-form string mapping

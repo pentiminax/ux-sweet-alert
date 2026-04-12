@@ -1,0 +1,78 @@
+---
+title: Result & Callbacks
+description: Handle SweetAlert results through callback URLs, Live Components, and controller arguments.
+sidebar:
+  label: Result & Callbacks
+  order: 3
+---
+
+# Result & Callbacks
+
+The bundle uses a small immutable value object, `Result`, to represent the output of a SweetAlert
+interaction.
+
+## `Result` shape
+
+```php
+final readonly class Result
+{
+    public function __construct(
+        public bool $isConfirmed = false,
+        public bool $isDenied = false,
+        public bool $isDismissed = false,
+        public mixed $value = null,
+    ) {
+    }
+}
+```
+
+## Posting results back to Symfony
+
+Whenever an alert has a `callbackUrl`, the Stimulus controller issues a `POST` request with a JSON
+body containing the result payload.
+
+`AlertManager::input()` exposes this directly through its `callback` argument, but any `Alert`
+instance can also be customized with `callbackUrl(...)`.
+
+## Resolving the result in a controller
+
+`ResultValueResolver` reads the JSON request body and hydrates a `Result` argument automatically.
+
+```php
+use Pentiminax\UX\SweetAlert\Model\Result;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+#[Route('/modal/result', name: 'app_modal_result', methods: ['POST'])]
+public function __invoke(Result $result): Response
+{
+    if ($result->isConfirmed) {
+        // Persist the submitted value or continue the workflow.
+    }
+
+    return new Response(status: 204);
+}
+```
+
+## Browser-side lifecycle events
+
+The Stimulus controller dispatches a few useful browser events:
+
+<Table
+  headers={['Event', 'When it fires']}
+  rows={[
+    ['sweetalert:before-fire', 'Right before `Swal.fire(...)` is called.'],
+    ['sweetalert:after-fire', 'After the SweetAlert promise resolves.'],
+    ['ux-sweet-alert:{id}:closed', 'When an alert without callback URL is closed.'],
+    ['ux-sweet-alert:callback:response', 'After a callback URL responds with JSON or completes empty.'],
+  ]}
+/>
+
+## Live Component callbacks
+
+Live Component integrations can skip callback URLs entirely:
+
+- `ConfirmButton` can call a browser callback or `callbackAction()`
+- `InputModal` can call a browser callback or override `onResult(...)`
+
+That makes Live Components the best fit when the result should stay inside the component lifecycle.

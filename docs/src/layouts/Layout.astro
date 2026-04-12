@@ -1,0 +1,186 @@
+---
+import { getCollection } from 'astro:content'
+import Footer from '../components/Footer.astro'
+import { primaryNavigation, siteConfig } from '../config/navigation'
+import '../styles/global.css'
+import '../styles/custom.css'
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description = siteConfig.description } = Astro.props
+const pathname = Astro.url.pathname
+
+const docsPages = (await getCollection('docs'))
+  .map((entry) => ({
+    title: entry.data.title,
+    description: entry.data.description ?? '',
+    href: `${siteConfig.basePath}/${entry.id}/`,
+  }))
+  .sort((a, b) => a.title.localeCompare(b.title))
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | {siteConfig.title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="doc-shell">
+      <header class="doc-header">
+        <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div class="flex items-center gap-4">
+            <a href={siteConfig.basePath + '/'} class="group inline-flex items-center gap-3">
+              <span class="doc-logo">
+                <span></span>
+              </span>
+              <span>
+                <span class="block font-display text-lg font-semibold text-[color:var(--doc-heading)]">
+                  {siteConfig.title}
+                </span>
+                <span class="hidden text-xs tracking-[0.2em] uppercase text-[color:var(--doc-muted)] sm:block">
+                  Symfony UX Bundle
+                </span>
+              </span>
+            </a>
+
+            <nav class="hidden items-center gap-1 md:flex">
+              {
+                primaryNavigation.map((item) => (
+                  <a
+                    href={item.href}
+                    class:list={[
+                      'rounded-full px-4 py-2 text-sm font-semibold transition-colors',
+                      pathname === item.href
+                        ? 'bg-[color:var(--doc-surface-soft)] text-[color:var(--doc-heading)]'
+                        : 'text-[color:var(--doc-muted)] hover:text-[color:var(--doc-heading)]',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                ))
+              }
+            </nav>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="relative hidden w-full max-w-sm md:block" data-doc-search>
+              <input
+                type="search"
+                aria-label="Search documentation"
+                class="doc-search-input w-full rounded-full border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)] px-4 py-2.5 pr-16 text-sm text-[color:var(--doc-heading)]"
+                placeholder="Search docs..."
+                data-doc-search-input
+                autocomplete="off"
+              />
+              <span class="doc-search-shortcut" data-doc-search-shortcut>Ctrl+K</span>
+              <div
+                class="doc-search-results hidden"
+                data-doc-search-results
+              >
+                <ul class="max-h-80 overflow-y-auto py-2" data-doc-search-results-list></ul>
+              </div>
+            </div>
+
+            <a class="doc-button doc-button-secondary hidden sm:inline-flex" href={siteConfig.packagistUrl} target="_blank" rel="noreferrer">
+              Packagist
+            </a>
+            <a class="doc-button doc-button-secondary" href={siteConfig.githubUrl} target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="min-h-[calc(100vh-5rem)]">
+        <slot />
+      </main>
+
+      <Footer />
+    </div>
+
+    <script is:inline define:vars={{ docsPages }}>
+      ;(() => {
+        const search = document.querySelector('[data-doc-search]')
+        if (!search) return
+
+        const input = search.querySelector('[data-doc-search-input]')
+        const shortcut = search.querySelector('[data-doc-search-shortcut]')
+        const resultsContainer = search.querySelector('[data-doc-search-results]')
+        const resultsList = search.querySelector('[data-doc-search-results-list]')
+        if (!input || !shortcut || !resultsContainer || !resultsList) return
+
+        const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform)
+        shortcut.textContent = isMac ? '⌘K' : 'Ctrl+K'
+
+        const normalize = (value) => value.toLowerCase().trim()
+
+        const renderResults = (query) => {
+          const normalizedQuery = normalize(query)
+          resultsList.innerHTML = ''
+
+          if (normalizedQuery.length < 2) {
+            resultsContainer.classList.add('hidden')
+            return
+          }
+
+          const matches = docsPages
+            .filter((page) => {
+              const haystack = `${page.title} ${page.description}`.toLowerCase()
+              return haystack.includes(normalizedQuery)
+            })
+            .slice(0, 8)
+
+          if (matches.length === 0) {
+            resultsList.innerHTML =
+              '<li class="px-4 py-3 text-sm text-[color:var(--doc-muted)]">No matching pages found.</li>'
+            resultsContainer.classList.remove('hidden')
+            return
+          }
+
+          for (const page of matches) {
+            const item = document.createElement('li')
+            item.innerHTML = `<a href="${page.href}" class="block px-4 py-3 transition-colors hover:bg-[color:rgba(255,107,79,0.08)]"><p class="text-sm font-semibold text-[color:var(--doc-heading)]">${page.title}</p>${page.description ? `<p class="mt-1 text-xs text-[color:var(--doc-muted)]">${page.description}</p>` : ''}</a>`
+            resultsList.appendChild(item)
+          }
+
+          resultsContainer.classList.remove('hidden')
+        }
+
+        input.addEventListener('input', () => renderResults(input.value))
+        input.addEventListener('focus', () => renderResults(input.value))
+
+        document.addEventListener('keydown', (event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+            event.preventDefault()
+            input.focus()
+            input.select()
+            renderResults(input.value)
+          }
+
+          if (event.key === 'Escape') {
+            resultsContainer.classList.add('hidden')
+          }
+        })
+
+        document.addEventListener('click', (event) => {
+          if (!search.contains(event.target)) {
+            resultsContainer.classList.add('hidden')
+          }
+        })
+      })()
+    </script>
+  </body>
+</html>

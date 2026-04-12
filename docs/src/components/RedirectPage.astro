@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string
+  target: string
+}
+
+const { title, target } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={target} />
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target)
+    </script>
+    <style>
+      :root {
+        color-scheme: dark light;
+        font-family: "Source Sans 3", system-ui, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        background: #121212;
+        color: #f6f0e7;
+      }
+
+      a {
+        color: #ff6b4f;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>{target}</a>…</p>
+  </body>
+</html>

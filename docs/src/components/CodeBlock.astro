@@ -1,0 +1,7 @@
+---
+const { class: className, ...props } = Astro.props
+---
+
+<pre {...props} class:list={['doc-code-block', className]}>
+  <slot />
+</pre>

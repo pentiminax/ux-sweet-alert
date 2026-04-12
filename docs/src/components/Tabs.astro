@@ -1,0 +1,49 @@
+<div class="tabs-container my-8 overflow-hidden rounded-[1.5rem] border border-[color:var(--doc-line)] bg-[color:var(--doc-surface)]">
+  <div class="tab-labels flex overflow-x-auto border-b border-[color:var(--doc-line)] bg-[color:var(--doc-surface-soft)]"></div>
+  <div class="p-6">
+    <slot />
+  </div>
+</div>
+
+<script>
+  function initTabs() {
+    document.querySelectorAll('.tabs-container').forEach((container) => {
+      const labelContainer = container.querySelector('.tab-labels')
+      const panels = Array.from(container.querySelectorAll('.tab-panel'))
+
+      if (!labelContainer || labelContainer.children.length > 0 || panels.length === 0) {
+        return
+      }
+
+      panels.forEach((panel, index) => {
+        const label = panel.dataset.label || `Tab ${index + 1}`
+        const button = document.createElement('button')
+        button.type = 'button'
+        button.className =
+          'tab-button border-b-2 border-transparent px-5 py-3 text-sm font-semibold whitespace-nowrap text-[color:var(--doc-muted)] transition-colors hover:text-[color:var(--doc-heading)]'
+        button.textContent = label
+
+        button.addEventListener('click', () => {
+          container.querySelectorAll('.tab-button').forEach((item) => {
+            item.classList.remove('is-active')
+          })
+
+          panels.forEach((item) => item.classList.add('hidden'))
+
+          button.classList.add('is-active')
+          panel.classList.remove('hidden')
+        })
+
+        if (index === 0) {
+          button.classList.add('is-active')
+          panel.classList.remove('hidden')
+        }
+
+        labelContainer.appendChild(button)
+      })
+    })
+  }
+
+  initTabs()
+  document.addEventListener('astro:after-swap', initTabs)
+</script>

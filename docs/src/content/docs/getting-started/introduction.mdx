@@ -1,0 +1,46 @@
+---
+title: Introduction
+description: Learn what UX SweetAlert adds on top of SweetAlert2 in a Symfony application.
+sidebar:
+  label: Introduction
+  order: 1
+---
+
+# Introduction
+
+UX SweetAlert is a Symfony bundle that wraps [SweetAlert2](https://sweetalert2.github.io/) in a
+PHP-first API. You queue alerts, toasts, and input dialogs from Symfony code, then the bundled
+Stimulus controller renders them at the right time on the client.
+
+<Aside type="tip">
+  The bundle is designed for the Symfony UX ecosystem. It plays well with classic full-page
+  responses, Turbo-powered flows, HTMX responses, and Symfony UX Live Components.
+</Aside>
+
+## What it gives you
+
+- `AlertManagerInterface` helpers for success, error, warning, info, question, toast, and input flows.
+- A Twig helper, `ux_sweet_alert_scripts()`, that mounts the frontend controller with queued alerts.
+- Input abstractions such as `Text`, `Textarea`, `Select`, `Radio`, `Checkbox`, `File`, and `Range`.
+- Result-aware flows through callback URLs and the `ResultValueResolver`.
+- Live Component helpers for confirmation and input modals.
+- Automatic transport for Turbo streams and an HTMX fallback via `HX-Trigger`.
+
+## How the delivery pipeline works
+
+1. Your controller, service, or Live Component creates an alert through `AlertManagerInterface`.
+2. The bundle stores the alert in session storage and mirrors it in the request context.
+3. `ux_sweet_alert_scripts()` renders a Stimulus controller payload for page-based flows.
+4. The controller calls `Swal.fire(...)`, emits lifecycle browser events, and optionally posts a result back to Symfony.
+
+## What gets documented here
+
+- Getting started with installation and the first rendered alert.
+- Core usage patterns for alerts, toasts, and input dialogs.
+- Transport-specific behavior for Turbo, HTMX, and Live Components.
+- API reference pages for the alert model, enums, input types, and callback results.
+
+<Aside type="note">
+  Ready to install it? Continue with the [Installation](../installation/) guide, then move to [Quick
+  Start](../quick-start/).
+</Aside>
