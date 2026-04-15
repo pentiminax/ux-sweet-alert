@@ -8,13 +8,16 @@ use Pentiminax\UX\SweetAlert\Enum\InputType;
 
 final class HtmlInputType extends AbstractInputType
 {
-    private const SPECIALIZED_TYPES = [
-        InputType::Select,
-        InputType::Radio,
-        InputType::Checkbox,
-        InputType::File,
-        InputType::Range,
-        InputType::Textarea,
+    /**
+     * @var array<string, class-string>
+     */
+    private const array SPECIALIZED_CLASSES = [
+        InputType::Select->value   => Select::class,
+        InputType::Radio->value    => Radio::class,
+        InputType::Checkbox->value => Checkbox::class,
+        InputType::File->value     => File::class,
+        InputType::Range->value    => Range::class,
+        InputType::Textarea->value => Textarea::class,
     ];
 
     public function __construct(
@@ -24,10 +27,8 @@ final class HtmlInputType extends AbstractInputType
         ?string $placeholder = null,
         array $inputAttributes = [],
     ) {
-        if (\in_array($type, self::SPECIALIZED_TYPES, true)) {
-            throw new \InvalidArgumentException(\sprintf('Input type "%s" requires a specialized class. Use %s instead.', $type->value, match ($type) {
-                InputType::Select => Select::class, InputType::Radio => Radio::class, InputType::Checkbox => Checkbox::class, InputType::File => File::class, InputType::Range => Range::class, InputType::Textarea => Textarea::class, default => 'a specialized InputType class',
-            }));
+        if (isset(self::SPECIALIZED_CLASSES[$type->value])) {
+            throw new \InvalidArgumentException(\sprintf('Input type "%s" requires a specialized class. Use %s instead.', $type->value, self::SPECIALIZED_CLASSES[$type->value]));
         }
 
         parent::__construct($type, $label, $value, $placeholder, $inputAttributes);

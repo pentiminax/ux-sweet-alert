@@ -21,6 +21,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -271,19 +272,25 @@ final class AlertManagerTest extends KernelTestCase
     public function it_dispatches_queue_events_in_order_and_persists_the_mutated_alert(): void
     {
         $context = new SweetAlertContext();
-        $events  = [];
+        $events  = new \ArrayObject();
 
         $dispatcher = new class($events) implements EventDispatcherInterface {
-            private array $events;
+            /**
+             * @var \ArrayObject<int, class-string>
+             */
+            private \ArrayObject $events;
 
-            public function __construct(array &$events)
+            /**
+             * @param \ArrayObject<int, class-string> $events
+             */
+            public function __construct(\ArrayObject $events)
             {
-                $this->events = &$events;
+                $this->events = $events;
             }
 
             public function dispatch(object $event, ?string $eventName = null): object
             {
-                $this->events[] = $event::class;
+                $this->events->append($event::class);
 
                 if ($event instanceof BeforeAlertQueuedEvent) {
                     $event->getAlert()
@@ -306,7 +313,7 @@ final class AlertManagerTest extends KernelTestCase
         $this->assertSame([
             BeforeAlertQueuedEvent::class,
             AlertQueuedEvent::class,
-        ], $events);
+        ], $events->getArrayCopy());
         $this->assertCount(1, $storedAlerts);
         $this->assertSame(Theme::Dark->value, $storedAlerts[0]->jsonSerialize()['theme']);
         $this->assertTrue($storedAlerts[0]->jsonSerialize()['showCancelButton']);
@@ -317,19 +324,25 @@ final class AlertManagerTest extends KernelTestCase
     #[Test]
     public function it_dispatches_events_for_input_alerts(): void
     {
-        $events = [];
+        $events = new \ArrayObject();
 
         $dispatcher = new class($events) implements EventDispatcherInterface {
-            private array $events;
+            /**
+             * @var \ArrayObject<int, class-string>
+             */
+            private \ArrayObject $events;
 
-            public function __construct(array &$events)
+            /**
+             * @param \ArrayObject<int, class-string> $events
+             */
+            public function __construct(\ArrayObject $events)
             {
-                $this->events = &$events;
+                $this->events = $events;
             }
 
             public function dispatch(object $event, ?string $eventName = null): object
             {
-                $this->events[] = $event::class;
+                $this->events->append($event::class);
 
                 return $event;
             }
@@ -345,7 +358,27 @@ final class AlertManagerTest extends KernelTestCase
         $this->assertSame([
             BeforeAlertQueuedEvent::class,
             AlertQueuedEvent::class,
-        ], $events);
+        ], $events->getArrayCopy());
+    }
+
+    #[Test]
+    public function it_converts_flash_messages_when_auto_conversion_is_enabled(): void
+    {
+        $alertManager = $this->createAlertManager(autoConvertFlashMessages: true);
+        $session      = $alertManager->getSession();
+
+        $this->assertInstanceOf(FlashBagAwareSessionInterface::class, $session);
+
+        $alertManager->success(title: 'Stored alert');
+        $session->getFlashBag()->add('error', 'Flash alert');
+
+        $alerts = $alertManager->getAlerts();
+
+        $this->assertCount(2, $alerts);
+        $this->assertSame('Stored alert', $alerts[0]->getTitle());
+        $this->assertSame('Flash alert', $alerts[1]->getTitle());
+        $this->assertSame(\Pentiminax\UX\SweetAlert\Enum\Icon::ERROR, $alerts[1]->getIcon());
+        $this->assertSame([], $session->getFlashBag()->peekAll());
     }
 
     #[Test]
@@ -371,6 +404,7 @@ final class AlertManagerTest extends KernelTestCase
         ?AlertDefaults $defaults = null,
         ?SweetAlertContextInterface $context = null,
         ?EventDispatcherInterface $dispatcher = null,
+        bool $autoConvertFlashMessages = false,
     ): AlertManager {
         $session = new Session(new MockArraySessionStorage());
 
@@ -388,6 +422,7 @@ final class AlertManagerTest extends KernelTestCase
             flashMessageConverter: new FlashMessageConverter($alertDefaults),
             alertDefaults: $alertDefaults,
             eventDispatcher: $dispatcher ?? $this->createStub(EventDispatcherInterface::class),
+            autoConvertFlashMessages: $autoConvertFlashMessages,
         );
     }
 }

@@ -10,3 +10,5 @@
 composer.lock
 .worktrees/
 /docs/superpowers/
+.omx/
+/config/reference.php

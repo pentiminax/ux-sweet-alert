@@ -14,11 +14,15 @@ use Pentiminax\UX\SweetAlert\InputType\InputTypeInterface;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AlertManager implements AlertManagerInterface
 {
+    private const FLASH_BAG_NAME = 'flashes';
+
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly SweetAlertContextInterface $context,
@@ -60,11 +64,12 @@ class AlertManager implements AlertManagerInterface
             return $storedAlerts;
         }
 
-        $alerts = [$storedAlerts];
+        $alerts   = [$storedAlerts];
+        $flashBag = $this->getFlashBag();
 
-        foreach ($this->getSession()->getFlashBag()->peekAll() as $key => $messages) {
+        foreach ($flashBag->peekAll() as $key => $messages) {
             $alerts[] = $this->flashMessageConverter->convert($key, $messages);
-            $this->getSession()->getFlashBag()->get($key);
+            $flashBag->get($key);
         }
 
         return array_merge(...$alerts);
@@ -73,6 +78,23 @@ class AlertManager implements AlertManagerInterface
     public function getSession(): SessionInterface
     {
         return $this->requestStack->getSession();
+    }
+
+    private function getFlashBag(): FlashBagInterface
+    {
+        $session = $this->getSession();
+
+        if ($session instanceof FlashBagAwareSessionInterface) {
+            return $session->getFlashBag();
+        }
+
+        $bag = $session->getBag(self::FLASH_BAG_NAME);
+
+        if (!$bag instanceof FlashBagInterface) {
+            throw new \LogicException('The current session does not provide a flash bag.');
+        }
+
+        return $bag;
     }
 
     public function success(

@@ -7,7 +7,6 @@ namespace Pentiminax\UX\SweetAlert\Tests;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
-use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -33,9 +32,7 @@ final class FlashMessageConverterTest extends TestCase
     {
         $alerts = $this->converter->convert($key, $messages);
 
-        $this->assertIsArray($alerts);
         $this->assertCount(\count($messages), $alerts);
-        $this->assertContainsOnlyInstancesOf(Alert::class, $alerts);
 
         foreach ($alerts as $i => $alert) {
             $this->assertSame($messages[$i], $alert->getTitle());

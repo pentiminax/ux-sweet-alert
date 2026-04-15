@@ -67,7 +67,8 @@ class SweetAlertBundle extends AbstractBundle
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $builder->prependExtensionConfig('twig_component', [
-            'defaults' => [
+            'anonymous_template_directory' => 'components/',
+            'defaults'                     => [
                 'Pentiminax\UX\SweetAlert\Twig\Components\\' => [
                     'template_directory' => '@SweetAlert/components/',
                     'name_prefix'        => 'SweetAlert',
