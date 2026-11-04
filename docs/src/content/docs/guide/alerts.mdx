@@ -76,6 +76,39 @@ $alert = Alert::new(
 $alertManager->addAlert($alert);
 ```
 
+## Multi-step wizards
+
+`steps()` queues several alerts as one wizard. Each step shows SweetAlert2 progress steps (labelled
+`1`..`n` unless the alert already sets its own with `progressSteps()`) with its own step highlighted.
+
+```php
+use Pentiminax\UX\SweetAlert\Model\Alert;
+
+$alertManager->steps(
+    Alert::new(title: 'Welcome')->withCancelButton(),
+    Alert::new(title: 'Your profile')->withCancelButton(),
+    Alert::new(title: 'All set!'),
+);
+```
+
+- The steps fire in order on every transport (Twig, HX-Trigger, JSON, Turbo streams).
+- Cancelling or dismissing a step (cancel button, Esc, backdrop click, close button, timer) stops the
+  wizard: the remaining steps never open and send no callback or `closed` event.
+- A deny answer (`withDenyButton()`) is a real answer and moves on to the next step.
+- Each step's `Result` goes to its own callback and `ux-sweet-alert:<id>:closed` event; there is no
+  aggregated result for the whole wizard.
+
+Alerts queued with `addAlert()` keep their old behavior: they all show, one after another, whatever
+the user answers.
+
+<Table
+  headers={['Method', 'What it changes']}
+  rows={[
+    ['progressSteps(array $labels)', 'Labels of the progress steps shown above the title.'],
+    ['currentProgressStep(int $index)', 'Zero-based index of the highlighted step.'],
+  ]}
+/>
+
 ## Server-side defaults still apply
 
 Alerts built through `AlertManagerInterface` are created with `Alert::withDefaults(...)`, so the

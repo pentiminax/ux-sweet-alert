@@ -114,6 +114,13 @@ final class Alert implements \JsonSerializable
 
     private ?string $hideClass = null;
 
+    /** @var list<string> */
+    private array $progressSteps = [];
+
+    private ?int $currentProgressStep = null;
+
+    private ?string $wizardId = null;
+
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
         $alert = new self();
@@ -625,6 +632,44 @@ final class Alert implements \JsonSerializable
     }
 
     /**
+     * @param array<string> $labels one label per step, e.g. ['1', '2', '3']
+     */
+    public function progressSteps(array $labels): self
+    {
+        $this->progressSteps = array_values($labels);
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getProgressSteps(): array
+    {
+        return $this->progressSteps;
+    }
+
+    /**
+     * @param int $index zero-based index of the active step in progressSteps
+     */
+    public function currentProgressStep(int $index): self
+    {
+        $this->currentProgressStep = $index;
+
+        return $this;
+    }
+
+    /**
+     * Steps sharing a wizard id fire one after another, and dismissing one skips the rest. Set by AlertManager::steps().
+     */
+    public function wizard(string $wizardId): self
+    {
+        $this->wizardId = $wizardId;
+
+        return $this;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function jsonSerialize(): array
@@ -678,6 +723,9 @@ final class Alert implements \JsonSerializable
             'imageWidth'             => $this->imageWidth,
             'showClass'              => null !== $this->showClass ? ['popup' => $this->showClass] : null,
             'hideClass'              => null !== $this->hideClass ? ['popup' => $this->hideClass] : null,
+            'progressSteps'          => []   !== $this->progressSteps ? $this->progressSteps : null,
+            'currentProgressStep'    => $this->currentProgressStep,
+            'wizardId'               => $this->wizardId,
         ], static fn (mixed $value): bool => null !== $value);
 
         if ($this->toast) {

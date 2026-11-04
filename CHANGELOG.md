@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added multi-step wizards: `AlertManager::steps(Alert ...$alerts)` queues the alerts with SweetAlert2 progress steps (`Alert::progressSteps()`, `currentProgressStep()`) and a shared `wizardId`. Steps of a wizard fire in order on every transport, and dismissing one (cancel, Esc, backdrop, close, timer) skips the remaining steps; a deny answer moves on. Each step's result still goes to its own callback and `closed` event. Plain `addAlert()` queues are unchanged.
+- BC break: `AlertManagerInterface` gained `steps()`; custom implementations must add it.
 - Added `Alert::width()`, `padding()`, `background()`, `color()`, `setImageWidth()`, `showClass()` and `hideClass()`, serialized only when set. `showClass()`/`hideClass()` accept a free class string or an `Animation` enum preset (Animate.css classes; Animate.css must be loaded by the app).
 - Added `PreConfirmResponse::fromViolations()` to answer `preConfirmUrl()` requests from a Symfony Validator violation list (`422 {"message": first violation}`, else `200` with the given value or an empty `204`). `symfony/validator` is suggested, not required.
 - Added `Alert::preConfirmUrl()`: the confirmed value is POSTed as `{value}` to the URL while the modal shows a loader; a non-2xx response (e.g. `422 {"message": "..."}`) keeps the modal open with that message, a 2xx JSON body becomes `result.value`. Requests carry `X-SweetAlert-PreConfirm`, which keeps `AlertDelivery` from draining the alert queue.
