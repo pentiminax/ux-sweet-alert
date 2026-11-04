@@ -24,6 +24,7 @@ final class AlertController
         '/json'                => 'json',
         '/htmx'                => 'htmx',
         '/turbo-stream'        => 'turboStream',
+        '/turbo-frame'         => 'turboFrame',
         '/result'              => 'result',
     ];
 
@@ -77,6 +78,14 @@ final class AlertController
         return new Response('<turbo-stream action="remove" target="form"></turbo-stream>', headers: [
             'Content-Type' => 'text/vnd.turbo-stream.html',
         ]);
+    }
+
+    // No Content-Type on purpose: like AbstractController::render(), Symfony only sets it when preparing the response.
+    public function turboFrame(): Response
+    {
+        $this->alertManager->info(title: self::TITLE);
+
+        return new Response('<turbo-frame id="profile">saved</turbo-frame>');
     }
 
     public function result(Result $result): Response

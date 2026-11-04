@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fixed alerts missing from `Turbo-Frame` responses built with `render()`: `RenderAlertListener` now runs at priority -10, after Symfony sets the default `Content-Type`.
 - Added multi-step wizards: `AlertManager::steps(Alert ...$alerts)` queues the alerts with SweetAlert2 progress steps (`Alert::progressSteps()`, `currentProgressStep()`) and a shared `wizardId`. Steps of a wizard fire in order on every transport, and dismissing one (cancel, Esc, backdrop, close, timer) skips the remaining steps; a deny answer moves on. Each step's result still goes to its own callback and `closed` event. Plain `addAlert()` queues are unchanged.
 - BC break: `AlertManagerInterface` gained `steps()`; custom implementations must add it.
 - Added `Alert::width()`, `padding()`, `background()`, `color()`, `setImageWidth()`, `showClass()` and `hideClass()`, serialized only when set. `showClass()`/`hideClass()` accept a free class string or an `Animation` enum preset (Animate.css classes; Animate.css must be loaded by the app).
