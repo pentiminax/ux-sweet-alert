@@ -132,6 +132,24 @@ describe('present', () => {
         await present({title: 'x', id: 'o'}, document.body, 'myCb');
         expect(order).toEqual(['callback', 'closed']);
     });
+
+    it('still fires :closed when the callback throws', async () => {
+        (window as any).myCb = () => { throw new Error('boom'); };
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+        const closed = vi.fn();
+        document.addEventListener('ux-sweet-alert:t:closed', closed);
+        await expect(present({title: 'x', id: 't'}, document.body, 'myCb')).resolves.toEqual(confirmed);
+        expect(closed).toHaveBeenCalledTimes(1);
+        expect(error).toHaveBeenCalled();
+    });
+
+    it('dispatches on document when the origin left the DOM before the alert showed', async () => {
+        const detached = document.createElement('div');
+        const onDocument = vi.fn();
+        document.addEventListener('sweetalert:before-fire', onDocument, {once: true});
+        await present({title: 'x'}, detached);
+        expect(onDocument).toHaveBeenCalledTimes(1);
+    });
 });
 
 describe('installNavigationGuard', () => {

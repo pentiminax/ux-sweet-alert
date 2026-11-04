@@ -26,24 +26,32 @@ async function show(payload, origin, callback) {
         cancelable: true,
         detail: { swalOptions },
     });
-    origin.dispatchEvent(beforeFire);
+    connected(origin).dispatchEvent(beforeFire);
     let result;
     if (beforeFire.defaultPrevented) {
         result = { isConfirmed: false, isDenied: false, isDismissed: true, dismiss: Swal.DismissReason.cancel };
     }
     else {
         result = await Swal.fire(swalOptions);
-        origin.dispatchEvent(new CustomEvent(AFTER_FIRE_EVENT, {
+        connected(origin).dispatchEvent(new CustomEvent(AFTER_FIRE_EVENT, {
             bubbles: true,
             cancelable: false,
             detail: { result, swalOptions },
         }));
-        await runCallback(result, origin, callbackUrl, callback);
+        try {
+            await runCallback(result, connected(origin), callbackUrl, callback);
+        }
+        catch (err) {
+            console.error('[ux-sweet-alert] Alert callback failed:', err);
+        }
     }
     if (id) {
         document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${id}:closed`, { detail: result }));
     }
     return result;
+}
+function connected(origin) {
+    return origin.isConnected ? origin : document;
 }
 async function runCallback(result, origin, callbackUrl, callback) {
     if (callbackUrl) {

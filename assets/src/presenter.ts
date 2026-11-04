@@ -38,7 +38,7 @@ async function show(payload: AlertPayload, origin: HTMLElement | Document, callb
         cancelable: true,
         detail: {swalOptions},
     });
-    origin.dispatchEvent(beforeFire);
+    connected(origin).dispatchEvent(beforeFire);
 
     let result: SweetAlertResult;
 
@@ -47,13 +47,18 @@ async function show(payload: AlertPayload, origin: HTMLElement | Document, callb
     } else {
         result = await Swal.fire(swalOptions);
 
-        origin.dispatchEvent(new CustomEvent(AFTER_FIRE_EVENT, {
+        connected(origin).dispatchEvent(new CustomEvent(AFTER_FIRE_EVENT, {
             bubbles: true,
             cancelable: false,
             detail: {result, swalOptions},
         }));
 
-        await runCallback(result, origin, callbackUrl, callback);
+        // A throwing callback must not prevent the :closed event below.
+        try {
+            await runCallback(result, connected(origin), callbackUrl, callback);
+        } catch (err) {
+            console.error('[ux-sweet-alert] Alert callback failed:', err);
+        }
     }
 
     if (id) {
@@ -61,6 +66,12 @@ async function show(payload: AlertPayload, origin: HTMLElement | Document, callb
     }
 
     return result;
+}
+
+// Queued alerts survive Turbo Drive navigation; their origin may have left the DOM,
+// where dispatched events would no longer bubble to document listeners.
+function connected(origin: HTMLElement | Document): HTMLElement | Document {
+    return origin.isConnected ? origin : document;
 }
 
 async function runCallback(result: SweetAlertResult, origin: HTMLElement | Document, callbackUrl?: string, callback?: string): Promise<void> {
