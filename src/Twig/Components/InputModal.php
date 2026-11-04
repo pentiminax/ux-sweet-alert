@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
-use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\InputType;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Result;
-use Symfony\Contracts\Service\Attribute\Required;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
@@ -24,6 +21,7 @@ class InputModal
 {
     use ComponentToolsTrait;
     use DefaultActionTrait;
+    use ModalComponentTrait;
 
     #[LiveProp]
     public string $title = '';
@@ -78,17 +76,13 @@ class InputModal
 
     protected ?Result $result = null;
 
-    protected ?TranslatorInterface $translator = null;
-
-    private SweetAlertContextInterface $context;
-
     #[LiveListener('alertAdded')]
     public function alertAdded(): void
     {
         $alert = Alert::new(
             title: $this->translate($this->title),
             text: $this->translate($this->text),
-            icon: !empty($this->icon) ? Icon::from($this->icon) : null,
+            icon: '' !== $this->icon ? Icon::from($this->icon) : null,
             position: Position::CENTER,
             customClass: $this->customClass()
         );
@@ -101,50 +95,15 @@ class InputModal
             $alert->withCancelButton();
         }
 
-        $alert->input($this->inputType);
+        $this->applyInput($alert);
 
-        if (!empty($this->inputLabel)) {
-            $alert->inputLabel($this->inputLabel);
-        }
-
-        if (!empty($this->inputPlaceholder)) {
-            $alert->inputPlaceholder($this->inputPlaceholder);
-        }
-
-        if (!empty($this->inputValue)) {
-            $alert->inputValue($this->inputValue);
-        }
-
-        if (!empty($this->inputOptions)) {
-            $options = json_decode($this->inputOptions, true);
-            if (\is_array($options)) {
-                $alert->inputOptions($options);
-            }
-        }
-
-        if (!empty($this->inputAttributes)) {
-            $attrs = json_decode($this->inputAttributes, true);
-            if (\is_array($attrs)) {
-                $alert->inputAttributes($attrs);
-            }
-        }
-
-        if (!empty($this->validationMessage)) {
-            $alert->validationMessage($this->validationMessage);
-        }
-
-        if ($this->returnInputValueOnDeny) {
-            $alert->returnInputValueOnDeny();
-        }
-
-        $this->context->addAlert($alert);
-
-        $this->dispatchBrowserEvent('ux-sweet-alert:alert:added', [
-            'alert'    => $alert,
-            'callback' => $this->callback,
-        ]);
+        $this->queueAlert($alert);
     }
 
+    /**
+     * @param array<string, mixed> $result
+     * @param array<string, mixed> $args
+     */
     #[LiveAction]
     public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): mixed
     {
@@ -152,10 +111,7 @@ class InputModal
 
         $this->onResult($this->result, $args);
 
-        $this->dispatchBrowserEvent('ux-sweet-alert:callback', [
-            'result' => $result,
-            'args'   => $args,
-        ]);
+        $this->dispatchCallback($result, $args);
 
         return null;
     }
@@ -164,36 +120,32 @@ class InputModal
     {
     }
 
-    #[Required]
-    public function setContext(SweetAlertContextInterface $context): void
+    private function applyInput(Alert $alert): void
     {
-        $this->context = $context;
-    }
+        $alert->input($this->inputType);
 
-    #[Required]
-    public function setTranslator(?TranslatorInterface $translator): void
-    {
-        $this->translator = $translator;
-    }
-
-    public function isDisabled(): bool
-    {
-        return $this->disabled;
-    }
-
-    private function customClass(): array
-    {
-        if (empty($this->customClass)) {
-            return [];
+        if ('' !== $this->inputLabel) {
+            $alert->inputLabel($this->inputLabel);
         }
 
-        $customClass = json_decode($this->customClass, true);
+        if ('' !== $this->inputPlaceholder) {
+            $alert->inputPlaceholder($this->inputPlaceholder);
+        }
 
-        return \is_array($customClass) ? $customClass : [];
-    }
+        // '0' is a legitimate value, so compare against '' instead of using empty().
+        if ('' !== $this->inputValue) {
+            $alert->inputValue($this->inputValue);
+        }
 
-    private function translate(string $message): string
-    {
-        return $this->translator?->trans($message) ?? $message;
+        $alert->inputOptions($this->decodeJsonArray($this->inputOptions));
+        $alert->inputAttributes($this->decodeJsonArray($this->inputAttributes));
+
+        if ('' !== $this->validationMessage) {
+            $alert->validationMessage($this->validationMessage);
+        }
+
+        if ($this->returnInputValueOnDeny) {
+            $alert->returnInputValueOnDeny();
+        }
     }
 }

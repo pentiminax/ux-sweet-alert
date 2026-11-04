@@ -81,6 +81,29 @@ final class InputModalTest extends TestCase
     }
 
     #[Test]
+    public function it_keeps_zero_as_input_value(): void
+    {
+        $component = new InputModal();
+        $component->setLiveResponder(new LiveResponder());
+        $component->setTranslator(null);
+        $component->inputType  = 'number';
+        $component->inputValue = '0';
+
+        $context = $this->createMock(SweetAlertContextInterface::class);
+        $context
+            ->expects($this->once())
+            ->method('addAlert')
+            ->with($this->callback(static function (object $alert): bool {
+                self::assertSame('0', $alert->jsonSerialize()['inputValue']);
+
+                return true;
+            }));
+        $component->setContext($context);
+
+        $component->alertAdded();
+    }
+
+    #[Test]
     public function it_ignores_invalid_json_in_custom_class_input_options_and_attributes(): void
     {
         $component = new InputModal();
