@@ -107,7 +107,7 @@ The bundle also ships `SweetAlert:ConfirmButton` and `SweetAlert:InputModal` Liv
 
 ## Run the demo
 
-The `demo/` folder is a Symfony app that shows every feature next to the code behind it. It uses the bundle from this checkout, so your changes in `src/` show up on reload.
+The `demo/` folder is a Symfony 8.1 app (PHP 8.4+) that shows every feature next to the code behind it. It uses the bundle from this checkout, so your changes in `src/` show up on reload.
 
 ```bash
 cd demo
