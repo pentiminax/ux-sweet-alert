@@ -67,12 +67,13 @@ class default_1 extends Controller {
         }
         this.handleAlertAdded = async (e) => {
             const detail = e.detail;
-            const alert = detail.alert;
-            if (alert.id) {
-                delete alert.id;
+            for (const alert of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
+                if (alert.id) {
+                    delete alert.id;
+                }
+                const result = await fireAlert(alert, e.target);
+                await resolveCallback(detail.callback, result, e.target);
             }
-            const result = await fireAlert(alert, e.target);
-            await resolveCallback(detail.callback, result, e.target);
         };
         document.addEventListener(ALERT_ADDED_EVENT, this.handleAlertAdded);
     }

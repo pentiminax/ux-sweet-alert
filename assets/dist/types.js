@@ -1,3 +1,4 @@
+export const JSON_KEY = 'ux_sweet_alert';
 export const ALERT_ADDED_EVENT = 'ux-sweet-alert:alert:added';
 export const ALERT_CLOSED_EVENT_PREFIX = 'ux-sweet-alert:';
 export const CALLBACK_RESPONSE_EVENT = 'ux-sweet-alert:callback:response';

@@ -1,10 +1,5 @@
 import {injectHiddenHtml} from './dom-utils.js';
-import {ALERT_ADDED_EVENT, type AlertDetail} from './types.js';
-
-interface HxTriggers {
-    [ALERT_ADDED_EVENT]?: AlertDetail;
-    [key: string]: unknown;
-}
+import {ALERT_ADDED_EVENT, JSON_KEY} from './types.js';
 
 export class FetchInterceptor {
     private originalFetch: typeof window.fetch | null = null;
@@ -44,30 +39,12 @@ export class FetchInterceptor {
 
         if (contentType.includes('application/json')) {
             const data = await response.clone().json();
-            if (data.alerts) {
-                injectHiddenHtml(data.alerts);
-            }
-        }
-
-        this.dispatchHxTriggerAlerts(response);
-    }
-
-    private dispatchHxTriggerAlerts(response: Response): void {
-        const header = response.headers.get('HX-Trigger');
-        if (!header) {
-            return;
-        }
-
-        try {
-            const triggers: HxTriggers = JSON.parse(header);
-            const alertEvent = triggers[ALERT_ADDED_EVENT];
-            if (alertEvent) {
+            const alerts = data !== null && typeof data === 'object' ? data[JSON_KEY] : undefined;
+            if (Array.isArray(alerts)) {
                 document.dispatchEvent(new CustomEvent(ALERT_ADDED_EVENT, {
-                    detail: alertEvent,
+                    detail: {alerts},
                 }));
             }
-        } catch {
-            // Not valid JSON, ignore
         }
     }
 }

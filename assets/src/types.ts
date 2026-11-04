@@ -1,7 +1,8 @@
 import type {SweetAlertOptions} from 'sweetalert2';
 
 export interface AlertDetail {
-    alert: SweetAlertOptions & { id?: string };
+    alert?: SweetAlertOptions & { id?: string };
+    alerts?: (SweetAlertOptions & { id?: string })[];
     callback?: string;
 }
 
@@ -10,6 +11,7 @@ export type ToastValue = SweetAlertOptions & {
     callbackUrl?: string;
 };
 
+export const JSON_KEY = 'ux_sweet_alert';
 export const ALERT_ADDED_EVENT = 'ux-sweet-alert:alert:added';
 export const ALERT_CLOSED_EVENT_PREFIX = 'ux-sweet-alert:';
 export const CALLBACK_RESPONSE_EVENT = 'ux-sweet-alert:callback:response';
