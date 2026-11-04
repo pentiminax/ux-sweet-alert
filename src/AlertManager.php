@@ -26,7 +26,7 @@ class AlertManager implements AlertManagerInterface
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly SweetAlertContextInterface $context,
-        private readonly FlashMessageConverter $flashMessageConverter,
+        private readonly FlashMessageConverterInterface $flashMessageConverter,
         private readonly AlertDefaults $alertDefaults,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly bool $autoConvertFlashMessages = false,
@@ -56,7 +56,6 @@ class AlertManager implements AlertManagerInterface
     {
         $session = $this->getSession();
 
-        // Consume alerts from session attribute (consume-on-read)
         $storedAlerts = $session->get(AlertManagerInterface::ALERT_STORAGE_KEY, []);
         $session->remove(AlertManagerInterface::ALERT_STORAGE_KEY);
 
@@ -202,10 +201,7 @@ class AlertManager implements AlertManagerInterface
         ?int $timer = null,
         bool $timerProgressBar = false,
     ): Alert {
-        $id = empty($id) ? uniqid(more_entropy: true) : $id;
-
-        // Apply toast defaults if toast mode
-        if ($toast && Position::CENTER === $position) {
+        if ($this->isToastAtDefaultPosition($toast, $position)) {
             $position = Position::BOTTOM_END;
         }
 
@@ -258,6 +254,11 @@ class AlertManager implements AlertManagerInterface
         $this->addAlert($alert);
 
         return $alert;
+    }
+
+    private function isToastAtDefaultPosition(bool $toast, Position $position): bool
+    {
+        return $toast && Position::CENTER === $position;
     }
 
     private function createAndAddAlert(

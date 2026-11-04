@@ -20,7 +20,7 @@ final class Alert implements \JsonSerializable
 
     private Position $position = Position::CENTER;
 
-    private string $confirmButtonText = 'OK';
+    private string $confirmButtonText = AlertDefaults::CONFIRM_BUTTON_TEXT;
 
     private bool $showConfirmButton = true;
 
@@ -40,15 +40,16 @@ final class Alert implements \JsonSerializable
 
     private bool $allowEscapeKey = true;
 
-    private string $confirmButtonColor = '#3085d6';
+    private string $confirmButtonColor = AlertDefaults::CONFIRM_BUTTON_COLOR;
 
-    private string $cancelButtonColor = '#aaa';
+    private string $cancelButtonColor = AlertDefaults::CANCEL_BUTTON_COLOR;
 
-    private string $denyButtonColor = '#dd6b55';
+    private string $denyButtonColor = AlertDefaults::DENY_BUTTON_COLOR;
 
+    /** @var array<string, string> */
     private array $customClass = [];
 
-    private string $cancelButtonText = 'Cancel';
+    private string $cancelButtonText = AlertDefaults::CANCEL_BUTTON_TEXT;
 
     private ?string $html = null;
 
@@ -82,8 +83,10 @@ final class Alert implements \JsonSerializable
 
     private ?string $inputValue = null;
 
+    /** @var array<string, scalar> */
     private array $inputAttributes = [];
 
+    /** @var array<string, string> */
     private array $inputOptions = [];
 
     private bool $returnInputValueOnDeny = false;
@@ -100,7 +103,7 @@ final class Alert implements \JsonSerializable
     {
         $alert = new self();
 
-        $alert->id          = empty($id) ? uniqid(more_entropy: true) : $id;
+        $alert->id          = self::resolveId($id);
         $alert->title       = $title;
         $alert->text        = $text;
         $alert->icon        = $icon;
@@ -122,7 +125,7 @@ final class Alert implements \JsonSerializable
     ): self {
         $alert = new self();
 
-        $alert->id                 = empty($id) ? uniqid(more_entropy: true) : $id;
+        $alert->id                 = self::resolveId($id);
         $alert->title              = $title;
         $alert->text               = $text;
         $alert->icon               = $icon;
@@ -461,6 +464,9 @@ final class Alert implements \JsonSerializable
         return $this->inputLabel;
     }
 
+    /**
+     * @param array<string, scalar> $inputAttributes
+     */
     public function inputAttributes(array $inputAttributes): self
     {
         $this->inputAttributes = $inputAttributes;
@@ -468,11 +474,17 @@ final class Alert implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return array<string, scalar>
+     */
     public function getInputAttributes(): array
     {
         return $this->inputAttributes;
     }
 
+    /**
+     * @param array<string, string> $inputOptions
+     */
     public function inputOptions(array $inputOptions): self
     {
         $this->inputOptions = $inputOptions;
@@ -480,6 +492,9 @@ final class Alert implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getInputOptions(): array
     {
         return $this->inputOptions;
@@ -527,6 +542,9 @@ final class Alert implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         $data = [
@@ -564,17 +582,11 @@ final class Alert implements \JsonSerializable
             'validationMessage'      => $this->validationMessage,
         ];
 
-        if (null !== $this->callbackUrl) {
-            $data['callbackUrl'] = $this->callbackUrl;
-        }
-
-        if (null !== $this->preConfirmUrl) {
-            $data['preConfirmUrl'] = $this->preConfirmUrl;
-        }
-
-        if (null !== $this->preConfirmErrorMessage) {
-            $data['preConfirmErrorMessage'] = $this->preConfirmErrorMessage;
-        }
+        $data += array_filter([
+            'callbackUrl'            => $this->callbackUrl,
+            'preConfirmUrl'          => $this->preConfirmUrl,
+            'preConfirmErrorMessage' => $this->preConfirmErrorMessage,
+        ], static fn (?string $value): bool => null !== $value);
 
         if ($this->toast) {
             $data['toast']            = true;
@@ -588,5 +600,10 @@ final class Alert implements \JsonSerializable
         }
 
         return $data;
+    }
+
+    private static function resolveId(string $id): string
+    {
+        return '' === $id ? uniqid(more_entropy: true) : $id;
     }
 }

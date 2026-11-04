@@ -6,13 +6,14 @@ namespace Pentiminax\UX\SweetAlert;
 
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
+use Pentiminax\UX\SweetAlert\Model\AlertDefaults;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class SweetAlertBundle extends AbstractBundle
+final class SweetAlertBundle extends AbstractBundle
 {
     public function configure(DefinitionConfigurator $definition): void
     {
@@ -26,12 +27,12 @@ class SweetAlertBundle extends AbstractBundle
                             ->values(array_map(static fn (Position $position) => $position->value, Position::cases()))
                             ->defaultValue('center')
                         ->end()
-                        ->scalarNode('confirmButtonColor')->defaultValue('#3085d6')->end()
-                        ->scalarNode('cancelButtonColor')->defaultValue('#aaa')->end()
-                        ->scalarNode('denyButtonColor')->defaultValue('#dd6b55')->end()
-                        ->scalarNode('confirmButtonText')->defaultValue('OK')->end()
-                        ->scalarNode('cancelButtonText')->defaultValue('Cancel')->end()
-                        ->scalarNode('denyButtonText')->defaultValue('No')->end()
+                        ->scalarNode('confirmButtonColor')->defaultValue(AlertDefaults::CONFIRM_BUTTON_COLOR)->end()
+                        ->scalarNode('cancelButtonColor')->defaultValue(AlertDefaults::CANCEL_BUTTON_COLOR)->end()
+                        ->scalarNode('denyButtonColor')->defaultValue(AlertDefaults::DENY_BUTTON_COLOR)->end()
+                        ->scalarNode('confirmButtonText')->defaultValue(AlertDefaults::CONFIRM_BUTTON_TEXT)->end()
+                        ->scalarNode('cancelButtonText')->defaultValue(AlertDefaults::CANCEL_BUTTON_TEXT)->end()
+                        ->scalarNode('denyButtonText')->defaultValue(AlertDefaults::DENY_BUTTON_TEXT)->end()
                         ->booleanNode('showConfirmButton')->defaultTrue()->end()
                         ->booleanNode('showCancelButton')->defaultFalse()->end()
                         ->booleanNode('showDenyButton')->defaultFalse()->end()
