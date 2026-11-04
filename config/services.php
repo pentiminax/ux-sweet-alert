@@ -6,6 +6,7 @@ use Pentiminax\UX\SweetAlert\AlertManager;
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContext;
 use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
+use Pentiminax\UX\SweetAlert\Delivery\AlertDelivery;
 use Pentiminax\UX\SweetAlert\EventListener\RenderAlertListener;
 use Pentiminax\UX\SweetAlert\DataCollector\SweetAlertDataCollector;
 use Pentiminax\UX\SweetAlert\FlashMessageConverter;
@@ -47,9 +48,16 @@ return static function (ContainerConfigurator $container) {
         ->private();
 
     $services
+        ->set('sweet_alert.alert_delivery', AlertDelivery::class)
+        ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
+        ->arg('$twig', new Reference('twig'))
+        ->arg('$requestStack', new Reference('request_stack'))
+        ->private();
+
+    $services
         ->set('sweet_alert.twig_extension', AlertExtension::class)
         ->arg('$twig', new Reference('twig'))
-        ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
+        ->arg('$delivery', new Reference('sweet_alert.alert_delivery'))
         ->tag('twig.extension')
         ->private();
 
@@ -111,8 +119,7 @@ return static function (ContainerConfigurator $container) {
 
     $services
         ->set(RenderAlertListener::class)
-        ->arg('$alertManager', new Reference('sweet_alert.alert_manager'))
-        ->arg('$twig', new Reference('twig'))
+        ->arg('$delivery', new Reference('sweet_alert.alert_delivery'))
         ->tag('kernel.event_listener', ['event' => 'kernel.response']);
 
     $services

@@ -15,14 +15,18 @@ a `<turbo-stream action="alert">` fragment.
 
 For main requests that are not redirects:
 
-- alerts are read from the manager
-- the listener renders `@SweetAlert/turbo/alert.html.twig`
-- HTML responses get the generated Turbo stream appended to their content
-- JSON responses receive an extra `alerts` field containing the Turbo stream payload
+- `text/vnd.turbo-stream.html` responses, and `text/html` responses to `Turbo-Frame` requests, get
+  the rendered `@SweetAlert/turbo/alert.html.twig` streams (appended for turbo-stream responses,
+  inserted inside the requested `<turbo-frame>` for frame responses; if the frame is not in the
+  response, the alerts stay queued)
+- JSON object responses receive an extra `ux_sweet_alert` field containing an array of alert objects (not
+  set if the key already exists)
+- other responses are left alone and the alerts stay queued for the next displayable response
 
-## HTML responses
+## Turbo-stream and Turbo-Frame responses
 
-For a classic HTML response, the generated stream is appended directly to the response body:
+On turbo-stream responses the generated stream is appended to the body; on `Turbo-Frame` responses it
+is inserted right after the opening tag of the requested frame:
 
 ```html
 <turbo-stream action="alert">
@@ -36,10 +40,10 @@ The bundled Stimulus controller wraps `window.fetch` when Turbo stream support i
 detects two cases:
 
 - `text/vnd.turbo-stream.html` responses
-- `application/json` responses containing an `alerts` field
+- `application/json` responses containing a `ux_sweet_alert` array
 
-In both cases, the controller injects the hidden stream markup into the DOM so Turbo can execute the
-custom `alert` action.
+Turbo streams are injected into the DOM so Turbo can execute the custom `alert` action; JSON alerts
+are fired directly.
 
 ## Minimal controller example
 
@@ -58,7 +62,7 @@ public function __invoke(AlertManagerInterface $alertManager): JsonResponse
 }
 ```
 
-The resulting JSON response still contains your original payload, plus the extra `alerts` key added
+The resulting JSON response still contains your original payload, plus the extra `ux_sweet_alert` key added
 by the listener.
 
 ## Why it matters
