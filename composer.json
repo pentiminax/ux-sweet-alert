@@ -42,7 +42,11 @@
         "symfony/framework-bundle": "^7.0|^8.0",
         "symfony/phpunit-bridge": "^7.0|^8.0",
         "symfony/twig-bundle": "^7.0|^8.0",
+        "symfony/validator": "^7.0|^8.0",
         "symfony/var-dumper": "^7.0|^8.0"
+    },
+    "suggest": {
+        "symfony/validator": "To answer preConfirmUrl() requests from constraint violations with PreConfirmResponse"
     },
     "conflict": {
         "symfony/flex": "<1.13"

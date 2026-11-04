@@ -133,3 +133,37 @@ public function check(Request $request): JsonResponse
 - A 2xx JSON response closes the modal and becomes `result.value`, which `callbackUrl()` also receives. A 2xx response that is not JSON keeps the user's input as `result.value`, and a JSON `false` body is delivered as `null` (SweetAlert2 treats `false` as a refusal).
 - Only the confirm button triggers the request; outside click and Esc are blocked while it runs.
 - The endpoint must accept POST only and enforce its own access control: there is no CSRF token.
+
+### Validating with Symfony Constraints
+
+With `symfony/validator` installed (`composer require symfony/validator`), `PreConfirmResponse::fromViolations()`
+turns a violation list into the response the modal expects. Any constraint works, including ones that need the
+database such as `UniqueEntity` when you validate an object.
+
+```php
+use Pentiminax\UX\SweetAlert\Http\PreConfirmResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+#[Route('/username/check', methods: ['POST'])]
+public function check(Request $request, ValidatorInterface $validator): Response
+{
+    $name = $request->getPayload()->get('value');
+
+    $violations = $validator->validate($name, [
+        new Assert\NotBlank(),
+        new Assert\Length(min: 3, max: 20),
+    ]);
+
+    return PreConfirmResponse::fromViolations($violations, ['username' => $name]);
+}
+```
+
+- With violations: `422 {"message": "..."}` holding the first violation's message, so the modal stays open and shows it.
+- Without violations: `200` with the second argument as JSON (it becomes `result.value`; `false` arrives as `null`),
+  or an empty `204` when it is omitted or `null`, which keeps the user's input as `result.value`.
+
+Constraints are only checked on the server: they are not translated to HTML input attributes. For instant
+client-side checks, set them yourself with `inputAttributes()` (e.g. `required`, `minlength`) and `validationMessage()`.
