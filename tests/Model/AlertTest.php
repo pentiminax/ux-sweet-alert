@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pentiminax\UX\SweetAlert\Tests\Model;
 
+use Pentiminax\UX\SweetAlert\Enum\Animation;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
@@ -313,5 +314,41 @@ final class AlertTest extends TestCase
         $this->assertSame('/check', $data['preConfirmUrl']);
         $this->assertSame('Oops', $data['preConfirmErrorMessage']);
         $this->assertArrayNotHasKey('preConfirmErrorMessage', Alert::new(title: 'Test')->preConfirmUrl('/check')->jsonSerialize());
+    }
+
+    #[Test]
+    public function it_serializes_visual_options_only_when_set(): void
+    {
+        $data = Alert::new(title: 'Test')
+            ->width('32rem')
+            ->padding(0)
+            ->background('#fff url(/images/trees.png)')
+            ->color('#716add')
+            ->setImageWidth(400)
+            ->showClass(Animation::FadeInUp)
+            ->hideClass('my-hide')
+            ->jsonSerialize();
+
+        $this->assertSame('32rem', $data['width']);
+        $this->assertSame(0, $data['padding']);
+        $this->assertSame('#fff url(/images/trees.png)', $data['background']);
+        $this->assertSame('#716add', $data['color']);
+        $this->assertSame(400, $data['imageWidth']);
+        $this->assertSame(['popup' => 'animate__animated animate__fadeInUp animate__faster'], $data['showClass']);
+        $this->assertSame(['popup' => 'my-hide'], $data['hideClass']);
+
+        $defaults = Alert::new(title: 'Test')->jsonSerialize();
+        foreach (['width', 'padding', 'background', 'color', 'imageWidth', 'showClass', 'hideClass'] as $key) {
+            $this->assertArrayNotHasKey($key, $defaults);
+        }
+    }
+
+    #[Test]
+    public function it_keeps_visual_options_for_toasts(): void
+    {
+        $data = Alert::new(title: 'Test')->asToast()->showClass(Animation::FadeInDown)->width(300)->jsonSerialize();
+
+        $this->assertSame(['popup' => Animation::FadeInDown->value], $data['showClass']);
+        $this->assertSame(300, $data['width']);
     }
 }

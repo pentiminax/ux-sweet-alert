@@ -52,13 +52,52 @@ $alertManager
 
 You can also pass a `customClass` array when creating alerts through the manager helpers.
 
+## Popup size and colors
+
+```php
+$alertManager
+    ->info('Welcome back')
+    ->width('32rem')          // int (px) or any CSS length
+    ->padding('3em')
+    ->background('#fff url(/images/trees.png)')
+    ->color('#716add');
+```
+
+These keys are only sent when set, so SweetAlert2 and theme defaults apply otherwise.
+
+## Show and hide animations
+
+`showClass()` and `hideClass()` set the CSS classes put on the popup when it opens and closes. Pass
+an `Animation` preset or any class string:
+
+```php
+use Pentiminax\UX\SweetAlert\Enum\Animation;
+
+$alertManager
+    ->success('Saved')
+    ->showClass(Animation::FadeInUp)
+    ->hideClass(Animation::FadeOutDown);
+
+// Serialized as {"showClass": {"popup": "animate__animated animate__fadeInUp animate__faster"}, ...}
+```
+
+Presets: `FadeIn`, `FadeOut`, `FadeInUp`, `FadeOutDown`, `FadeInDown`, `FadeOutUp`, `ZoomIn`, `ZoomOut`.
+
+<Aside type="caution">
+  The presets are [Animate.css](https://animate.style/) classes. The bundle does not ship Animate.css:
+  load it yourself (e.g. `importmap:require animate.css` or a CDN link), otherwise the popup appears
+  without animation. Only the `popup` classes are set; SweetAlert2 keeps its default backdrop and
+  icon classes. `withoutAnimation()` disables SweetAlert2 animations and overrides `showClass()` /
+  `hideClass()`.
+</Aside>
+
 ## Content-level styling options
 
 Beyond the theme name, the alert model supports:
 
 - `html(...)` for rich HTML content
 - `setFooter(...)` for footer text or markup
-- `setImageUrl(...)`, `setImageAlt(...)`, and `setImageHeight(...)`
+- `setImageUrl(...)`, `setImageAlt(...)`, `setImageHeight(...)`, and `setImageWidth(...)`
 - `setDraggable(...)` and `setTopLayer(...)`
 
 ## Styling lifecycle events
