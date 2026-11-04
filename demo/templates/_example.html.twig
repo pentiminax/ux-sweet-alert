@@ -1,0 +1,12 @@
+{# One demo card: a button that runs an Examples closure, next to that closure's body. #}
+{% set label = label|default(example|replace({'-': ' '})|capitalize) %}
+<section class="card grid gap-5 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:items-start">
+    <div>
+        <h2 class="font-display text-lg font-semibold text-heading">{{ label }}</h2>
+        {% if description|default %}<p class="mt-1 text-sm text-muted">{{ description }}</p>{% endif %}
+        <form method="post" action="{{ path('fire', {page: page_key, example: example}) }}" class="mt-4">
+            <button class="btn btn-primary">Try it</button>
+        </form>
+    </div>
+    <pre class="code"><code class="language-php">{{ example_code(page_key, example) }}</code></pre>
+</section>

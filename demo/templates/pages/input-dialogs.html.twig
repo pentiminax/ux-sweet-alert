@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block intro %}
+    <code class="font-mono text-sm text-heading">input()</code> takes an input type object. With a <code class="font-mono text-sm text-heading">callback</code> URL,
+    the result is POSTed back and resolved as a <code class="font-mono text-sm text-heading">Result</code> argument. This controller sends it back to you as a toast.
+{% endblock %}
+
+{% block content %}
+    {% set descriptions = {file: 'A File object cannot be JSON-encoded, so the callback receives an empty value. Upload files with a regular form.'} %}
+
+    <section class="card">
+        <h2 class="font-display text-lg font-semibold text-heading">The callback endpoint</h2>
+        <p class="mt-1 text-sm text-muted">Shared by every example below.</p>
+        <pre class="code mt-4"><code class="language-php">{{ method_code('App\\Controller\\DemoController::result') }}</code></pre>
+    </section>
+
+    {% for example in demo_examples('input-dialogs')|filter(e => e != 'server-validation') %}
+        {{ include('_example.html.twig', {page_key: 'input-dialogs', description: descriptions[example] ?? null}) }}
+    {% endfor %}
+
+    {{ include('_example.html.twig', {
+        page_key: 'input-dialogs',
+        example: 'server-validation',
+        description: 'preConfirmUrl() validates on the server while the modal stays open. Try "ab".',
+    }) }}
+    <section class="card">
+        <h2 class="font-display text-lg font-semibold text-heading">The validation endpoint</h2>
+        <pre class="code mt-4"><code class="language-php">{{ method_code('App\\Controller\\DemoController::checkUsername') }}</code></pre>
+    </section>
+{% endblock %}

@@ -21,6 +21,18 @@ use PHPUnit\Framework\TestCase;
 final class AlertTest extends TestCase
 {
     #[Test]
+    public function it_leaves_button_colors_to_the_theme_unless_set(): void
+    {
+        $data         = Alert::new(title: 'title')->theme(Theme::Bootstrap5)->jsonSerialize();
+        $fromDefaults = Alert::withDefaults(new AlertDefaults(), title: 'title')->jsonSerialize();
+
+        foreach (['confirmButtonColor', 'cancelButtonColor', 'denyButtonColor'] as $key) {
+            $this->assertArrayNotHasKey($key, $data);
+            $this->assertArrayNotHasKey($key, $fromDefaults);
+        }
+    }
+
+    #[Test]
     public function it_creates_alert_with_all_fluent_options(): void
     {
         $alert = Alert::new(

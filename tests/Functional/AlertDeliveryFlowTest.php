@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pentiminax\UX\SweetAlert\Tests\Functional;
 
 use Pentiminax\UX\SweetAlert\Delivery\AlertDelivery;
+use Pentiminax\UX\SweetAlert\Tests\Fixtures\DummyTurboBundle;
 use Pentiminax\UX\SweetAlert\Tests\Functional\App\AlertController;
 use Pentiminax\UX\SweetAlert\Tests\Functional\App\AlertQueuedRecorder;
 use PHPUnit\Framework\Attributes\Test;
@@ -114,6 +115,21 @@ final class AlertDeliveryFlowTest extends FunctionalTestCase
         $content = (string) $client->getResponse()->getContent();
         self::assertStringStartsWith('<turbo-stream action="remove" target="form"></turbo-stream>', $content);
         self::assertStringContainsString('<turbo-stream action="alert">', $content);
+        self::assertStringContainsString(AlertController::TITLE, $content);
+    }
+
+    #[Test]
+    public function it_inserts_an_alert_stream_in_the_requested_turbo_frame_of_a_rendered_response(): void
+    {
+        if (!class_exists('Symfony\UX\Turbo\TurboBundle')) {
+            class_alias(DummyTurboBundle::class, 'Symfony\UX\Turbo\TurboBundle');
+        }
+        $client = self::createAppClient();
+
+        $client->request('GET', '/turbo-frame', server: ['HTTP_TURBO_FRAME' => 'profile']);
+
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringStartsWith('<turbo-frame id="profile"><turbo-stream action="alert">', $content);
         self::assertStringContainsString(AlertController::TITLE, $content);
     }
 

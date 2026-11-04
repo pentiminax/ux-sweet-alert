@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block intro %}
+    Inject <code class="font-mono text-sm text-heading">AlertManagerInterface</code>, call a helper, return any response.
+    The alert is stored in the session and fires on the next page render.
+{% endblock %}
+
+{% block content %}
+    {% for example in demo_examples('alerts') %}
+        {{ include('_example.html.twig', {page_key: 'alerts'}) }}
+    {% endfor %}
+{% endblock %}

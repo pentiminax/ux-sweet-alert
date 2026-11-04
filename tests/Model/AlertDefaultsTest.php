@@ -120,9 +120,9 @@ final class AlertDefaultsTest extends TestCase
     private function assertCommonDefaults(AlertDefaults $defaults): void
     {
         $this->assertSame(Position::CENTER, $defaults->position);
-        $this->assertSame('#3085d6', $defaults->confirmButtonColor);
-        $this->assertSame('#aaa', $defaults->cancelButtonColor);
-        $this->assertSame('#dd6b55', $defaults->denyButtonColor);
+        $this->assertNull($defaults->confirmButtonColor);
+        $this->assertNull($defaults->cancelButtonColor);
+        $this->assertNull($defaults->denyButtonColor);
         $this->assertSame('OK', $defaults->confirmButtonText);
         $this->assertSame('Cancel', $defaults->cancelButtonText);
         $this->assertSame('No', $defaults->denyButtonText);

@@ -41,11 +41,11 @@ final class Alert implements \JsonSerializable
 
     private bool $allowEscapeKey = true;
 
-    private string $confirmButtonColor = AlertDefaults::CONFIRM_BUTTON_COLOR;
+    private ?string $confirmButtonColor = null;
 
-    private string $cancelButtonColor = AlertDefaults::CANCEL_BUTTON_COLOR;
+    private ?string $cancelButtonColor = null;
 
-    private string $denyButtonColor = AlertDefaults::DENY_BUTTON_COLOR;
+    private ?string $denyButtonColor = null;
 
     /** @var array<string, string> */
     private array $customClass = [];
@@ -687,9 +687,6 @@ final class Alert implements \JsonSerializable
             'animation'              => $this->animation,
             'theme'                  => $this->theme->value,
             'allowEscapeKey'         => $this->allowEscapeKey,
-            'confirmButtonColor'     => $this->confirmButtonColor,
-            'cancelButtonColor'      => $this->cancelButtonColor,
-            'denyButtonColor'        => $this->denyButtonColor,
             'position'               => $this->position->value,
             'customClass'            => $this->customClass,
             'cancelButtonText'       => $this->cancelButtonText,
@@ -716,6 +713,9 @@ final class Alert implements \JsonSerializable
             'callbackUrl'            => $this->callbackUrl,
             'preConfirmUrl'          => $this->preConfirmUrl,
             'preConfirmErrorMessage' => $this->preConfirmErrorMessage,
+            'confirmButtonColor'     => $this->confirmButtonColor,
+            'cancelButtonColor'      => $this->cancelButtonColor,
+            'denyButtonColor'        => $this->denyButtonColor,
             'width'                  => $this->width,
             'padding'                => $this->padding,
             'background'             => $this->background,

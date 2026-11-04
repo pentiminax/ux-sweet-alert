@@ -35,7 +35,12 @@ $alertManager
 
 The package metadata exposes SweetAlert2 theme files in `assets/package.json`, but the optional
 theme styles are not auto-enabled by default. If you want a framework theme, make sure the matching
-SweetAlert2 CSS is imported by your asset pipeline.
+SweetAlert2 CSS is imported by your asset pipeline. With AssetMapper, set the theme file to `true` under
+`autoimport` in `assets/controllers.json` and add it to the import map:
+
+```bash
+php bin/console importmap:require sweetalert2/themes/bootstrap-5.css
+```
 
 ## Fine-grained styling
 
@@ -49,6 +54,9 @@ $alertManager
     ->denyButtonColor('#f4b400')
     ->theme(Theme::Dark);
 ```
+
+Button colors are only sent when you set them, here or in the `defaults` config: otherwise the theme
+styles the buttons. A color you set wins over the theme.
 
 You can also pass a `customClass` array when creating alerts through the manager helpers.
 

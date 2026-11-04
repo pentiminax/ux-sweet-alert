@@ -120,7 +120,8 @@ return static function (ContainerConfigurator $container) {
     $services
         ->set(RenderAlertListener::class)
         ->arg('$delivery', new Reference('sweet_alert.alert_delivery'))
-        ->tag('kernel.event_listener', ['event' => 'kernel.response']);
+        // After ResponseListener (0), which sets the default Content-Type the transport checks rely on; before SessionListener (-1000) saves the drained queue.
+        ->tag('kernel.event_listener', ['event' => 'kernel.response', 'priority' => -10]);
 
     $services
         ->set(ResultValueResolver::class)

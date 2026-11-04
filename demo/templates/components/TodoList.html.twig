@@ -1,0 +1,32 @@
+<div {{ attributes }}>
+    <ul class="divide-y divide-line">
+        {% for id, label in this.todos %}
+            <li class="flex flex-wrap items-center justify-between gap-3 py-3">
+                <span class="text-heading">{{ label }}</span>
+                <span class="flex gap-2">
+                    <twig:RenameTodoModal
+                        key="rename-{{ id }}"
+                        data-live-item-id-param="{{ id }}"
+                        class="btn btn-secondary"
+                        title="Rename this item"
+                        inputLabel="New label"
+                        validationMessage="A label is required."
+                        confirmButtonText="Rename"
+                    >Rename</twig:RenameTodoModal>
+                    <twig:DeleteTodoButton
+                        key="delete-{{ id }}"
+                        data-live-item-id-param="{{ id }}"
+                        class="btn btn-secondary"
+                        title="Delete this item?"
+                        text="It is gone until you reset the list."
+                        icon="warning"
+                        confirmButtonText="Delete"
+                    >Delete</twig:DeleteTodoButton>
+                </span>
+            </li>
+        {% else %}
+            <li class="py-3 text-muted">Nothing left.</li>
+        {% endfor %}
+    </ul>
+    <button class="btn btn-secondary mt-4" data-action="live#action" data-live-action-param="reset">Reset the list</button>
+</div>
