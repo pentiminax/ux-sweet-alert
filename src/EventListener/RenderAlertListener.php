@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 #[AsEventListener]
-class RenderAlertListener
+final class RenderAlertListener
 {
     public function __construct(
         private readonly AlertDelivery $delivery,

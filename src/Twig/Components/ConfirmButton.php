@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Pentiminax\UX\SweetAlert\Twig\Components;
 
-use Pentiminax\UX\SweetAlert\Context\SweetAlertContextInterface;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Model\Alert;
 use Pentiminax\UX\SweetAlert\Model\Result;
-use Symfony\Contracts\Service\Attribute\Required;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
@@ -23,6 +20,7 @@ class ConfirmButton
 {
     use ComponentToolsTrait;
     use DefaultActionTrait;
+    use ModalComponentTrait;
 
     #[LiveProp]
     public string $title = '';
@@ -53,10 +51,6 @@ class ConfirmButton
 
     protected ?Result $result = null;
 
-    protected ?TranslatorInterface $translator = null;
-
-    private SweetAlertContextInterface $context;
-
     #[LiveListener('alertAdded')]
     public function alertAdded(): void
     {
@@ -76,57 +70,20 @@ class ConfirmButton
             $alert->withCancelButton();
         }
 
-        $this->context->addAlert($alert);
-
-        $this->dispatchBrowserEvent('ux-sweet-alert:alert:added', [
-            'alert'    => $alert,
-            'callback' => $this->callback,
-        ]);
+        $this->queueAlert($alert);
     }
 
+    /**
+     * @param array<string, mixed> $result
+     * @param array<string, mixed> $args
+     */
     #[LiveAction]
     public function callbackAction(#[LiveArg] array $result, #[LiveArg] array $args = []): mixed
     {
         $this->result = Result::fromArray($result);
 
-        $this->dispatchBrowserEvent('ux-sweet-alert:callback', [
-            'result' => $result,
-            'args'   => $args,
-        ]);
+        $this->dispatchCallback($result, $args);
 
         return null;
-    }
-
-    #[Required]
-    public function setContext(SweetAlertContextInterface $context): void
-    {
-        $this->context = $context;
-    }
-
-    #[Required]
-    public function setTranslator(?TranslatorInterface $translator): void
-    {
-        $this->translator = $translator;
-    }
-
-    public function isDisabled(): bool
-    {
-        return $this->disabled;
-    }
-
-    private function customClass(): array
-    {
-        if (empty($this->customClass)) {
-            return [];
-        }
-
-        $customClass = json_decode($this->customClass, true);
-
-        return \is_array($customClass) ? $customClass : [];
-    }
-
-    private function translate(string $message): string
-    {
-        return $this->translator?->trans($message) ?? $message;
     }
 }

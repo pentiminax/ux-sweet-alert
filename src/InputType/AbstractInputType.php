@@ -30,12 +30,17 @@ abstract class AbstractInputType implements InputTypeInterface
             $alert->inputValue($this->value);
         }
 
-        if (null !== $this->placeholder && $this->type->supportsPlaceholder()) {
+        if ($this->hasSupportedPlaceholder()) {
             $alert->inputPlaceholder($this->placeholder);
         }
 
         if (!empty($this->inputAttributes)) {
             $alert->inputAttributes($this->inputAttributes);
         }
+    }
+
+    private function hasSupportedPlaceholder(): bool
+    {
+        return null !== $this->placeholder && $this->type->supportsPlaceholder();
     }
 }
