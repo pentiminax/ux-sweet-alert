@@ -35,6 +35,12 @@ final class AlertDelivery
 
     private const TURBO_STREAM_TEMPLATE = '@SweetAlert/turbo/alert.html.twig';
 
+    // Group 1: the opening tag's attribute list; quoted values may contain `>`.
+    private const FRAME_OPENING_TAG_PATTERN = '/<turbo-frame(?=[\s\/>])((?:\s+[^\s"\'>\/=]+(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'=<>`]+))?)*)\s*\/?>/i';
+
+    // Group 1: name; groups 2-4: double-quoted, single-quoted or unquoted value.
+    private const HTML_ATTRIBUTE_PATTERN = '/([^\s"\'>\/=]+)(?:\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s"\'=<>`]+)))?/';
+
     public function __construct(
         private readonly AlertManagerInterface $alertManager,
         private readonly Environment $twig,
@@ -146,10 +152,9 @@ final class AlertDelivery
     private function deliverInTurboFrame(Request $request, Response $response): void
     {
         $content = (string) $response->getContent();
-        $id      = (string) $request->headers->get(self::TURBO_FRAME_HEADER);
-        $pattern = '/<turbo-frame\b[^>]*\bid=(["\'])'.preg_quote($id, '/').'\1[^>]*>/i';
+        $offset  = $this->findFrameContentOffset($content, (string) $request->headers->get(self::TURBO_FRAME_HEADER));
 
-        if (1 !== preg_match($pattern, $content, $match, \PREG_OFFSET_CAPTURE)) {
+        if (null === $offset) {
             return;
         }
 
@@ -158,8 +163,34 @@ final class AlertDelivery
             return;
         }
 
-        $offset = $match[0][1] + \strlen($match[0][0]);
         $response->setContent(substr($content, 0, $offset).$this->renderTurboStreams($alerts).substr($content, $offset));
+    }
+
+    /**
+     * Returns the offset right after the opening tag of the frame whose `id` attribute
+     * is exactly $id, or null. Attributes are tokenized per HTML so `data-id` or an
+     * `id=` inside another attribute's value never match; names are case-insensitive,
+     * values are not, and the first `id` attribute of a tag wins.
+     */
+    private function findFrameContentOffset(string $content, string $id): ?int
+    {
+        preg_match_all(self::FRAME_OPENING_TAG_PATTERN, $content, $tags, \PREG_SET_ORDER | \PREG_OFFSET_CAPTURE);
+
+        foreach ($tags as $tag) {
+            preg_match_all(self::HTML_ATTRIBUTE_PATTERN, $tag[1][0], $attributes, \PREG_SET_ORDER | \PREG_UNMATCHED_AS_NULL);
+
+            foreach ($attributes as $attribute) {
+                if ('id' === strtolower($attribute[1])) {
+                    if ($id === ($attribute[2] ?? $attribute[3] ?? $attribute[4] ?? '')) {
+                        return $tag[0][1] + \strlen($tag[0][0]);
+                    }
+
+                    continue 2;
+                }
+            }
+        }
+
+        return null;
     }
 
     private function deliverJson(JsonResponse $response): void

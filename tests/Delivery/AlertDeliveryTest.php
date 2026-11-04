@@ -161,6 +161,34 @@ final class AlertDeliveryTest extends TestCase
         yield 'src before id' => ['<turbo-frame src="/a" id="x">'];
         yield 'single quotes' => ["<turbo-frame id='x'>"];
         yield 'class before id' => ['<turbo-frame class="c" id="x" loading="lazy">'];
+        yield 'unquoted id' => ['<turbo-frame id=x>'];
+        yield 'uppercase tag and attribute names' => ['<TURBO-FRAME ID="x">'];
+        yield '> inside a quoted value' => ['<turbo-frame data-x="a>b" id="x">'];
+    }
+
+    #[Test]
+    #[DataProvider('framesThatAreNotTheRequestedOne')]
+    public function it_only_matches_the_frame_whose_id_attribute_is_exactly_the_requested_one(string $decoy): void
+    {
+        $this->request->headers->set('Turbo-Frame', 'x');
+        $this->manager->success('One');
+
+        $response = new Response($decoy.'<p>decoy</p></turbo-frame><turbo-frame id="x"><p>hi</p></turbo-frame>', headers: ['Content-Type' => 'text/html']);
+        $this->delivery->deliver($this->request, $response);
+
+        $this->assertStringStartsWith($decoy.'<p>decoy</p></turbo-frame><turbo-frame id="x"><turbo-stream action="alert">', $response->getContent());
+        $this->assertSame(0, $this->queueSize());
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function framesThatAreNotTheRequestedOne(): iterable
+    {
+        yield 'data-id attribute' => ['<turbo-frame id="other" data-id="x">'];
+        yield 'id= inside another value' => ['<turbo-frame title=\'a id="x"\' id="other">'];
+        yield 'different case value' => ['<turbo-frame id="X">'];
+        yield 'second id attribute ignored' => ['<turbo-frame id="other" id="x">'];
     }
 
     #[Test]
