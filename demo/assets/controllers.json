@@ -5,10 +5,10 @@
                 "enabled": true,
                 "fetch": "eager",
                 "autoimport": {
-                    "sweetalert2/themes/bootstrap-4.css": false,
-                    "sweetalert2/themes/bootstrap-5.css": false,
-                    "sweetalert2/themes/bulma.css": false,
-                    "sweetalert2/themes/material-ui.css": false
+                    "sweetalert2/themes/bootstrap-4.css": true,
+                    "sweetalert2/themes/bootstrap-5.css": true,
+                    "sweetalert2/themes/bulma.css": true,
+                    "sweetalert2/themes/material-ui.css": true
                 }
             }
         },

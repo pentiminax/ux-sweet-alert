@@ -53,4 +53,20 @@ return [
     'highlight.js/lib/languages/javascript' => [
         'version' => '11.12.0',
     ],
+    'sweetalert2/themes/bootstrap-4.css' => [
+        'version' => '11.26.25',
+        'type' => 'css',
+    ],
+    'sweetalert2/themes/bootstrap-5.css' => [
+        'version' => '11.26.25',
+        'type' => 'css',
+    ],
+    'sweetalert2/themes/bulma.css' => [
+        'version' => '11.26.25',
+        'type' => 'css',
+    ],
+    'sweetalert2/themes/material-ui.css' => [
+        'version' => '11.26.25',
+        'type' => 'css',
+    ],
 ];
