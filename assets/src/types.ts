@@ -11,6 +11,10 @@ export type PreConfirmOptions = {
     preConfirmErrorMessage?: string;
 };
 
+export type WizardOptions = {
+    wizardId?: string;
+};
+
 export type ToastValue = SweetAlertOptions & {
     id?: string;
     callbackUrl?: string;

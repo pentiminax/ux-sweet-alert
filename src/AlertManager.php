@@ -49,6 +49,20 @@ class AlertManager implements AlertManagerInterface
         $this->eventDispatcher->dispatch(new AlertQueuedEvent($alert));
     }
 
+    public function steps(Alert ...$alerts): void
+    {
+        $wizardId = uniqid('wizard_', true);
+        $labels   = array_map('strval', range(1, max(1, \count($alerts))));
+
+        foreach (array_values($alerts) as $index => $alert) {
+            if ([] === $alert->getProgressSteps()) {
+                $alert->progressSteps($labels);
+            }
+
+            $this->addAlert($alert->currentProgressStep($index)->wizard($wizardId));
+        }
+    }
+
     /**
      * @return Alert[]
      */

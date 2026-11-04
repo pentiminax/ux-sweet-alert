@@ -75,6 +75,9 @@ export default class extends Controller {
                 delete alert.id;
 
                 const result = await fireAlert(alert, this.element as HTMLElement);
+                if (!result) {
+                    return;
+                }
 
                 document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${alertId}:closed`, {
                     detail: result,
@@ -94,6 +97,10 @@ export default class extends Controller {
             const detail = (e as CustomEvent<AlertDetail>).detail;
             for (const {id, ...alert} of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
                 const result = await fireAlert(alert, e.target as HTMLElement);
+                if (!result) {
+                    continue;
+                }
+
                 await resolveCallback(detail.callback, result, e.target as HTMLElement);
 
                 if (id) {
@@ -117,6 +124,9 @@ export default class extends Controller {
             delete (swalOptions as ToastValue).id;
 
             const result = await fireAlert(swalOptions, this.element as HTMLElement);
+            if (!result) {
+                continue;
+            }
 
             if (callbackUrl) {
                 await this.postCallbackResult(callbackUrl, result);

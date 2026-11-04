@@ -232,6 +232,35 @@ final class AlertManagerTest extends KernelTestCase
     }
 
     #[Test]
+    public function it_queues_steps_as_one_wizard_with_progress_steps(): void
+    {
+        $this->alertManager->steps(
+            Alert::new(title: 'Step 1'),
+            Alert::new(title: 'Step 2')->progressSteps(['A', 'B']),
+            Alert::new(title: 'Step 3'),
+        );
+
+        $data = array_map(static fn (Alert $alert): array => $alert->jsonSerialize(), $this->alertManager->getAlerts());
+
+        $this->assertSame(['Step 1', 'Step 2', 'Step 3'], array_column($data, 'title'));
+        $this->assertSame([0, 1, 2], array_column($data, 'currentProgressStep'));
+        $this->assertSame([['1', '2', '3'], ['A', 'B'], ['1', '2', '3']], array_column($data, 'progressSteps'));
+        $this->assertCount(1, array_unique(array_column($data, 'wizardId')));
+        $this->assertNotEmpty($data[0]['wizardId']);
+    }
+
+    #[Test]
+    public function it_gives_each_steps_call_its_own_wizard_id(): void
+    {
+        $this->alertManager->steps(Alert::new(title: 'A'));
+        $this->alertManager->steps(Alert::new(title: 'B'));
+
+        $ids = array_map(static fn (Alert $alert): mixed => $alert->jsonSerialize()['wizardId'], $this->alertManager->getAlerts());
+
+        $this->assertCount(2, array_unique($ids));
+    }
+
+    #[Test]
     public function it_configures_input_alert_via_input_type(): void
     {
         $textInput = new \Pentiminax\UX\SweetAlert\InputType\Text(

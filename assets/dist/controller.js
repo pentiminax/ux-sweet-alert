@@ -54,6 +54,9 @@ class default_1 extends Controller {
                 const alertId = alert.id;
                 delete alert.id;
                 const result = await fireAlert(alert, this.element);
+                if (!result) {
+                    return;
+                }
                 document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${alertId}:closed`, {
                     detail: result,
                 }));
@@ -69,6 +72,9 @@ class default_1 extends Controller {
             const detail = e.detail;
             for (const { id, ...alert } of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
                 const result = await fireAlert(alert, e.target);
+                if (!result) {
+                    continue;
+                }
                 await resolveCallback(detail.callback, result, e.target);
                 if (id) {
                     document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${id}:closed`, {
@@ -87,6 +93,9 @@ class default_1 extends Controller {
             delete swalOptions.callbackUrl;
             delete swalOptions.id;
             const result = await fireAlert(swalOptions, this.element);
+            if (!result) {
+                continue;
+            }
             if (callbackUrl) {
                 await this.postCallbackResult(callbackUrl, result);
             }

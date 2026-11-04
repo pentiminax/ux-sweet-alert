@@ -17,6 +17,12 @@ interface AlertManagerInterface
     public function addAlert(Alert $alert): void;
 
     /**
+     * Queues the alerts as a wizard: each shows the progress steps ('1'..'n' unless the alert sets its own),
+     * they fire in order whatever the transport, and dismissing a step skips the remaining ones.
+     */
+    public function steps(Alert ...$alerts): void;
+
+    /**
      * @return Alert[]
      */
     public function getAlerts(): array;

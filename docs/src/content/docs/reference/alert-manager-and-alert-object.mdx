@@ -20,6 +20,7 @@ store it, and expose it to the frontend controller.
     ['toast()', 'Create a non-blocking toast notification.'],
     ['input()', 'Create an alert configured by an input type object.'],
     ['addAlert(Alert $alert)', 'Push a manually created alert into storage.'],
+    ['steps(Alert ...$alerts)', 'Queue alerts as a multi-step wizard with progress steps; dismissing a step skips the rest.'],
     ['getAlerts()', 'Consume queued alerts, optionally converting flash messages.'],
   ]}
 />
@@ -41,6 +42,7 @@ store it, and expose it to the frontend controller.
     ['Content', 'html(), setFooter(), setImageUrl(), setImageAlt(), setImageHeight(), setImageWidth()'],
     ['Input-related', 'input(), inputLabel(), inputPlaceholder(), inputValue(), inputAttributes(), inputOptions(), validationMessage(), returnInputValueOnDeny()'],
     ['Callbacks', 'callbackUrl(), preConfirmUrl()'],
+    ['Wizard', 'progressSteps(), currentProgressStep(), wizard() (set by `steps()`)'],
   ]}
 />
 
@@ -54,6 +56,8 @@ modal settings and, when relevant:
 - `callbackUrl` when a backend callback was configured
 - `preConfirmUrl` and `preConfirmErrorMessage` when server-side pre-confirm validation was configured
 - `width`, `padding`, `background`, `color`, `imageWidth`, `showClass`, and `hideClass` when set
+- `progressSteps`, `currentProgressStep`, and `wizardId` when set; the controller strips `wizardId`
+  before calling SweetAlert2
 
 ## Storage lifecycle
 

@@ -351,4 +351,23 @@ final class AlertTest extends TestCase
         $this->assertSame(['popup' => Animation::FadeInDown->value], $data['showClass']);
         $this->assertSame(300, $data['width']);
     }
+
+    #[Test]
+    public function it_serializes_progress_steps_only_when_set(): void
+    {
+        $data = Alert::new(title: 'Test')
+            ->progressSteps(['Account', 'Profile'])
+            ->currentProgressStep(1)
+            ->wizard('w1')
+            ->jsonSerialize();
+
+        $this->assertSame(['Account', 'Profile'], $data['progressSteps']);
+        $this->assertSame(1, $data['currentProgressStep']);
+        $this->assertSame('w1', $data['wizardId']);
+
+        $defaults = Alert::new(title: 'Test')->jsonSerialize();
+        foreach (['progressSteps', 'currentProgressStep', 'wizardId'] as $key) {
+            $this->assertArrayNotHasKey($key, $defaults);
+        }
+    }
 }
