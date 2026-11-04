@@ -54,6 +54,22 @@ public function __invoke(Result $result): Response
 }
 ```
 
+## Pre-confirm responses
+
+`Pentiminax\UX\SweetAlert\Http\PreConfirmResponse::fromViolations(ConstraintViolationListInterface $violations, mixed $value = null): Response`
+builds the answer of a `preConfirmUrl()` endpoint (requires `symfony/validator`):
+
+<Table
+  headers={['Input', 'Response']}
+  rows={[
+    ['At least one violation', '`422` JSON `{"message": "<first violation message>"}`'],
+    ['No violation, `$value` not null', '`200` JSON `$value`, delivered as `result.value`'],
+    ['No violation, `$value` null', 'Empty `204`: `result.value` stays the user input'],
+  ]}
+/>
+
+See [Input Dialogs](../../guide/input-dialogs/#validating-with-symfony-constraints) for an example.
+
 ## Browser-side lifecycle events
 
 The Stimulus controller dispatches a few useful browser events:

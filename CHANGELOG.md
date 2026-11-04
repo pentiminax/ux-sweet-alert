@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `PreConfirmResponse::fromViolations()` to answer `preConfirmUrl()` requests from a Symfony Validator violation list (`422 {"message": first violation}`, else `200` with the given value or an empty `204`). `symfony/validator` is suggested, not required.
 - Added `Alert::preConfirmUrl()`: the confirmed value is POSTed as `{value}` to the URL while the modal shows a loader; a non-2xx response (e.g. `422 {"message": "..."}`) keeps the modal open with that message, a 2xx JSON body becomes `result.value`. Requests carry `X-SweetAlert-PreConfirm`, which keeps `AlertDelivery` from draining the alert queue.
 - HX-Trigger now carries all queued alerts as an `alerts` array and merges with an existing `HX-Trigger` header instead of overwriting it.
 - The JSON key is now `ux_sweet_alert`, an array of alert objects (was `alerts` holding Turbo stream HTML), and is not set if the key already exists.
