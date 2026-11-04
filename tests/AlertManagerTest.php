@@ -87,6 +87,8 @@ final class AlertManagerTest extends KernelTestCase
             'inputOptions'           => null,
             'returnInputValueOnDeny' => null,
             'validationMessage'      => null,
+            'timer'                  => null,
+            'timerProgressBar'       => false,
             'backdrop'               => true,
             'allowOutsideClick'      => true,
             'draggable'              => false,
@@ -107,6 +109,31 @@ final class AlertManagerTest extends KernelTestCase
         );
 
         $this->assertSame(Theme::Dark->value, $alert->jsonSerialize()['theme']);
+    }
+
+    #[Test]
+    public function it_uses_configured_default_position_custom_class_and_timer(): void
+    {
+        $alertManager = $this->createAlertManager(new AlertDefaults(
+            position: Position::TOP_END,
+            customClass: ['popup' => 'my-popup'],
+            timer: 3000,
+        ));
+
+        $data = $alertManager->success(title: 'title')->jsonSerialize();
+
+        $this->assertSame(Position::TOP_END->value, $data['position']);
+        $this->assertSame(['popup' => 'my-popup'], $data['customClass']);
+        $this->assertSame(3000, $data['timer']);
+    }
+
+    #[Test]
+    public function it_keeps_bottom_end_for_toasts_without_explicit_position(): void
+    {
+        $alertManager = $this->createAlertManager(new AlertDefaults(position: Position::TOP));
+
+        $this->assertSame(Position::BOTTOM_END, $alertManager->toast(title: 'title')->getPosition());
+        $this->assertSame(Position::BOTTOM_END, $alertManager->success(title: 'title', toast: true)->getPosition());
     }
 
     #[Test]
