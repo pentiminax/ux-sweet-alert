@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v0.22.0 - 2026-11-03
+
+- Added a demo app in `demo/` (Symfony, PHP 8.4) with one page per docs section; it is export-ignored from the Composer package.
+- Fixed `sweet_alert.defaults` not applying to the `success()`/`error()`/`warning()`/`info()`/`question()`/`toast()` helpers: their `position` and `customClass` arguments now default to `null` and fall back to the configured defaults; `timer` is serialized for every alert.
+- Fixed toasts sending `draggable` and `focusConfirm`, which SweetAlert2 warns about in toast mode.
+- Fixed `ux-sweet-alert:{id}:closed` not firing for alerts delivered through JSON and htmx.
+- Fixed a `preConfirmUrl()` endpoint answering JSON `false` keeping the modal open; it now resolves to `null`.
+- `inputOptions` accepts grouped choices.
 - Button colors are now left to the SweetAlert2 theme: `confirmButtonColor`, `cancelButtonColor` and `denyButtonColor` default to `null` (config and `AlertDefaults`) and are serialized only when set, so themes such as `bootstrap-5` style their own buttons. Popups without a configured color now use the theme's colors instead of `#3085d6` / `#aaa` / `#dd6b55`; set them in `sweet_alert.defaults` to keep the old look.
 - BC break: removed `AlertDefaults::CONFIRM_BUTTON_COLOR`, `CANCEL_BUTTON_COLOR` and `DENY_BUTTON_COLOR`; `AlertDefaults` color properties are now `?string`.
 - Fixed alerts missing from `Turbo-Frame` responses built with `render()`: `RenderAlertListener` now runs at priority -10, after Symfony sets the default `Content-Type`.
