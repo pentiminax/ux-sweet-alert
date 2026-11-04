@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pentiminax\UX\SweetAlert\Model;
 
+use Pentiminax\UX\SweetAlert\Enum\Animation;
 use Pentiminax\UX\SweetAlert\Enum\Icon;
 use Pentiminax\UX\SweetAlert\Enum\Position;
 use Pentiminax\UX\SweetAlert\Enum\Theme;
@@ -98,6 +99,20 @@ final class Alert implements \JsonSerializable
     private ?string $preConfirmUrl = null;
 
     private ?string $preConfirmErrorMessage = null;
+
+    private int|string|null $width = null;
+
+    private int|string|null $padding = null;
+
+    private ?string $background = null;
+
+    private ?string $color = null;
+
+    private int|string|null $imageWidth = null;
+
+    private ?string $showClass = null;
+
+    private ?string $hideClass = null;
 
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
@@ -543,6 +558,73 @@ final class Alert implements \JsonSerializable
     }
 
     /**
+     * @param int|string $width popup width, e.g. 600, '32rem' or '50%'
+     */
+    public function width(int|string $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @param int|string $padding popup padding, e.g. 0 or '3em'
+     */
+    public function padding(int|string $padding): self
+    {
+        $this->padding = $padding;
+
+        return $this;
+    }
+
+    /**
+     * @param string $background CSS background, e.g. '#fff' or "#fff url(/images/trees.png)"
+     */
+    public function background(string $background): self
+    {
+        $this->background = $background;
+
+        return $this;
+    }
+
+    /**
+     * @param string $color CSS text color of the popup
+     */
+    public function color(string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function setImageWidth(int|string|null $imageWidth): self
+    {
+        $this->imageWidth = $imageWidth;
+
+        return $this;
+    }
+
+    /**
+     * CSS classes added to the popup when it opens; Animation presets need Animate.css loaded by the app.
+     */
+    public function showClass(Animation|string $popup): self
+    {
+        $this->showClass = $popup instanceof Animation ? $popup->value : $popup;
+
+        return $this;
+    }
+
+    /**
+     * CSS classes added to the popup when it closes; Animation presets need Animate.css loaded by the app.
+     */
+    public function hideClass(Animation|string $popup): self
+    {
+        $this->hideClass = $popup instanceof Animation ? $popup->value : $popup;
+
+        return $this;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function jsonSerialize(): array
@@ -582,11 +664,19 @@ final class Alert implements \JsonSerializable
             'validationMessage'      => $this->validationMessage,
         ];
 
+        // showClass/hideClass send only `popup`: SweetAlert2 merges it with its default backdrop/icon classes.
         $data += array_filter([
             'callbackUrl'            => $this->callbackUrl,
             'preConfirmUrl'          => $this->preConfirmUrl,
             'preConfirmErrorMessage' => $this->preConfirmErrorMessage,
-        ], static fn (?string $value): bool => null !== $value);
+            'width'                  => $this->width,
+            'padding'                => $this->padding,
+            'background'             => $this->background,
+            'color'                  => $this->color,
+            'imageWidth'             => $this->imageWidth,
+            'showClass'              => null !== $this->showClass ? ['popup' => $this->showClass] : null,
+            'hideClass'              => null !== $this->hideClass ? ['popup' => $this->hideClass] : null,
+        ], static fn (mixed $value): bool => null !== $value);
 
         if ($this->toast) {
             $data['toast']            = true;

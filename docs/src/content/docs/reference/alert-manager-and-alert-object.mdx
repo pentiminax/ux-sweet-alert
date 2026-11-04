@@ -36,8 +36,9 @@ store it, and expose it to the frontend controller.
   rows={[
     ['Buttons', 'withCancelButton(), withDenyButton(), withoutConfirmButton(), reverseButtons(), confirmButtonText(), cancelButtonText(), setDenyButtonText()'],
     ['Behavior', 'withoutAnimation(), withoutBackdrop(), denyOutsideClick(), denyEscapeKey(), setFocusConfirm(), setDraggable(), setTopLayer()'],
-    ['Layout', 'position(), theme(), customClass through manager helper arguments'],
-    ['Content', 'html(), setFooter(), setImageUrl(), setImageAlt(), setImageHeight()'],
+    ['Layout', 'position(), theme(), width(), padding(), customClass through manager helper arguments'],
+    ['Styling', 'background(), color(), showClass(Animation|string), hideClass(Animation|string)'],
+    ['Content', 'html(), setFooter(), setImageUrl(), setImageAlt(), setImageHeight(), setImageWidth()'],
     ['Input-related', 'input(), inputLabel(), inputPlaceholder(), inputValue(), inputAttributes(), inputOptions(), validationMessage(), returnInputValueOnDeny()'],
     ['Callbacks', 'callbackUrl(), preConfirmUrl()'],
   ]}
@@ -52,6 +53,7 @@ modal settings and, when relevant:
 - `backdrop` and `allowOutsideClick` for modal mode
 - `callbackUrl` when a backend callback was configured
 - `preConfirmUrl` and `preConfirmErrorMessage` when server-side pre-confirm validation was configured
+- `width`, `padding`, `background`, `color`, `imageWidth`, `showClass`, and `hideClass` when set
 
 ## Storage lifecycle
 
