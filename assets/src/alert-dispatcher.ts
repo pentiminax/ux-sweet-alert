@@ -1,13 +1,16 @@
 import Swal, {SweetAlertOptions, SweetAlertResult} from 'sweetalert2';
 import {BEFORE_FIRE_EVENT, AFTER_FIRE_EVENT, type PreConfirmOptions, type WizardOptions} from './types.js';
 
-// Resolves to true once a wizard is stopped. shortcut: entries are never removed (one per wizard per page), add cleanup if pages run many wizards.
-const wizards = new Map<string, Promise<boolean>>();
+// shortcut: stopped ids are never removed (one per wizard per page), add cleanup if pages run many wizards.
+const stoppedWizards = new Set<string>();
+// Every wizard step goes through this single queue, so two wizards (or Turbo streams rendered concurrently) never replace each other's unanswered step.
+let wizardQueue: Promise<unknown> = Promise.resolve();
 
 /**
- * Steps sharing a wizardId fire one after another, whatever transport delivered them (Turbo streams render concurrently).
- * A dismissed step (cancel, Esc, backdrop, close button, timer) stops the wizard: the remaining steps resolve to null
+ * Wizard steps fire one after another in arrival order, whatever transport delivered them.
+ * A dismissed step (cancel, Esc, backdrop, close button, timer) stops its wizard: the remaining steps resolve to null
  * without opening, so callers skip their callback and closed event. A deny answer is a valid answer and does not stop it.
+ * Ordinary alerts (no wizardId) are not queued.
  */
 export function fireAlert(options: SweetAlertOptions & WizardOptions, targetElement: HTMLElement | Document): Promise<SweetAlertResult | null> {
     const {wizardId, ...swalOptions} = options;
@@ -15,9 +18,24 @@ export function fireAlert(options: SweetAlertOptions & WizardOptions, targetElem
         return fireSwal(swalOptions, targetElement);
     }
 
-    const step = (wizards.get(wizardId) ?? Promise.resolve(false))
-        .then((stopped) => stopped ? null : fireSwal(swalOptions, targetElement));
-    wizards.set(wizardId, step.then((result) => result?.isDismissed ?? true, () => true));
+    const step = wizardQueue.then(async () => {
+        if (stoppedWizards.has(wizardId)) {
+            return null;
+        }
+
+        try {
+            const result = await fireSwal(swalOptions, targetElement);
+            if (result.isDismissed) {
+                stoppedWizards.add(wizardId);
+            }
+
+            return result;
+        } catch (error) {
+            stoppedWizards.add(wizardId);
+            throw error;
+        }
+    });
+    wizardQueue = step.catch(() => null);
 
     return step;
 }

@@ -1,14 +1,29 @@
 import Swal from 'sweetalert2';
 import { BEFORE_FIRE_EVENT, AFTER_FIRE_EVENT } from './types.js';
-const wizards = new Map();
+const stoppedWizards = new Set();
+let wizardQueue = Promise.resolve();
 export function fireAlert(options, targetElement) {
     const { wizardId, ...swalOptions } = options;
     if (!wizardId) {
         return fireSwal(swalOptions, targetElement);
     }
-    const step = (wizards.get(wizardId) ?? Promise.resolve(false))
-        .then((stopped) => stopped ? null : fireSwal(swalOptions, targetElement));
-    wizards.set(wizardId, step.then((result) => result?.isDismissed ?? true, () => true));
+    const step = wizardQueue.then(async () => {
+        if (stoppedWizards.has(wizardId)) {
+            return null;
+        }
+        try {
+            const result = await fireSwal(swalOptions, targetElement);
+            if (result.isDismissed) {
+                stoppedWizards.add(wizardId);
+            }
+            return result;
+        }
+        catch (error) {
+            stoppedWizards.add(wizardId);
+            throw error;
+        }
+    });
+    wizardQueue = step.catch(() => null);
     return step;
 }
 async function fireSwal(swalOptions, targetElement) {
