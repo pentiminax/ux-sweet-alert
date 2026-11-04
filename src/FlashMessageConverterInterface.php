@@ -9,6 +9,8 @@ use Pentiminax\UX\SweetAlert\Model\Alert;
 interface FlashMessageConverterInterface
 {
     /**
+     * @param string[] $messages
+     *
      * @return Alert[]
      */
     public function convert(string $key, array $messages);
