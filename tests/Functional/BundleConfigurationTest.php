@@ -38,6 +38,9 @@ final class BundleConfigurationTest extends FunctionalTestCase
             'theme'              => 'dark',
             'allowOutsideClick'  => false,
             'draggable'          => true,
+            'customClass'        => ['popup' => 'my-popup'],
+            'timer'              => 3000,
+            'timerProgressBar'   => true,
         ]]);
 
         $client->request('GET', '/json');
@@ -49,6 +52,9 @@ final class BundleConfigurationTest extends FunctionalTestCase
         self::assertSame('dark', $alert['theme']);
         self::assertFalse($alert['allowOutsideClick']);
         self::assertTrue($alert['draggable']);
+        self::assertSame(['popup' => 'my-popup'], $alert['customClass']);
+        self::assertSame(3000, $alert['timer']);
+        self::assertTrue($alert['timerProgressBar']);
     }
 
     #[Test]

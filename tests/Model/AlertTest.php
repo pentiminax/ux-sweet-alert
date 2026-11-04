@@ -122,7 +122,7 @@ final class AlertTest extends TestCase
     }
 
     #[Test]
-    public function it_excludes_toast_fields_for_standard_alerts(): void
+    public function it_serializes_timer_but_not_toast_flag_for_standard_alerts(): void
     {
         $alert = Alert::new(
             title: 'standard',
@@ -134,8 +134,8 @@ final class AlertTest extends TestCase
 
         $this->assertFalse($alert->isToast());
         $this->assertArrayNotHasKey('toast', $data);
-        $this->assertArrayNotHasKey('timer', $data);
-        $this->assertArrayNotHasKey('timerProgressBar', $data);
+        $this->assertNull($data['timer']);
+        $this->assertFalse($data['timerProgressBar']);
         $this->assertArrayHasKey('backdrop', $data);
         $this->assertArrayHasKey('allowOutsideClick', $data);
     }

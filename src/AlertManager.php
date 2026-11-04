@@ -100,9 +100,9 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
-        Position $position = Position::CENTER,
+        ?Position $position = null,
         ?Theme $theme = null,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
@@ -114,9 +114,9 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
-        Position $position = Position::CENTER,
+        ?Position $position = null,
         ?Theme $theme = null,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
@@ -128,9 +128,9 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
-        Position $position = Position::CENTER,
+        ?Position $position = null,
         ?Theme $theme = null,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
@@ -142,9 +142,9 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
-        Position $position = Position::CENTER,
+        ?Position $position = null,
         ?Theme $theme = null,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
@@ -156,9 +156,9 @@ class AlertManager implements AlertManagerInterface
         string $title,
         string $id = '',
         string $text = '',
-        Position $position = Position::CENTER,
+        ?Position $position = null,
         ?Theme $theme = null,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
@@ -171,7 +171,7 @@ class AlertManager implements AlertManagerInterface
         string $id = '',
         string $text = '',
         ?Icon $icon = Icon::SUCCESS,
-        Position $position = Position::BOTTOM_END,
+        ?Position $position = null,
         ?Theme $theme = null,
         ?int $timer = null,
         bool $timerProgressBar = false,
@@ -193,15 +193,15 @@ class AlertManager implements AlertManagerInterface
         string $id,
         string $title,
         string $text,
-        Position $position,
+        ?Position $position,
         ?Theme $theme,
         ?Icon $icon,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,
     ): Alert {
-        if ($this->isToastAtDefaultPosition($toast, $position)) {
+        if ($this->isToastWithoutPosition($toast, $position)) {
             $position = Position::BOTTOM_END;
         }
 
@@ -219,14 +219,17 @@ class AlertManager implements AlertManagerInterface
             $alert->theme($theme);
         }
 
+        if (null !== $timer) {
+            $alert->timer($timer);
+        }
+
+        if ($timerProgressBar) {
+            $alert->withTimerProgressBar();
+        }
+
         if ($toast) {
             $alert->asToast();
-            $alert->timer($timer);
             $alert->withoutConfirmButton();
-
-            if ($timerProgressBar) {
-                $alert->withTimerProgressBar();
-            }
         }
 
         return $alert;
@@ -238,9 +241,9 @@ class AlertManager implements AlertManagerInterface
         string $id = '',
         string $text = '',
         ?Icon $icon = null,
-        Position $position = Position::CENTER,
+        ?Position $position = null,
         ?Theme $theme = null,
-        array $customClass = [],
+        ?array $customClass = null,
         string $callback = '',
     ): Alert {
         $alert = $this->createAlert($id, $title, $text, $position, $theme, $icon, $customClass);
@@ -256,19 +259,19 @@ class AlertManager implements AlertManagerInterface
         return $alert;
     }
 
-    private function isToastAtDefaultPosition(bool $toast, Position $position): bool
+    private function isToastWithoutPosition(bool $toast, ?Position $position): bool
     {
-        return $toast && Position::CENTER === $position;
+        return $toast && null === $position;
     }
 
     private function createAndAddAlert(
         string $id,
         string $title,
         string $text,
-        Position $position,
+        ?Position $position,
         ?Theme $theme,
         ?Icon $icon,
-        array $customClass = [],
+        ?array $customClass = null,
         bool $toast = false,
         ?int $timer = null,
         bool $timerProgressBar = false,

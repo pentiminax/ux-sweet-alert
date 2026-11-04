@@ -662,6 +662,8 @@ final class Alert implements \JsonSerializable
             'inputOptions'           => !empty($this->inputOptions) ? $this->inputOptions : null,
             'returnInputValueOnDeny' => $this->returnInputValueOnDeny ?: null,
             'validationMessage'      => $this->validationMessage,
+            'timer'                  => $this->timer,
+            'timerProgressBar'       => $this->timerProgressBar,
         ];
 
         // showClass/hideClass send only `popup`: SweetAlert2 merges it with its default backdrop/icon classes.
@@ -679,9 +681,7 @@ final class Alert implements \JsonSerializable
         ], static fn (mixed $value): bool => null !== $value);
 
         if ($this->toast) {
-            $data['toast']            = true;
-            $data['timer']            = $this->timer;
-            $data['timerProgressBar'] = $this->timerProgressBar;
+            $data['toast'] = true;
         } else {
             $data['backdrop']          = $this->backdrop;
             $data['allowOutsideClick'] = $this->allowOutsideClick;
