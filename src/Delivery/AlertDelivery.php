@@ -27,6 +27,8 @@ final class AlertDelivery
 
     public const JSON_KEY = 'ux_sweet_alert';
 
+    public const PRE_CONFIRM_HEADER = 'X-SweetAlert-PreConfirm';
+
     private const HX_REQUEST_HEADER = 'HX-Request';
 
     private const HX_TRIGGER_HEADER = 'HX-Trigger';
@@ -60,7 +62,8 @@ final class AlertDelivery
 
     public function deliver(Request $request, Response $response): void
     {
-        if ($response->isRedirection() || !$this->canUseSession($request)) {
+        // Pre-confirm responses must not drain the queue: the open modal would swallow the alerts.
+        if ($request->headers->has(self::PRE_CONFIRM_HEADER) || $response->isRedirection() || !$this->canUseSession($request)) {
             return;
         }
 

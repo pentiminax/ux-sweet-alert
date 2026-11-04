@@ -247,6 +247,19 @@ final class AlertDeliveryTest extends TestCase
     }
 
     #[Test]
+    public function it_leaves_queue_on_pre_confirm_requests(): void
+    {
+        $this->request->headers->set(AlertDelivery::PRE_CONFIRM_HEADER, '1');
+        $this->manager->success('One');
+
+        $response = new JsonResponse(['status' => 'ok']);
+        $this->delivery->deliver($this->request, $response);
+
+        $this->assertSame(['status' => 'ok'], json_decode($response->getContent(), true));
+        $this->assertSame(1, $this->queueSize());
+    }
+
+    #[Test]
     public function it_leaves_queue_when_json_already_has_the_key(): void
     {
         $this->manager->success('One');

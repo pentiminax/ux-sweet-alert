@@ -92,6 +92,10 @@ final class Alert implements \JsonSerializable
 
     private ?string $callbackUrl = null;
 
+    private ?string $preConfirmUrl = null;
+
+    private ?string $preConfirmErrorMessage = null;
+
     public static function new(string $title, string $id = '', string $text = '', ?Icon $icon = Icon::SUCCESS, Position $position = Position::BOTTOM_END, array $customClass = []): self
     {
         $alert = new self();
@@ -512,6 +516,17 @@ final class Alert implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * POSTs the confirmed value to $url while the modal stays open; a non-2xx response keeps it open and shows its `message`.
+     */
+    public function preConfirmUrl(string $url, ?string $errorMessage = null): self
+    {
+        $this->preConfirmUrl          = $url;
+        $this->preConfirmErrorMessage = $errorMessage;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         $data = [
@@ -551,6 +566,14 @@ final class Alert implements \JsonSerializable
 
         if (null !== $this->callbackUrl) {
             $data['callbackUrl'] = $this->callbackUrl;
+        }
+
+        if (null !== $this->preConfirmUrl) {
+            $data['preConfirmUrl'] = $this->preConfirmUrl;
+        }
+
+        if (null !== $this->preConfirmErrorMessage) {
+            $data['preConfirmErrorMessage'] = $this->preConfirmErrorMessage;
         }
 
         if ($this->toast) {

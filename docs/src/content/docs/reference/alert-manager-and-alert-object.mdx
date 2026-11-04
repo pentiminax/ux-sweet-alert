@@ -39,7 +39,7 @@ store it, and expose it to the frontend controller.
     ['Layout', 'position(), theme(), customClass through manager helper arguments'],
     ['Content', 'html(), setFooter(), setImageUrl(), setImageAlt(), setImageHeight()'],
     ['Input-related', 'input(), inputLabel(), inputPlaceholder(), inputValue(), inputAttributes(), inputOptions(), validationMessage(), returnInputValueOnDeny()'],
-    ['Callbacks', 'callbackUrl()'],
+    ['Callbacks', 'callbackUrl(), preConfirmUrl()'],
   ]}
 />
 
@@ -51,6 +51,7 @@ modal settings and, when relevant:
 - `toast`, `timer`, and `timerProgressBar` for toast mode
 - `backdrop` and `allowOutsideClick` for modal mode
 - `callbackUrl` when a backend callback was configured
+- `preConfirmUrl` and `preConfirmErrorMessage` when server-side pre-confirm validation was configured
 
 ## Storage lifecycle
 
