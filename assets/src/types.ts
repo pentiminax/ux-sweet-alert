@@ -1,15 +1,15 @@
 import type {SweetAlertOptions} from 'sweetalert2';
 
-export interface AlertDetail {
-    alert?: SweetAlertOptions & { id?: string };
-    alerts?: (SweetAlertOptions & { id?: string })[];
-    callback?: string;
-}
-
-export type ToastValue = SweetAlertOptions & {
+export type AlertPayload = SweetAlertOptions & {
     id?: string;
     callbackUrl?: string;
 };
+
+export interface AlertDetail {
+    alert?: AlertPayload;
+    alerts?: AlertPayload[];
+    callback?: string;
+}
 
 export const JSON_KEY = 'ux_sweet_alert';
 export const ALERT_ADDED_EVENT = 'ux-sweet-alert:alert:added';

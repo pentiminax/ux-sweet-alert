@@ -31,10 +31,17 @@
     "@hotwired/turbo": "^8.0.0",
     "sweetalert2": "^11.26.25"
   },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
   "devDependencies": {
     "@hotwired/stimulus": "^3.0.0",
     "@hotwired/turbo": "^8.0.0",
     "@symfony/ux-live-component": "^3.6.0",
-    "sweetalert2": "^11.26.25"
+    "jsdom": "^26.0.0",
+    "sweetalert2": "^11.26.25",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
   }
 }

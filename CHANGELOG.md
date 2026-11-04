@@ -10,3 +10,11 @@
 - JS assets (`assets/dist`) were rebuilt.
 - BC break: the public constructors of `AlertExtension` and `RenderAlertListener` now take the internal `AlertDelivery`; this affects anyone instantiating or extending them directly.
 - JSON delivery skips streamed/binary responses and `_stateless` routes.
+- Alerts now display one at a time, in arrival order, across all transports.
+- `callbackUrl` is now honored for Turbo-stream, htmx and JSON alerts.
+- The `ux-sweet-alert:{id}:closed` event now fires for every alert with an id.
+- `ux-sweet-alert:callback:response` is now dispatched on the alert's origin element.
+- Turbo streams no longer block until the popup closes.
+- An open popup is closed on Turbo Drive navigation.
+- Malformed JSON responses no longer break the app's `fetch()`.
+- Removed the internal modules `alert-dispatcher` and `callback-resolver` (replaced by `presenter`).

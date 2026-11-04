@@ -1,5 +1,4 @@
 /assets/node_modules/
-/assets/package-lock.json
 /.idea/
 /var/
 /vendor/

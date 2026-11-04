@@ -31,20 +31,24 @@ export class FetchInterceptor {
     private async extractAlerts(response: Response): Promise<void> {
         const contentType = response.headers.get('Content-Type') ?? '';
 
-        if (contentType.includes('text/vnd.turbo-stream.html')) {
-            const html = await response.clone().text();
-            injectHiddenHtml(html);
-            return;
-        }
-
-        if (contentType.includes('application/json')) {
-            const data = await response.clone().json();
-            const alerts = data !== null && typeof data === 'object' ? data[JSON_KEY] : undefined;
-            if (Array.isArray(alerts)) {
-                document.dispatchEvent(new CustomEvent(ALERT_ADDED_EVENT, {
-                    detail: {alerts},
-                }));
+        try {
+            if (contentType.includes('text/vnd.turbo-stream.html')) {
+                const html = await response.clone().text();
+                injectHiddenHtml(html);
+                return;
             }
+
+            if (contentType.includes('application/json')) {
+                const data = await response.clone().json();
+                const alerts = data !== null && typeof data === 'object' ? data[JSON_KEY] : undefined;
+                if (Array.isArray(alerts)) {
+                    document.dispatchEvent(new CustomEvent(ALERT_ADDED_EVENT, {
+                        detail: {alerts},
+                    }));
+                }
+            }
+        } catch {
+            // Inspection must never make the app's own fetch() reject.
         }
     }
 }

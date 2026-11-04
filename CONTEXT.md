@@ -38,3 +38,8 @@ _Avoid_: rendering alerts
 A way an Alert reaches the browser: page view, Turbo stream, JSON `ux_sweet_alert` key or HX-Trigger header. When no transport fits the response, the Alert queue is left untouched.
 _Avoid_: channel, strategy
 
+### Presentation
+
+**Alert presentation**:
+Showing one delivered Alert in the browser, after the previous one has closed, and resolving its Result through at most one Callback.
+_Avoid_: firing, dispatching

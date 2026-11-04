@@ -1,32 +1,28 @@
 import {Controller} from '@hotwired/stimulus';
-import type {SweetAlertOptions} from 'sweetalert2';
-import {fireAlert} from './alert-dispatcher.js';
-import {resolveCallback} from './callback-resolver.js';
 import {FetchInterceptor} from './fetch-interceptor.js';
-import {
-    ALERT_ADDED_EVENT,
-    ALERT_CLOSED_EVENT_PREFIX,
-    CALLBACK_RESPONSE_EVENT,
-    type AlertDetail,
-    type ToastValue,
-} from './types.js';
+import {installNavigationGuard, present} from './presenter.js';
+import {ALERT_ADDED_EVENT, type AlertDetail, type AlertPayload} from './types.js';
 
 export default class extends Controller {
     static values = {
         view: Array,
     };
 
-    declare viewValue: ToastValue[];
+    declare viewValue: AlertPayload[];
 
     private readonly fetchInterceptor = new FetchInterceptor();
-    private handleAlertAdded: ((e: Event) => Promise<void>) | null = null;
+    private handleAlertAdded: ((e: Event) => void) | null = null;
     private handleTurboBeforeStreamRender: ((e: Event) => void) | null = null;
 
-    async connect(): Promise<void> {
+    connect(): void {
         this.fetchInterceptor.install();
+        installNavigationGuard();
         this.registerTurboStreamHandler();
         this.registerAlertAddedHandler();
-        await this.processInitialToasts();
+
+        for (const alert of this.viewValue) {
+            present(alert, this.element as HTMLElement).catch(console.error);
+        }
     }
 
     disconnect(): void {
@@ -52,7 +48,7 @@ export default class extends Controller {
             const detail = (e as CustomEvent).detail;
             const fallbackToDefaultActions = detail.render;
 
-            detail.render = async (streamElement: { action: string; templateContent: DocumentFragment }) => {
+            detail.render = (streamElement: { action: string; templateContent: DocumentFragment }) => {
                 if (streamElement.action !== 'alert') {
                     fallbackToDefaultActions(streamElement);
                     return;
@@ -63,7 +59,7 @@ export default class extends Controller {
                     return;
                 }
 
-                let alert: SweetAlertOptions & { id?: string };
+                let alert: AlertPayload;
                 try {
                     alert = JSON.parse(json);
                 } catch {
@@ -71,14 +67,7 @@ export default class extends Controller {
                     return;
                 }
 
-                const alertId = alert.id;
-                delete alert.id;
-
-                const result = await fireAlert(alert, this.element as HTMLElement);
-
-                document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${alertId}:closed`, {
-                    detail: result,
-                }));
+                present(alert, this.element as HTMLElement).catch(console.error);
             };
         };
 
@@ -90,76 +79,14 @@ export default class extends Controller {
             document.removeEventListener(ALERT_ADDED_EVENT, this.handleAlertAdded);
         }
 
-        this.handleAlertAdded = async (e: Event): Promise<void> => {
+        this.handleAlertAdded = (e: Event): void => {
             const detail = (e as CustomEvent<AlertDetail>).detail;
-            for (const {id, ...alert} of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
-                const result = await fireAlert(alert, e.target as HTMLElement);
-                await resolveCallback(detail.callback, result, e.target as HTMLElement);
 
-                if (id) {
-                    document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${id}:closed`, {
-                        detail: result,
-                    }));
-                }
+            for (const alert of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
+                present(alert, e.target as HTMLElement, detail.callback).catch(console.error);
             }
         };
 
         document.addEventListener(ALERT_ADDED_EVENT, this.handleAlertAdded);
-    }
-
-    private async processInitialToasts(): Promise<void> {
-        for (const toast of this.viewValue) {
-            const toastId = toast.id;
-            const callbackUrl = toast.callbackUrl ?? null;
-
-            const swalOptions: SweetAlertOptions = {...toast};
-            delete (swalOptions as ToastValue).callbackUrl;
-            delete (swalOptions as ToastValue).id;
-
-            const result = await fireAlert(swalOptions, this.element as HTMLElement);
-
-            if (callbackUrl) {
-                await this.postCallbackResult(callbackUrl, result);
-            } else {
-                document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${toastId}:closed`, {
-                    detail: result,
-                }));
-            }
-        }
-    }
-
-    private async postCallbackResult(callbackUrl: string, result: { isConfirmed: boolean; isDenied: boolean; isDismissed: boolean; value?: unknown }): Promise<void> {
-        try {
-            const response = await fetch(callbackUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                body: JSON.stringify({
-                    isConfirmed: result.isConfirmed,
-                    isDenied: result.isDenied,
-                    isDismissed: result.isDismissed,
-                    value: result.value ?? null,
-                }),
-                redirect: 'follow',
-            });
-
-            if (response.redirected) {
-                window.location.href = response.url;
-                return;
-            }
-
-            const detail = response.headers.get('Content-Type')?.includes('application/json')
-                ? await response.json()
-                : null;
-
-            this.element.dispatchEvent(new CustomEvent(CALLBACK_RESPONSE_EVENT, {
-                bubbles: true,
-                detail,
-            }));
-        } catch (err) {
-            console.warn('[ux-sweet-alert] Callback URL request failed:', err);
-        }
     }
 }

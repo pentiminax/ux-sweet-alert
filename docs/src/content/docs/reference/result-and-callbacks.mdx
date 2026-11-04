@@ -63,8 +63,8 @@ The Stimulus controller dispatches a few useful browser events:
   rows={[
     ['sweetalert:before-fire', 'Right before `Swal.fire(...)` is called.'],
     ['sweetalert:after-fire', 'After the SweetAlert promise resolves.'],
-    ['ux-sweet-alert:{id}:closed', 'When an alert without callback URL is closed.'],
-    ['ux-sweet-alert:callback:response', 'After a callback URL responds with JSON or completes empty.'],
+    ['ux-sweet-alert:{id}:closed', 'After an alert closes (and its callback, if any, ran). Fires for every alert that has an id.'],
+    ['ux-sweet-alert:callback:response', 'After a callback URL responds with JSON or completes empty. Dispatched on the element the alert originated from.'],
   ]}
 />
 
