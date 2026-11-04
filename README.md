@@ -105,6 +105,18 @@ Available helpers include `Text`, `Textarea`, `Select`, `Radio`, `Checkbox`, `Fi
 
 The bundle also ships `SweetAlert:ConfirmButton` and `SweetAlert:InputModal` Live Components. Render `{{ ux_sweet_alert_scripts() }}` on the page, then use the component that matches your interaction pattern. See the online documentation for full examples.
 
+## Run the demo
+
+The `demo/` folder is a Symfony app that shows every feature next to the code behind it. It uses the bundle from this checkout, so your changes in `src/` show up on reload.
+
+```bash
+cd demo
+composer install
+symfony serve
+```
+
+Without the Symfony CLI, run `php -S localhost:8000 -t public` instead (and `php bin/console tailwind:build --watch` if you edit the styles).
+
 ## Documentation
 
 - [Online documentation](https://pentiminax.github.io/ux-sweet-alert/)

@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* Tokens copied from docs/src/styles/custom.css so the demo looks like the docs. */
+:root {
+    color-scheme: dark;
+    --doc-bg: #121212;
+    --doc-surface-strong: #181716;
+    --doc-surface: #1f1d1b;
+    --doc-surface-soft: #2a2723;
+    --doc-line: rgba(255, 246, 231, 0.1);
+    --doc-heading: #fff7ee;
+    --doc-text: #efe3d5;
+    --doc-muted: #c2b6aa;
+    --doc-code-bg: #0d1117;
+    --doc-shadow: 0 32px 80px rgba(0, 0, 0, 0.28);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+        --doc-bg: #fbf7f0;
+        --doc-surface-strong: #f2ede5;
+        --doc-surface: #fffdf9;
+        --doc-surface-soft: #f8f1e7;
+        --doc-line: rgba(24, 23, 22, 0.08);
+        --doc-heading: #1d1814;
+        --doc-text: #3b322c;
+        --doc-muted: #6d6258;
+        --doc-shadow: 0 28px 60px rgba(90, 71, 55, 0.12);
+    }
+}
+
+@theme {
+    --color-bg: var(--doc-bg);
+    --color-surface: var(--doc-surface);
+    --color-surface-strong: var(--doc-surface-strong);
+    --color-surface-soft: var(--doc-surface-soft);
+    --color-line: var(--doc-line);
+    --color-heading: var(--doc-heading);
+    --color-text: var(--doc-text);
+    --color-muted: var(--doc-muted);
+    --color-code: var(--doc-code-bg);
+    --color-coral: #ff6b4f;
+    --color-amber: #f4b400;
+    --color-mint: #51c1a2;
+    --font-sans: 'Source Sans 3', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --shadow-doc: var(--doc-shadow);
+}
+
+@layer base {
+    body {
+        background:
+            radial-gradient(circle at top left, rgba(255, 107, 79, 0.1), transparent 32%),
+            radial-gradient(circle at top right, rgba(81, 193, 162, 0.08), transparent 28%),
+            var(--doc-bg);
+        @apply min-h-screen font-sans text-text antialiased;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-coral);
+        outline-offset: 3px;
+    }
+
+    ::selection {
+        background: rgba(255, 107, 79, 0.22);
+        color: var(--doc-heading);
+    }
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .btn-primary {
+        color: #fff6f0;
+        background: linear-gradient(135deg, #ff6b4f 0%, #ff8e53 100%);
+        box-shadow: 0 18px 32px rgba(255, 107, 79, 0.25);
+    }
+
+    .btn-secondary {
+        @apply border border-line bg-surface text-heading hover:border-coral/40;
+    }
+
+    .kicker {
+        @apply text-xs font-bold tracking-[0.2em] text-coral uppercase;
+    }
+
+    .gradient-text {
+        @apply inline-block bg-gradient-to-br from-coral via-amber to-mint bg-clip-text text-transparent;
+    }
+
+    .card {
+        @apply rounded-3xl border border-line bg-surface p-6 shadow-doc;
+    }
+
+    .code {
+        @apply overflow-x-auto rounded-2xl border border-white/10 bg-code p-4 font-mono text-[0.8rem] leading-relaxed text-[#e6edf3];
+    }
+
+    .logo {
+        @apply inline-grid size-11 place-items-center rounded-2xl text-white/95;
+        background: linear-gradient(145deg, rgba(255, 107, 79, 0.95), rgba(244, 180, 0, 0.82));
+        box-shadow: 0 14px 34px rgba(255, 107, 79, 0.24);
+    }
+}
+
+/* highlight.js colors only: the .code card already provides background and padding. */
+.code code.hljs {
+    padding: 0;
+    background: transparent;
+}

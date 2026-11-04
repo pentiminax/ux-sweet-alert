@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block intro %}
+    Every <code class="font-mono text-sm text-heading">Theme</code> case, one click each. This demo sets <code class="font-mono text-sm text-heading">theme: auto</code> by default, so popups follow your OS light/dark setting.
+{% endblock %}
+
+{% block content %}
+    <section class="card">
+        <div class="grid gap-2 sm:grid-cols-3 xl:grid-cols-4">
+            {% for theme in enum('Pentiminax\\UX\\SweetAlert\\Enum\\Theme').cases() %}
+                <form method="post" action="{{ path('fire', {page: 'themes', example: 'preview'}) }}">
+                    <input type="hidden" name="theme" value="{{ theme.value }}">
+                    <button class="btn btn-secondary w-full">{{ theme.value }}</button>
+                </form>
+            {% endfor %}
+        </div>
+        <pre class="code mt-6"><code class="language-php">{{ example_code('themes', 'preview') }}</code></pre>
+    </section>
+{% endblock %}

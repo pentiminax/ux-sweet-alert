@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block intro %}
+    The defaults below apply to every helper alert in this demo, which is why the confirm buttons are coral.
+    This is the real file, read at request time.
+{% endblock %}
+
+{% block content %}
+    <section class="card">
+        <h2 class="font-mono text-sm text-muted">demo/config/packages/sweet_alert.yaml</h2>
+        <pre class="code mt-4"><code class="language-yaml">{{ config }}</code></pre>
+        <p class="mt-4 text-sm text-muted">
+            All options: <code class="font-mono text-heading">php bin/console config:dump-reference sweet_alert</code>
+        </p>
+    </section>
+{% endblock %}

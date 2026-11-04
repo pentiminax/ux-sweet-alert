@@ -1,0 +1,4 @@
+# `symfony serve` also keeps the Tailwind build watching.
+workers:
+    tailwind:
+        cmd: ['symfony', 'console', 'tailwind:build', '--watch']

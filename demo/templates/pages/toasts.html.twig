@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block intro %}
+    <code class="font-mono text-sm text-heading">toast()</code> creates a small non-blocking notification. Pick a position.
+{% endblock %}
+
+{% block content %}
+    <section class="card grid gap-5 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:items-start">
+        <div>
+            <h2 class="font-display text-lg font-semibold text-heading">Positions</h2>
+            <div class="mt-4 grid grid-cols-3 gap-2">
+                {# Laid out as on screen, top-start to bottom-end. #}
+                {% for position in ['top-start', 'top', 'top-end', 'center-start', 'center', 'center-end', 'bottom-start', 'bottom', 'bottom-end'] %}
+                    <form method="post" action="{{ path('fire', {page: 'toasts', example: 'position'}) }}">
+                        <input type="hidden" name="position" value="{{ position }}">
+                        <button class="btn btn-secondary w-full px-2 text-xs" title="{{ position }}">{{ position }}</button>
+                    </form>
+                {% endfor %}
+            </div>
+        </div>
+        <pre class="code"><code class="language-php">{{ example_code('toasts', 'position') }}</code></pre>
+    </section>
+
+    {% for example in demo_examples('toasts')|filter(e => e != 'position') %}
+        {{ include('_example.html.twig', {page_key: 'toasts'}) }}
+    {% endfor %}
+{% endblock %}

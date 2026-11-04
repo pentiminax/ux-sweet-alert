@@ -1,0 +1,23 @@
+<twig:SweetAlert:ConfirmButton
+    class="btn btn-primary"
+    title="Archive conversation?"
+    text="You can restore it later."
+    icon="warning"
+    confirmButtonText="Archive"
+    callback="showDemoResult"
+>Confirm</twig:SweetAlert:ConfirmButton>
+
+<twig:SweetAlert:InputModal
+    class="btn btn-secondary"
+    title="Choose a role"
+    inputType="select"
+    inputOptions='{"admin":"Admin","editor":"Editor"}'
+    inputValue="editor"
+    callback="showDemoResult"
+>Input</twig:SweetAlert:InputModal>
+
+<script>
+    window.showDemoResult = (result) => {
+        document.getElementById('callback-output').textContent = JSON.stringify(result);
+    };
+</script>

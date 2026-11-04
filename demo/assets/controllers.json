@@ -1,0 +1,39 @@
+{
+    "controllers": {
+        "@pentiminax/ux-sweet-alert": {
+            "sweetalert": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "sweetalert2/themes/bootstrap-4.css": false,
+                    "sweetalert2/themes/bootstrap-5.css": false,
+                    "sweetalert2/themes/bulma.css": false,
+                    "sweetalert2/themes/material-ui.css": false
+                }
+            }
+        },
+        "@symfony/ux-live-component": {
+            "live": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-live-component/dist/live.min.css": true
+                }
+            }
+        },
+        "@symfony/ux-turbo": {
+            "turbo-core": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-turbo/dist/mercure_stream_source_element.js": true
+                }
+            },
+            "mercure-turbo-stream": {
+                "enabled": false,
+                "fetch": "eager"
+            }
+        }
+    },
+    "entrypoints": []
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{{ page.title|default('Demo') }}{% endblock %} | UX SweetAlert demo</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔔</text></svg>">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+        {% block javascripts %}
+            {{ importmap('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        <header class="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-xl">
+            <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+                <a href="{{ path('home') }}" class="inline-flex items-center gap-3">
+                    <span class="logo">{{ include('_logo.svg') }}</span>
+                    <span>
+                        <span class="block font-display text-lg font-semibold text-heading">UX SweetAlert</span>
+                        <span class="hidden text-xs tracking-[0.2em] text-muted uppercase sm:block">Live demo</span>
+                    </span>
+                </a>
+                <nav class="flex items-center gap-3">
+                    <a class="btn btn-secondary" href="https://pentiminax.github.io/ux-sweet-alert/">Docs</a>
+                    <a class="btn btn-secondary hidden sm:inline-flex" href="https://github.com/pentiminax/ux-sweet-alert">GitHub</a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 md:grid-cols-[240px_minmax(0,1fr)] lg:px-8">
+            <aside>
+                <nav aria-label="Demo pages" class="card flex flex-wrap gap-1 p-3 md:sticky md:top-24 md:block md:p-5">
+                    {% for group, pages in demo_pages() %}
+                        <h2 class="mb-3 hidden text-xs font-semibold tracking-[0.18em] text-muted uppercase md:block {{ not loop.first ? 'mt-6' }}">{{ group }}</h2>
+                        <ul class="contents md:block md:space-y-1.5">
+                            {% for item in pages %}
+                                {% set current = page is defined and page == item %}
+                                <li>
+                                    <a href="{{ path('page', {page: item.value}) }}"
+                                       {% if current %}aria-current="page"{% endif %}
+                                       class="block rounded-2xl border px-3 py-1.5 md:px-4 md:py-2.5 text-sm transition-colors {{ current ? 'border-coral/30 bg-coral/12 text-heading' : 'border-transparent text-muted hover:border-line hover:text-heading' }}">
+                                        {{ item.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </nav>
+            </aside>
+
+            <main class="min-w-0">
+                {% block body %}
+                    <p class="kicker">{{ page.group }}</p>
+                    <div class="mt-2 flex flex-wrap items-end justify-between gap-4">
+                        <h1 class="font-display text-4xl font-bold text-heading">{{ page.title }}</h1>
+                        <a class="text-sm font-semibold text-coral hover:underline" href="{{ page.docsUrl }}">Read the docs →</a>
+                    </div>
+                    <div class="mt-3 max-w-2xl text-lg text-muted">{% block intro %}{% endblock %}</div>
+                    <div class="mt-8 space-y-6">{% block content %}{% endblock %}</div>
+                {% endblock %}
+            </main>
+        </div>
+
+        {{ ux_sweet_alert_scripts() }}
+    </body>
+</html>

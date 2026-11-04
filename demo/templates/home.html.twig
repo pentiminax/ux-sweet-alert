@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Explore the bundle{% endblock %}
+
+{% block body %}
+    <section class="relative overflow-hidden rounded-[2rem] border border-line bg-surface p-8 shadow-doc sm:p-12">
+        <p class="kicker">Symfony UX bundle</p>
+        <h1 class="mt-4 max-w-3xl font-display text-4xl font-bold text-heading sm:text-5xl">
+            SweetAlert2 alerts, <span class="gradient-text">queued from PHP.</span>
+        </h1>
+        <p class="mt-5 max-w-2xl text-lg text-muted">
+            Every button in this demo runs real bundle code on the server and shows you that code.
+            Change something in <code class="font-mono text-sm text-heading">src/</code> at the repository root and reload: the demo uses it right away.
+        </p>
+        <form method="post" action="{{ path('fire', {page: 'home', example: 'fire-an-alert'}) }}" class="mt-8 flex flex-wrap gap-3">
+            <button class="btn btn-primary">Fire an alert</button>
+            <a class="btn btn-secondary" href="{{ path('page', {page: 'alerts'}) }}">Browse examples</a>
+        </form>
+        <pre class="code mt-8 max-w-2xl"><code class="language-php">{{ example_code('home', 'fire-an-alert') }}</code></pre>
+    </section>
+
+    {% for group, pages in demo_pages() %}
+        <h2 class="mt-10 mb-4 text-xs font-semibold tracking-[0.18em] text-muted uppercase">{{ group }}</h2>
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {% for item in pages %}
+                <a href="{{ path('page', {page: item.value}) }}" class="card block transition hover:-translate-y-0.5 hover:border-coral/40">
+                    <span class="font-display text-lg font-semibold text-heading">{{ item.title }}</span>
+                    <span class="mt-1 block text-sm text-coral">Open →</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

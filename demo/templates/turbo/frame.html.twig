@@ -1,0 +1,6 @@
+<turbo-frame id="turbo-frame-demo">
+    <form method="post" action="{{ path('turbo_frame') }}" class="flex flex-wrap items-center gap-4">
+        <button class="btn btn-primary">Submit inside the frame</button>
+        <span class="text-sm text-muted">{{ savedAt is defined ? 'Frame rendered at ' ~ savedAt|date('H:i:s') : 'Not submitted yet' }}</span>
+    </form>
+</turbo-frame>

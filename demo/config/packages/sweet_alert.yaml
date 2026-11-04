@@ -1,0 +1,8 @@
+sweet_alert:
+    # Turn every addFlash() into a SweetAlert toast.
+    auto_convert_flash_messages: true
+    defaults:
+        theme: auto
+        position: center
+        confirmButtonColor: '#ff6b4f'
+        cancelButtonColor: '#6d6258'
