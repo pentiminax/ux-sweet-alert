@@ -86,7 +86,7 @@ final class Alert implements \JsonSerializable
     /** @var array<string, scalar> */
     private array $inputAttributes = [];
 
-    /** @var array<string, string> */
+    /** @var array<string, string|array<string, string>> */
     private array $inputOptions = [];
 
     private bool $returnInputValueOnDeny = false;
@@ -483,7 +483,7 @@ final class Alert implements \JsonSerializable
     }
 
     /**
-     * @param array<string, string> $inputOptions
+     * @param array<string, string|array<string, string>> $inputOptions
      */
     public function inputOptions(array $inputOptions): self
     {
@@ -493,7 +493,7 @@ final class Alert implements \JsonSerializable
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|array<string, string>>
      */
     public function getInputOptions(): array
     {
