@@ -78,8 +78,6 @@ final class AlertManagerTest extends KernelTestCase
             'imageUrl'               => null,
             'imageHeight'            => null,
             'imageAlt'               => null,
-            'draggable'              => false,
-            'focusConfirm'           => true,
             'topLayer'               => false,
             'input'                  => null,
             'inputPlaceholder'       => null,
@@ -91,6 +89,8 @@ final class AlertManagerTest extends KernelTestCase
             'validationMessage'      => null,
             'backdrop'               => true,
             'allowOutsideClick'      => true,
+            'draggable'              => false,
+            'focusConfirm'           => true,
         ];
 
         $this->assertSame($expectedArray, $alert->jsonSerialize());

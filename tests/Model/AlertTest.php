@@ -116,6 +116,8 @@ final class AlertTest extends TestCase
         $this->assertTrue($data['timerProgressBar']);
         $this->assertArrayNotHasKey('backdrop', $data);
         $this->assertArrayNotHasKey('allowOutsideClick', $data);
+        $this->assertArrayNotHasKey('draggable', $data);
+        $this->assertArrayNotHasKey('focusConfirm', $data);
     }
 
     #[Test]
