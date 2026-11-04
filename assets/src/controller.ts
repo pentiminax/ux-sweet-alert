@@ -92,13 +92,15 @@ export default class extends Controller {
 
         this.handleAlertAdded = async (e: Event): Promise<void> => {
             const detail = (e as CustomEvent<AlertDetail>).detail;
-            for (const alert of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
-                if (alert.id) {
-                    delete alert.id;
-                }
-
+            for (const {id, ...alert} of detail.alerts ?? (detail.alert ? [detail.alert] : [])) {
                 const result = await fireAlert(alert, e.target as HTMLElement);
                 await resolveCallback(detail.callback, result, e.target as HTMLElement);
+
+                if (id) {
+                    document.dispatchEvent(new CustomEvent(`${ALERT_CLOSED_EVENT_PREFIX}${id}:closed`, {
+                        detail: result,
+                    }));
+                }
             }
         };
 
