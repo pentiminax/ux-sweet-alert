@@ -229,7 +229,10 @@ final class Examples
             'preview' => static function (AlertManagerInterface $alertManager, UrlGeneratorInterface $urls, Request $request): void {
                 $theme = Theme::from($request->getPayload()->getString('theme'));
 
-                $alertManager->success(title: 'Theme: '.$theme->value, theme: $theme)->withCancelButton();
+                // Alert::new() skips this demo's coral button defaults, so the theme styles every button.
+                $alertManager->addAlert(
+                    Alert::new(title: 'Theme: '.$theme->value, position: Position::CENTER)->theme($theme)->withCancelButton(),
+                );
             },
         ];
     }

@@ -9,19 +9,17 @@ use Pentiminax\UX\SweetAlert\Enum\Theme;
 
 final readonly class AlertDefaults
 {
-    public const CONFIRM_BUTTON_COLOR = '#3085d6';
-    public const CANCEL_BUTTON_COLOR  = '#aaa';
-    public const DENY_BUTTON_COLOR    = '#dd6b55';
-    public const CONFIRM_BUTTON_TEXT  = 'OK';
-    public const CANCEL_BUTTON_TEXT   = 'Cancel';
-    public const DENY_BUTTON_TEXT     = 'No';
+    public const CONFIRM_BUTTON_TEXT = 'OK';
+    public const CANCEL_BUTTON_TEXT  = 'Cancel';
+    public const DENY_BUTTON_TEXT    = 'No';
 
     public function __construct(
         public Position $position = Position::CENTER,
         public ?Theme $theme = null,
-        public string $confirmButtonColor = self::CONFIRM_BUTTON_COLOR,
-        public string $cancelButtonColor = self::CANCEL_BUTTON_COLOR,
-        public string $denyButtonColor = self::DENY_BUTTON_COLOR,
+        // Null leaves the button colors to the SweetAlert2 theme.
+        public ?string $confirmButtonColor = null,
+        public ?string $cancelButtonColor = null,
+        public ?string $denyButtonColor = null,
         public string $confirmButtonText = self::CONFIRM_BUTTON_TEXT,
         public string $cancelButtonText = self::CANCEL_BUTTON_TEXT,
         public string $denyButtonText = self::DENY_BUTTON_TEXT,
@@ -47,9 +45,9 @@ final readonly class AlertDefaults
         return new self(
             position: isset($config['position']) ? Position::from($config['position']) : Position::CENTER,
             theme: isset($config['theme']) ? Theme::from($config['theme']) : Theme::Auto,
-            confirmButtonColor: $config['confirmButtonColor'] ?? self::CONFIRM_BUTTON_COLOR,
-            cancelButtonColor: $config['cancelButtonColor']   ?? self::CANCEL_BUTTON_COLOR,
-            denyButtonColor: $config['denyButtonColor']       ?? self::DENY_BUTTON_COLOR,
+            confirmButtonColor: $config['confirmButtonColor'] ?? null,
+            cancelButtonColor: $config['cancelButtonColor']   ?? null,
+            denyButtonColor: $config['denyButtonColor']       ?? null,
             confirmButtonText: $config['confirmButtonText']   ?? self::CONFIRM_BUTTON_TEXT,
             cancelButtonText: $config['cancelButtonText']     ?? self::CANCEL_BUTTON_TEXT,
             denyButtonText: $config['denyButtonText']         ?? self::DENY_BUTTON_TEXT,

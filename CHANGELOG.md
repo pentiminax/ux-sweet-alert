@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Button colors are now left to the SweetAlert2 theme: `confirmButtonColor`, `cancelButtonColor` and `denyButtonColor` default to `null` (config and `AlertDefaults`) and are serialized only when set, so themes such as `bootstrap-5` style their own buttons. Popups without a configured color now use the theme's colors instead of `#3085d6` / `#aaa` / `#dd6b55`; set them in `sweet_alert.defaults` to keep the old look.
+- BC break: removed `AlertDefaults::CONFIRM_BUTTON_COLOR`, `CANCEL_BUTTON_COLOR` and `DENY_BUTTON_COLOR`; `AlertDefaults` color properties are now `?string`.
 - Fixed alerts missing from `Turbo-Frame` responses built with `render()`: `RenderAlertListener` now runs at priority -10, after Symfony sets the default `Content-Type`.
 - Added multi-step wizards: `AlertManager::steps(Alert ...$alerts)` queues the alerts with SweetAlert2 progress steps (`Alert::progressSteps()`, `currentProgressStep()`) and a shared `wizardId`. Steps of a wizard fire in order on every transport, and dismissing one (cancel, Esc, backdrop, close, timer) skips the remaining steps; a deny answer moves on. Each step's result still goes to its own callback and `closed` event. Plain `addAlert()` queues are unchanged.
 - BC break: `AlertManagerInterface` gained `steps()`; custom implementations must add it.
