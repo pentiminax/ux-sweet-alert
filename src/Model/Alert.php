@@ -538,8 +538,6 @@ final class Alert implements \JsonSerializable
             'imageUrl'               => $this->imageUrl,
             'imageHeight'            => $this->imageHeight,
             'imageAlt'               => $this->imageAlt,
-            'draggable'              => $this->draggable,
-            'focusConfirm'           => $this->focusConfirm,
             'topLayer'               => $this->topLayer,
             'input'                  => $this->input,
             'inputPlaceholder'       => $this->inputPlaceholder,
@@ -562,6 +560,8 @@ final class Alert implements \JsonSerializable
         } else {
             $data['backdrop']          = $this->backdrop;
             $data['allowOutsideClick'] = $this->allowOutsideClick;
+            $data['draggable']         = $this->draggable;
+            $data['focusConfirm']      = $this->focusConfirm;
         }
 
         return $data;
