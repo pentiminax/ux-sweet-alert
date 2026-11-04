@@ -10,8 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\Cloner\Data;
 
-class SweetAlertDataCollector extends AbstractDataCollector
+final class SweetAlertDataCollector extends AbstractDataCollector
 {
+    private const NAME       = 'ux_sweetalert';
+    private const KEY_ALERTS = 'alerts';
+    private const KEY_TOASTS = 'toasts';
+
     public function __construct(
         private readonly SweetAlertContextInterface $context,
     ) {
@@ -34,12 +38,12 @@ class SweetAlertDataCollector extends AbstractDataCollector
 
     public function getNumberOfAlerts(): int
     {
-        return \count($this->data['alerts']);
+        return \count($this->data[self::KEY_ALERTS]);
     }
 
     public function getNumberOfToasts(): int
     {
-        return \count($this->data['toasts']);
+        return \count($this->data[self::KEY_TOASTS]);
     }
 
     public function getTotalCount(): int
@@ -49,14 +53,14 @@ class SweetAlertDataCollector extends AbstractDataCollector
 
     public function getName(): string
     {
-        return 'ux_sweetalert';
+        return self::NAME;
     }
 
     private function collectData(): array
     {
         return [
-            'alerts' => $this->context->getStandardAlerts(),
-            'toasts' => $this->context->getToasts(),
+            self::KEY_ALERTS => $this->context->getStandardAlerts(),
+            self::KEY_TOASTS => $this->context->getToasts(),
         ];
     }
 }

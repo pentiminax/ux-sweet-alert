@@ -11,8 +11,11 @@ use Twig\Extension\AbstractExtension;
 use Twig\Markup;
 use Twig\TwigFunction;
 
-class AlertExtension extends AbstractExtension
+final class AlertExtension extends AbstractExtension
 {
+    private const CONTROLLER = '@pentiminax/ux-sweet-alert/sweetalert';
+    private const HTML       = '<div data-turbo-temporary="true" %s></div>';
+
     public function __construct(
         private readonly Environment $twig,
         private readonly AlertDelivery $delivery,
@@ -29,18 +32,11 @@ class AlertExtension extends AbstractExtension
     public function scripts(): Markup
     {
         $stimulus = new StimulusHelper($this->twig);
-        $alerts   = $this->delivery->forView();
-
-        $controllers['@pentiminax/ux-sweet-alert/sweetalert'] = [
-            'view' => $alerts,
-        ];
 
         $stimulusAttributes = $stimulus->createStimulusAttributes();
-        foreach ($controllers as $name => $controllerValues) {
-            $stimulusAttributes->addController($name, $controllerValues);
-        }
+        $stimulusAttributes->addController(self::CONTROLLER, ['view' => $this->delivery->forView()]);
 
-        $html = \sprintf('<div data-turbo-temporary="true" %s></div>', $stimulusAttributes);
+        $html = \sprintf(self::HTML, $stimulusAttributes);
 
         return new Markup($html, 'UTF-8');
     }
