@@ -302,4 +302,16 @@ final class AlertTest extends TestCase
 
         $this->assertArrayNotHasKey('callbackUrl', $data);
     }
+
+    #[Test]
+    public function it_serializes_pre_confirm_url_and_error_message_only_when_set(): void
+    {
+        $this->assertArrayNotHasKey('preConfirmUrl', Alert::new(title: 'Test')->jsonSerialize());
+
+        $data = Alert::new(title: 'Test')->preConfirmUrl('/check', 'Oops')->jsonSerialize();
+
+        $this->assertSame('/check', $data['preConfirmUrl']);
+        $this->assertSame('Oops', $data['preConfirmErrorMessage']);
+        $this->assertArrayNotHasKey('preConfirmErrorMessage', Alert::new(title: 'Test')->preConfirmUrl('/check')->jsonSerialize());
+    }
 }

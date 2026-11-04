@@ -6,6 +6,11 @@ export interface AlertDetail {
     callback?: string;
 }
 
+export type PreConfirmOptions = {
+    preConfirmUrl?: string;
+    preConfirmErrorMessage?: string;
+};
+
 export type ToastValue = SweetAlertOptions & {
     id?: string;
     callbackUrl?: string;

@@ -102,3 +102,34 @@ $alertManager
 
 - [Input Types](../../reference/input-types/) for constructor-level details.
 - [Result & Callbacks](../../reference/result-and-callbacks/) for the backend callback flow.
+
+## Server-side validation with `preConfirmUrl`
+
+`preConfirmUrl()` POSTs the confirmed value as JSON (`{"value": ...}`) to your endpoint while the modal
+stays open with a loader.
+
+```php
+$alertManager->addAlert(
+    Alert::new(title: 'Pick a username')
+        ->input('text')
+        ->withCancelButton()
+        ->preConfirmUrl('/username/check', 'Network error')
+);
+```
+
+```php
+#[Route('/username/check', methods: ['POST'])]
+public function check(Request $request): JsonResponse
+{
+    $name = $request->getPayload()->get('value');
+
+    return taken($name)
+        ? new JsonResponse(['message' => 'Already taken'], 422)
+        : new JsonResponse(['username' => $name]);
+}
+```
+
+- A non-2xx response keeps the modal open and shows `message` or `detail` (or the error message passed as the second argument, default `Request failed`).
+- A 2xx JSON response closes the modal and becomes `result.value`, which `callbackUrl()` also receives. A 2xx response that is not JSON keeps the user's input as `result.value`, and a JSON `false` body is delivered as `null` (SweetAlert2 treats `false` as a refusal).
+- Only the confirm button triggers the request; outside click and Esc are blocked while it runs.
+- The endpoint must accept POST only and enforce its own access control: there is no CSRF token.

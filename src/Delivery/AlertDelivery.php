@@ -27,6 +27,8 @@ final class AlertDelivery
 
     public const JSON_KEY = 'ux_sweet_alert';
 
+    public const PRE_CONFIRM_HEADER = 'X-SweetAlert-PreConfirm';
+
     private const HX_REQUEST_HEADER = 'HX-Request';
 
     private const HX_TRIGGER_HEADER = 'HX-Trigger';
@@ -73,10 +75,11 @@ final class AlertDelivery
         };
     }
 
-    // Never start a session just to look for alerts.
+    // Never start a session just to look for alerts. Pre-confirm requests must not drain the queue: the open modal would swallow the alerts.
     private function canUseSession(Request $request): bool
     {
-        return !$request->attributes->getBoolean('_stateless')
+        return !$request->headers->has(self::PRE_CONFIRM_HEADER)
+            && !$request->attributes->getBoolean('_stateless')
             && $request->hasSession()
             && ($request->getSession()->isStarted() || $request->hasPreviousSession());
     }
