@@ -130,6 +130,6 @@ public function check(Request $request): JsonResponse
 ```
 
 - A non-2xx response keeps the modal open and shows `message` or `detail` (or the error message passed as the second argument, default `Request failed`).
-- A 2xx JSON response closes the modal and becomes `result.value`, which `callbackUrl()` also receives. A 2xx response that is not JSON keeps the user's input as `result.value`.
+- A 2xx JSON response closes the modal and becomes `result.value`, which `callbackUrl()` also receives. A 2xx response that is not JSON keeps the user's input as `result.value`, and a JSON `false` body is delivered as `null` (SweetAlert2 treats `false` as a refusal).
 - Only the confirm button triggers the request; outside click and Esc are blocked while it runs.
 - The endpoint must accept POST only and enforce its own access control: there is no CSRF token.

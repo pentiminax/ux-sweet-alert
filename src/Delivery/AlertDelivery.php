@@ -62,8 +62,7 @@ final class AlertDelivery
 
     public function deliver(Request $request, Response $response): void
     {
-        // Pre-confirm responses must not drain the queue: the open modal would swallow the alerts.
-        if ($request->headers->has(self::PRE_CONFIRM_HEADER) || $response->isRedirection() || !$this->canUseSession($request)) {
+        if ($response->isRedirection() || !$this->canUseSession($request)) {
             return;
         }
 
@@ -76,10 +75,11 @@ final class AlertDelivery
         };
     }
 
-    // Never start a session just to look for alerts.
+    // Never start a session just to look for alerts. Pre-confirm requests must not drain the queue: the open modal would swallow the alerts.
     private function canUseSession(Request $request): bool
     {
-        return !$request->attributes->getBoolean('_stateless')
+        return !$request->headers->has(self::PRE_CONFIRM_HEADER)
+            && !$request->attributes->getBoolean('_stateless')
             && $request->hasSession()
             && ($request->getSession()->isStarted() || $request->hasPreviousSession());
     }

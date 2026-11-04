@@ -47,7 +47,7 @@ function withPreConfirm(swalOptions) {
                     Swal.showValidationMessage(response.redirected ? fallback : (body?.message ?? body?.detail ?? fallback));
                     return false;
                 }
-                return isJson ? body : undefined;
+                return isJson ? (body === false ? null : body) : undefined;
             }
             catch {
                 Swal.showValidationMessage(fallback);

@@ -61,8 +61,8 @@ function withPreConfirm(swalOptions: SweetAlertOptions & PreConfirmOptions): Swe
                     return false;
                 }
 
-                // undefined keeps the user's input as result.value when the body is not JSON.
-                return isJson ? body : undefined;
+                // undefined keeps the user's input when the body is not JSON; a JSON `false` would keep the modal open, so it becomes null.
+                return isJson ? (body === false ? null : body) : undefined;
             } catch {
                 Swal.showValidationMessage(fallback);
                 return false;
