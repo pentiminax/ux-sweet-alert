@@ -713,9 +713,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     auto_convert_flash_messages?: scalar|Param|null, // Default: false
  *     defaults?: array{
  *         position?: "bottom"|"bottom-end"|"bottom-start"|"center"|"center-end"|"center-start"|"top"|"top-end"|"top-start"|Param, // Default: "center"
- *         confirmButtonColor?: scalar|Param|null, // Default: "#3085d6"
- *         cancelButtonColor?: scalar|Param|null, // Default: "#aaa"
- *         denyButtonColor?: scalar|Param|null, // Default: "#dd6b55"
+ *         confirmButtonColor?: scalar|Param|null, // Default: null
+ *         cancelButtonColor?: scalar|Param|null, // Default: null
+ *         denyButtonColor?: scalar|Param|null, // Default: null
  *         confirmButtonText?: scalar|Param|null, // Default: "OK"
  *         cancelButtonText?: scalar|Param|null, // Default: "Cancel"
  *         denyButtonText?: scalar|Param|null, // Default: "No"
