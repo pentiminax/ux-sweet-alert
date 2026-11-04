@@ -14,6 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 final class DemoTest extends WebTestCase
 {
+    private const VIEW_ATTRIBUTE = 'data-pentiminax--ux-sweet-alert--sweetalert-view-value';
+
     /**
      * @return iterable<string, array{string}>
      */
@@ -53,7 +55,10 @@ final class DemoTest extends WebTestCase
         $client->request('POST', \sprintf('/fire/%s/%s', $page, $example), ['position' => 'top', 'theme' => 'dark']);
 
         self::assertResponseStatusCodeSame(303);
-        $client->followRedirect();
-        self::assertSelectorExists('[data-controller]');
+        $crawler = $client->followRedirect();
+
+        // The wizard queues its three steps; every other example queues one alert.
+        $view = $crawler->filter('[data-controller="pentiminax--ux-sweet-alert--sweetalert"]')->attr(self::VIEW_ATTRIBUTE);
+        self::assertCount('alerts/wizard' === $page.'/'.$example ? 3 : 1, json_decode((string) $view, false, flags: \JSON_THROW_ON_ERROR));
     }
 }
