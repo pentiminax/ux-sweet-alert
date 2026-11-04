@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Pentiminax\UX\SweetAlert\Delivery;
 
 use Pentiminax\UX\SweetAlert\AlertManagerInterface;
+use Pentiminax\UX\SweetAlert\Model\Alert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\UX\Turbo\TurboBundle;
 use Twig\Environment;
 
 /**
  * Drains the Alert queue into the one transport the current response can display.
+ *
+ * Each transport checks that it applies before draining, so alerts stay queued
+ * for the next response when none does.
  *
  * @internal
  */
@@ -22,6 +27,14 @@ final class AlertDelivery
 
     public const JSON_KEY = 'ux_sweet_alert';
 
+    private const HX_REQUEST_HEADER = 'HX-Request';
+
+    private const HX_TRIGGER_HEADER = 'HX-Trigger';
+
+    private const TURBO_FRAME_HEADER = 'Turbo-Frame';
+
+    private const TURBO_STREAM_TEMPLATE = '@SweetAlert/turbo/alert.html.twig';
+
     public function __construct(
         private readonly AlertManagerInterface $alertManager,
         private readonly Environment $twig,
@@ -30,7 +43,7 @@ final class AlertDelivery
     }
 
     /**
-     * @return \Pentiminax\UX\SweetAlert\Model\Alert[]
+     * @return Alert[]
      */
     public function forView(): array
     {
@@ -45,40 +58,13 @@ final class AlertDelivery
             return;
         }
 
-        $contentType = $response->headers->get('Content-Type') ?? '';
-
-        if ($request->headers->has('HX-Request')) {
-            $this->deliverHxTrigger($response);
-        } elseif (false !== $response->getContent() && str_contains($contentType, 'text/vnd.turbo-stream.html')) {
-            $alerts = $this->alertManager->getAlerts();
-            if ([] !== $alerts) {
-                $response->setContent($response->getContent().$this->renderTurboStreams($alerts));
-            }
-        } elseif (
-            false !== $response->getContent() // streamed/binary bodies cannot be modified
-            && str_contains($contentType, 'text/html')
-            && class_exists(\Symfony\UX\Turbo\TurboBundle::class)
-            && $request->headers->has('Turbo-Frame')
-        ) {
-            $this->deliverInTurboFrame($request, $response);
-        } elseif ($response instanceof JsonResponse) {
-            try {
-                $data = json_decode((string) $response->getContent(), false, 512, \JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                return;
-            }
-            if (!$data instanceof \stdClass || property_exists($data, self::JSON_KEY)) {
-                return;
-            }
-
-            $alerts = $this->alertManager->getAlerts();
-            if ([] !== $alerts) {
-                $data->{self::JSON_KEY} = array_map(static fn ($alert) => $alert->jsonSerialize(), $alerts);
-                // An alert with invalid UTF-8 must not throw once the queue is drained.
-                $response->setEncodingOptions($response->getEncodingOptions() | \JSON_INVALID_UTF8_SUBSTITUTE);
-                $response->setData($data);
-            }
-        }
+        match (true) {
+            $request->headers->has(self::HX_REQUEST_HEADER) => $this->deliverHxTrigger($response),
+            $this->isTurboStreamResponse($response)         => $this->appendTurboStreams($response),
+            $this->isTurboFrameRequest($request, $response) => $this->deliverInTurboFrame($request, $response),
+            $response instanceof JsonResponse               => $this->deliverJson($response),
+            default                                         => null,
+        };
     }
 
     // Never start a session just to look for alerts.
@@ -89,21 +75,31 @@ final class AlertDelivery
             && ($request->getSession()->isStarted() || $request->hasPreviousSession());
     }
 
+    private function isTurboStreamResponse(Response $response): bool
+    {
+        return $this->hasModifiableBody($response)
+            && str_contains($response->headers->get('Content-Type') ?? '', 'text/vnd.turbo-stream.html');
+    }
+
+    private function isTurboFrameRequest(Request $request, Response $response): bool
+    {
+        return $this->hasModifiableBody($response)
+            && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')
+            && class_exists(TurboBundle::class)
+            && $request->headers->has(self::TURBO_FRAME_HEADER);
+    }
+
+    // Streamed and binary responses return false and cannot be appended to.
+    private function hasModifiableBody(Response $response): bool
+    {
+        return false !== $response->getContent();
+    }
+
     private function deliverHxTrigger(Response $response): void
     {
-        $existing = $response->headers->get('HX-Trigger');
-        $trigger  = new \stdClass();
-
-        if (null !== $existing && '' !== $existing) {
-            $decoded = json_decode($existing);
-            if (\JSON_ERROR_NONE === json_last_error()) {
-                if (!$decoded instanceof \stdClass) {
-                    return;
-                }
-                $trigger = $decoded;
-            } else {
-                $trigger = (object) array_fill_keys(array_filter(array_map('trim', explode(',', $existing))), null);
-            }
+        $trigger = $this->existingTrigger($response->headers->get(self::HX_TRIGGER_HEADER));
+        if (null === $trigger) {
+            return;
         }
 
         $alerts = $this->alertManager->getAlerts();
@@ -111,19 +107,49 @@ final class AlertDelivery
             return;
         }
 
-        $trigger->{self::HX_EVENT_KEY} = ['alerts' => array_map(static fn ($alert) => $alert->jsonSerialize(), $alerts)];
+        $trigger->{self::HX_EVENT_KEY} = ['alerts' => $this->serialize($alerts)];
 
-        $response->headers->set('HX-Trigger', json_encode($trigger, \JSON_THROW_ON_ERROR | \JSON_INVALID_UTF8_SUBSTITUTE));
+        $response->headers->set(self::HX_TRIGGER_HEADER, json_encode($trigger, \JSON_THROW_ON_ERROR | \JSON_INVALID_UTF8_SUBSTITUTE));
+    }
+
+    /**
+     * Returns the existing HX-Trigger as an object to merge into, or null when it
+     * holds JSON that is not an object (we must not rewrite it).
+     */
+    private function existingTrigger(?string $header): ?\stdClass
+    {
+        if (null === $header || '' === $header) {
+            return new \stdClass();
+        }
+
+        try {
+            $decoded = json_decode($header, false, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            // Plain form: comma-separated event names.
+            return (object) array_fill_keys(array_filter(array_map('trim', explode(',', $header))), null);
+        }
+
+        return $decoded instanceof \stdClass ? $decoded : null;
+    }
+
+    private function appendTurboStreams(Response $response): void
+    {
+        $alerts = $this->alertManager->getAlerts();
+        if ([] === $alerts) {
+            return;
+        }
+
+        $response->setContent($response->getContent().$this->renderTurboStreams($alerts));
     }
 
     // Turbo keeps only the requested frame of a frame response, so streams must go inside it.
     private function deliverInTurboFrame(Request $request, Response $response): void
     {
         $content = (string) $response->getContent();
-        $id      = (string) $request->headers->get('Turbo-Frame');
+        $id      = (string) $request->headers->get(self::TURBO_FRAME_HEADER);
         $pattern = '/<turbo-frame\b[^>]*\bid=(["\'])'.preg_quote($id, '/').'\1[^>]*>/i';
 
-        if (1 !== preg_match($pattern, $content, $m, \PREG_OFFSET_CAPTURE)) {
+        if (1 !== preg_match($pattern, $content, $match, \PREG_OFFSET_CAPTURE)) {
             return;
         }
 
@@ -132,17 +158,51 @@ final class AlertDelivery
             return;
         }
 
-        $offset = $m[0][1] + \strlen($m[0][0]);
+        $offset = $match[0][1] + \strlen($match[0][0]);
         $response->setContent(substr($content, 0, $offset).$this->renderTurboStreams($alerts).substr($content, $offset));
     }
 
-    private function renderTurboStreams(array $alerts): string
+    private function deliverJson(JsonResponse $response): void
     {
-        $result = '';
-        foreach ($alerts as $alert) {
-            $result .= $this->twig->render('@SweetAlert/turbo/alert.html.twig', ['alert' => $alert]);
+        try {
+            $data = json_decode((string) $response->getContent(), false, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return;
         }
 
-        return $result;
+        if (!$data instanceof \stdClass || property_exists($data, self::JSON_KEY)) {
+            return;
+        }
+
+        $alerts = $this->alertManager->getAlerts();
+        if ([] === $alerts) {
+            return;
+        }
+
+        $data->{self::JSON_KEY} = $this->serialize($alerts);
+        // An alert with invalid UTF-8 must not throw once the queue is drained.
+        $response->setEncodingOptions($response->getEncodingOptions() | \JSON_INVALID_UTF8_SUBSTITUTE);
+        $response->setData($data);
+    }
+
+    /**
+     * @param Alert[] $alerts
+     */
+    private function renderTurboStreams(array $alerts): string
+    {
+        return implode('', array_map(
+            fn (Alert $alert): string => $this->twig->render(self::TURBO_STREAM_TEMPLATE, ['alert' => $alert]),
+            $alerts,
+        ));
+    }
+
+    /**
+     * @param Alert[] $alerts
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function serialize(array $alerts): array
+    {
+        return array_map(static fn (Alert $alert): array => $alert->jsonSerialize(), $alerts);
     }
 }
